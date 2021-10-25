@@ -1,0 +1,165 @@
+﻿@model List<EventHub.Models.ConstructComp.EventVM>
+
+<style>
+
+    .panel-body {
+        padding: 0px;
+    }
+</style>
+
+<!-- Events -->
+@foreach (EventHub.Models.ConstructComp.EventVM eventVM in Model)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="text-align:left;" class="col-sm-2">
+                    Event
+                </th>
+                <th style="text-align:left;" class="col-sm-7">
+                    @eventVM.Title
+                </th>
+                <th class="col-sm-1">
+                    <button id="@eventVM.EventTempId" type="button" class="addSubEvent btn btn-success">
+                        <span class="glyphicon glyphicon-plus"></span> Sub
+                    </button>
+                </th>
+                <th class="col-sm-1">
+                    <button id="@eventVM.EventTempId" type="button" class="editEvent btn btn-warning">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                </th>
+                <th class="col-sm-1">
+                    <button id="@eventVM.EventTempId" type="button" class="deleteEvent btn btn-danger">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Sub Events -->
+            @foreach (EventHub.Models.ConstructComp.SubEventVM subEvent in eventVM.SubEvents)
+            {
+                <tr>
+                    <td style="text-align:left;" class="col-sm-2">
+                        Sub Event
+                    </td>
+                    <td style="text-align:left;" class="col-sm-7">
+                        @subEvent.Title
+                    </td>
+                    <td class="col-sm-1"></td>
+                    <td class="col-sm-1">
+                        <button event-id="@subEvent.EventTempId" subevent-id="@subEvent.SubEventTempId" type="button" class="editSubEvent btn btn-warning">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                    </td>
+                    <td class="col-sm-1">
+                        <button event-id="@subEvent.EventTempId" subevent-id="@subEvent.SubEventTempId" type="button" class="deleteSubEvent btn btn-danger">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <hr />
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        var formContainer = $('#formContainer');
+        var constructionContainer = $('#constructionContainer');
+
+        var addEvent = $('.addEvent');
+        var addSubEvent = $('.addSubEvent');
+
+        var editEvent = $('.editEvent');
+        var editSubEvent = $('.editSubEvent');
+
+        var deleteEvent = $('.deleteEvent');
+        var deleteSubEvent = $('.deleteSubEvent');
+
+        addSubEvent.on('click', function () {
+
+            var id = $(this).attr('id');
+
+            $.ajax({
+                url: '/ConstructComp/GetSubEventForm',
+                type: 'GET',
+                data: { 'id': id },
+                success: function (data) {
+                    formContainer.html(data);
+                }
+            });
+
+        });
+
+        editEvent.on('click', function () {
+
+            var id = $(this).attr('id');
+
+            $.ajax({
+                url: '/ConstructComp/EditEvent',
+                type: 'GET',
+                data: { 'id': id },
+                success: function (data) {
+                    formContainer.html(data);
+                }
+            });
+
+        });
+
+        deleteEvent.on('click', function () {
+
+            var id = $(this).attr('id');
+
+            $.ajax({
+                url: '/ConstructComp/DeleteEvent',
+                type: 'POST',
+                data: { 'id': id },
+                success: function (data) {
+                    constructionContainer.html(data);
+                }
+            });
+
+        });
+
+        editSubEvent.on('click', function () {
+
+            var model = {};
+            model.eventid = $(this).attr('event-id');
+            model.subeventid = $(this).attr('subevent-id');
+
+            $.ajax({
+                url: '/ConstructComp/GetEditSubEvent',
+                type: 'POST',
+                data: { 'model': model },
+                success: function (data) {
+                    formContainer.html(data);
+                }
+            });
+
+        });
+
+        deleteSubEvent.on('click', function () {
+
+            var viewModel = {};
+            viewModel.eventid = $(this).attr('event-id');
+            viewModel.subeventid = $(this).attr('subevent-id');
+
+            $.ajax({
+                url: '/ConstructComp/DeleteSubEvent',
+                type: 'POST',
+                data: { 'viewModel': viewModel },
+                success: function (data) {
+                    constructionContainer.html(data);
+                }
+            });
+
+        });
+
+    });
+
+</script>

@@ -1,0 +1,50 @@
+﻿@model CreateCompetitiontVM
+
+<form asp-controller="Competition" asp-action="SubmitSoloComp" method="post">
+    @{int soloCounter = 1;}
+    <div id="soloFields">
+        <br />
+        <div id="comp-heading" class="panel-heading">Individuelltävling</div>
+        <br />
+        <!-- Date -->
+        <div class="input-group"><label asp-for="@Model.TeamSubComp[soloCounter-1].Date" class="pull-left"></label></div>
+        <div class="input-group">
+            <span asp-validation-for="@Model.TeamSubComp[soloCounter-1].Date" class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            <input id="dateSelect" asp-for="@Model.TeamSubComp[soloCounter-1].Date" class="form-control" placeholder="Datum" title="Datum">
+        </div>
+        <br />
+        <!-- Difficulty -->
+        <div class="input-group"><label asp-for="@Model.TeamSubComp[soloCounter-1].Difficulty" class="pull-left"></label></div>
+        <div class="input-group">
+            <span asp-validation-for="@Model.TeamSubComp[soloCounter-1].Difficulty" class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
+            <select id="difficultySelect" asp-for="@Model.TeamSubComp[soloCounter-1].Difficulty" class="form-control" asp-items="Html.GetEnumSelectList<Difficulties>()" title="Svårighetsgrad"><option>Svårighetsgrad</option></select>
+        </div>
+        <br />
+        <!-- Gender -->
+        <div class="input-group"><label asp-for="@Model.TeamSubComp[soloCounter-1].Gender" class="pull-left"></label></div>
+        <div class="input-group">
+            <span asp-validation-for="@Model.TeamSubComp[soloCounter-1].Gender" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <select id="genderSelect" asp-for="@Model.TeamSubComp[soloCounter-1].Gender" class="form-control" asp-items="Html.GetEnumSelectList<SingleGenders>()" title="Kön"><option>Kön</option></select>
+        </div>
+        <br />
+        <!-- Cost -->
+        <div class="input-group"><label asp-for="@Model.TeamSubComp[soloCounter-1].Price" class="pull-left"></label></div>
+        <div class="input-group">
+            <span asp-validation-for="@Model.TeamSubComp[soloCounter-1].Price" class="input-group-addon"><i class="glyphicon glyphicon-piggy-bank"></i></span>
+            <input id="costInput" asp-for="@Model.TeamSubComp[soloCounter-1].Price" class="form-control" placeholder="Pris" title="Pris">
+        </div>
+        <br />
+        <!-- Quantity -->
+        <div class="input-group"><label asp-for="@Model.TeamSubComp[soloCounter-1].Quantity" class="pull-left"></label></div>
+        <div class="input-group">
+            <span asp-validation-for="@Model.TeamSubComp[soloCounter-1].Quantity" class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+            <input id="quantityInput" asp-for="@Model.TeamSubComp[soloCounter-1].Quantity" class="form-control" placeholder="Antal deltagare" title="Antal deltagare">
+        </div>
+        <br />
+    </div>
+    <div>
+        <a id="submitSoloComp" class="btn btn-primary btn-block buttonBorder">
+            Lägg till <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        </a>
+    </div>
+</form>

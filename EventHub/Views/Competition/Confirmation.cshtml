@@ -1,0 +1,53 @@
+﻿@model EditOneCompetVM.CompetitionVM
+@{
+    ViewData["Title"] = "Tävlingen har skapats";
+}
+
+<div class="event-main">
+    <div class="comp-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Tävling tillagd!</h1>
+        </div>
+        <div>
+            <div class="alert alert-dark" role="alert">
+                <h2>Bra jobbat!</h2>
+                <p>
+                    Följande tävling inväntar nu godkännande innan den publiceras.
+                    Om du redan nu hittar något fel så kan du alltid <a asp-controller="Competition" asp-action="EditCompetition" asp-route-id="@Model.Id" class="alert-link">redigera</a> tävlingen,
+                    annars hittar du den under <a asp-controller="Profile" asp-action="ListCompetitionEdit" class="alert-link"> Mina Tävlingar</a>.
+                </p>
+                <hr />
+                
+                    <h3>@Model.Name</h3>
+                    <h3> @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()</h3>
+                <p>
+                    @Model.Description
+                </p>    
+                <p>
+                        <ul class="list-group">
+                            @foreach (var subClass in @Model.SubCompetition)
+                    {
+                        <li class="list-group-item list-group-item-text">
+                            @subClass.Type @subClass.Gender @subClass.Difficulty
+                            <br />
+                            @subClass.Price SEK
+                            <br />
+                            @subClass.Quantity platser
+                        </li>
+            }
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        
+            <div class="alert alert-danger" role="alert">
+                <p>
+                    För att tävlingen ska publiceras så måste den först godkännas av en administratör hos Boxcore.
+                    Den processen startar inte automatiskt utan måste föregås av en offertförfrågan till admin@boxcore.net.
+                    Om du redan har varit i kontakt med oss så kommer vi att godkänna och publicera tävlingen inom 24 timmar.
+                </p>
+            </div>
+       
+        <div class="bc-system-footer"></div>
+    </div>
+</div>

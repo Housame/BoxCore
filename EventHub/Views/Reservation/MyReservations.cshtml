@@ -1,0 +1,165 @@
+﻿@model IEnumerable<MyCompetitionsVM.CompetitionVM>
+@{
+    ViewBag.Title = "Mina bokningar";
+}
+<!-- #region View 2 -->
+<div class="event-main">
+    <div class="comp-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Mina bokningar</h1>
+        </div>
+
+        @if (Model.Count() == 0)
+        {
+            <div class="bc-overview-body">
+                <div class="bc-system-table profile-comp-booking">
+                    <h1>Inga bokningar</h1>
+                    <p>Bläddra genom tillgängliga tävlingar <a asp-controller="Reservation" asp-action="reserve">här</a></p>
+                    <br />
+                </div>
+            </div>
+        }
+        @if (Model.Count() > 0)
+        {
+            <div class="bc-system-body">
+                <div id="competitionDiv" class="list-group">
+                    @{int i = 0; }
+                    @foreach (var competition in Model)
+                    {
+                        <div class="list-group-item">
+                            <div class="comp-info panel panel-inverse list-group-item">
+                                <div class="panel-heading">
+                                    <div data-toggle="collapse" data-target="#@i" class="panel-title comp-info-panel">
+                                        <button data-toggle="collapse" data-target="#@i" class="comp-info-button"><img src="~/img/BoxCore04.png" /></button>
+                                        <br />
+                                        <b>@competition.CompName</b>
+                                        <br />
+                                        @competition.StartDate.ToString("yyyy-MM-dd") till @competition.EndDate.ToString("yyyy-MM-dd")
+                                        <br />
+                                        @competition.Location
+                                        <br />
+                                        <br />
+                                    </div>
+                                </div>
+                                <div id="@i" class="panel-collapse collapse">
+                                    <div style="border: 1px #ddd solid" class="bc-competition-body">
+                                        <div class="stepIndicatorTxt event-info well">
+                                            Tävlingsinformation
+                                        </div>
+                                        <div class="panel-body">
+                                            <table class="table bc-system-table bc-system-no-padding">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="text-align: left"><strong>Startdatum: </strong></td>
+                                                        <td style="text-align: right">@competition.StartDate.ToString("yyyy-MM-dd")</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align: left"><strong>Slutdatum: </strong></td>
+                                                        <td style="text-align: right">@competition.EndDate.ToString("yyyy-MM-dd")</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align: left"><strong style="text-align: left">Plats: </strong></td>
+                                                        <td style="text-align: right">@competition.Location</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="bc-competition-info">
+                                                <textarea id="bc-competition-info" class="form-control" rows="5" readonly>
+                                                    @competition.Description
+                                                </textarea>
+                                            </div>
+                                            <br />
+                                        </div>
+                                    </div>
+                                    @foreach (var subcomp in competition.SubCompetitions)
+                                    {
+                                        <br />
+                                        <div style="border: 1px #ddd solid" class="bc-system-body">
+                                            <div class="stepIndicatorTxt event-info well">
+                                                Tävlingsklass
+                                            </div>                                            
+                                            <div class="panel-body">
+                                                <table class="table bc-system-table bc-system-no-padding">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="text-align: left"><strong>Datum: </strong></td>
+                                                            <td style="text-align: right">@subcomp.Date.ToString("yyyy-MM-dd")</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left"><strong>Klass: </strong></td>
+                                                            <td style="text-align: right">@subcomp.Description</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left"><strong style="text-align: left">Pris: </strong></td>
+                                                            <td style="text-align: right">@subcomp.Cost.ToString("N0") kr</td>
+                                                        </tr>
+                                                        @if (subcomp.Type == "Team")
+                                                        {
+                                                            <tr>
+                                                                <td style="text-align: left"><strong style="text-align: left">Antal lagkamrater: </strong></td>
+                                                                <td style="text-align: right">@subcomp.QuantityPerTeam </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            @if (subcomp.Type == "Team")
+                                            {
+                                                @*<input asp-controller="" asp-action="" asp-route-id="@subcomp.Id" class="btn btn-warning pull-left" type="submit" value="Lägg till/ändra bros" />*@
+                                                <button id="@subcomp.Id" class="modalTest btn btn-primary">Lagkamrat(er)</button>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        { i++; }
+                    }
+                </div>
+            </div>
+                        }
+        <div class="bc-system-footer"></div>
+    </div>
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+        </div>
+
+    </div>
+</div>
+<!-- #endregion -->
+@section Scripts{
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/js/filterScripts.js"></script>
+    <!-- Script to launch Modal -->
+    <script>
+        $(document).ready(function () {
+
+            // Start
+            $(document).on('click', '.modalTest', function () {
+                var id = $(this).attr('id');
+
+                $.ajax({
+                    url: "/UserClient/AddAthletes/",
+                    data: { 'id': id },
+                    type: 'POST',
+                    success: function (data) {
+                        $('.modal-content').html(data);
+                        $('#myModal').modal('toggle');
+                    },
+                });
+            });
+
+            $('#myModal').on("hide.bs.modal", function () {
+                $("input").prop('disabled', false);
+                $("select").prop('disabled', false);
+            })
+            // End
+        })
+
+    </script>
+}
+
+

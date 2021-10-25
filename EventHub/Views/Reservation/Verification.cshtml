@@ -1,0 +1,30 @@
+﻿@model VerificationVM
+@{
+    ViewBag.Title = "Bekräftelse";
+}
+<div class="event-main">
+    <div class="user-form bc-system-wrapper">
+        <div class="bc-system-header">
+            <h3>Bokningsbekräftelse</h3>
+        </div>
+        <div class="bc-system-body">
+            Du har nu reserverat en plats på <strong>@Model.EventName</strong>.
+            <br />
+            <br />
+            Tävlingsdatum: <strong>@Model.EventStartDate.ToString("yyyy-MM-dd")</strong> till <strong>@Model.EventEndDate.ToString("yyyy-MM-dd")</strong>.
+            <br />
+            <br />
+            Ditt event har planerad start <strong>@Model.SubEventDate.ToString("yyyy-MM-dd")</strong> i <strong>@Model.EventLocation</strong>.
+            <br />
+            <br />
+            Vänligen kontakta arrangören för vidare information.
+            <br />
+            <br />
+            Ett e-postmeddelande har skickats med referensummer: <strong>@Model.ReferenceNumber</strong>
+            <br />
+            <br />
+            Tack för att du använder <strong>BoxCore</strong>.
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>

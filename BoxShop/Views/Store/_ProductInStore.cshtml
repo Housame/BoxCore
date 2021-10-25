@@ -1,0 +1,47 @@
+﻿@model ProductDisplayVM
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td id="imgDiv">
+                <br />
+                @if (@Model.Image.Length > 0)
+                {
+                    var base64 = Convert.ToBase64String(@Model.Image);
+                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                    <img class="img-thumbnail store" src="@imgSrc" width="100" height="100" />
+                }
+                else
+                {
+                    <div class="img-thumbnail nopic" style="width: 100px; height: 100px">
+                        <span class="glyphicon glyphicon-camera cam-medium"></span>
+                    </div>
+                }
+                <br />
+                <br />
+            </td>
+            <td>
+                <br />
+                <br />
+                <table>
+                    <tr>
+                        <td class="infoDiv">@Model.Name</td>
+                    </tr>
+                    <tr>
+                        <td class="infoDiv">@Model.Description</td>
+                    </tr>
+                    <tr>
+                        <td class="infoDiv">@Model.Price SEK</td>
+                    </tr>
+                </table>
+                <br />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <br />
+                <button style="width:100%" id="@Model.Id" type="button" class="btn btn-primary buy">Köp</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

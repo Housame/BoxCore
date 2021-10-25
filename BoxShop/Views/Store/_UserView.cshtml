@@ -1,0 +1,11 @@
+﻿@model VerifyUserInStore[]
+
+@if (Model != null)
+{
+    @foreach (VerifyUserInStore user in Model)
+    {
+        <a id="@user.Id" data-toggle="modal" data-target="#myModal" class="userSelected list-group-item list-group-item-action">
+            @user.FirstName @user.LastName
+        </a>
+    }
+}

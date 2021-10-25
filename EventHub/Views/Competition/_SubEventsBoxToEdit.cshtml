@@ -1,0 +1,106 @@
+﻿@model IEnumerable<EditOneCompetVM.SubCompetitionVM>
+@foreach (var subCompt in Model)
+{
+    if (subCompt.Type == SubCompetitionTypes.Single)
+    {
+        <div class="soloFields" data-subid="@subCompt.Id">
+            <div class="panel panel-info">
+                <div class="panel-heading">Individuelltävling</div>
+            </div>
+            <!-- Id -->
+            <div class="input-group">
+                <input asp-for="@subCompt.Id" class="subCompSoloId" id="subCompId-@subCompt.Id">
+            </div>
+            <!-- Date -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Date" class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <input id="dateSelect" asp-for="@subCompt.Date" class="form-control" placeholder="Datum">
+            </div>
+            <!-- Difficulty -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Difficulty" class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
+                <select id="difficultySelect-@subCompt.Id" asp-for="@subCompt.Difficulty" class="form-control" asp-items="Html.GetEnumSelectList<Difficulties>()"><option>@subCompt.Difficulty</option></select>
+            </div>
+            <br />
+            <!-- Gender -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Gender" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <select id="genderSelect-@subCompt.Id" asp-for="@subCompt.Gender" class="form-control" asp-items="Html.GetEnumSelectList<SingleGenders>()"><option>@subCompt.Gender</option></select>
+            </div>
+            <br />
+            <!-- Cost -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Price" class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+                <input id="costInput-@subCompt.Id" asp-for="@subCompt.Price" class="form-control" placeholder="Pris">
+            </div>
+            <br />
+            <!-- Quantity -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Quantity" class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+                <input id="quantityInput-@subCompt.Id" asp-for="@subCompt.Quantity" class="form-control" placeholder="Max antal deltagare">
+            </div>
+            <br />
+            <div>
+                @*<button class="btn btn-danger" asp-controller="Competition" asp-action="Delete" asp-route-id="@subCompt.Id">Ta bort denna subevent</button>*@
+                @*<button class="btn btn-danger" onclick="DeleteSubEvent(@subCompt.Id,@subCompt.CompetitionId)">Ta bort denna subevent</button>*@
+                <a id="@subCompt.Id" class="deleteSubComp btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Ta bort denna subevent</a>
+            </div>
+            <br/>
+        </div>
+
+    }
+    else
+    {
+        <div class="teamFields" data-subid="@subCompt.Id">
+            <div class="panel panel-info">
+                <div class="panel-heading">Lagtävling</div>
+            </div>
+            <!-- Id -->
+            <div class="input-group">
+                <input asp-for="@subCompt.Id" class="subCompTeamId" id="subCompId-@subCompt.Id">
+            </div>
+            <!-- Date -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Date" class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <input id="dateSelect" asp-for="@subCompt.Date" class="form-control" placeholder="Datum">
+            </div>
+            <!-- Difficulty -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Difficulty" class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
+                <select id="difficultySelect-@subCompt.Id" asp-for="@subCompt.Difficulty" class="form-control" asp-items="Html.GetEnumSelectList<Difficulties>()"><option>@subCompt.Difficulty</option></select>
+            </div>
+            <br />
+            <!-- Gender -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Gender" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <select id="genderSelect-@subCompt.Id" asp-for="@subCompt.Gender" class="form-control" asp-items="Html.GetEnumSelectList<Genders>()"><option>@subCompt.Gender</option></select>
+            </div>
+            <br />
+            <!-- Cost -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Price" class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+                <input id="costInput-@subCompt.Id" asp-for="@subCompt.Price" class="form-control" placeholder="Pris">
+            </div>
+            <br />
+            <!-- Quantity -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.Quantity" class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+                <input id="quantityInput-@subCompt.Id" asp-for="@subCompt.Quantity" class="form-control" placeholder="Max antal deltagare">
+            </div>
+            <br />
+            <!-- Quantity per team -->
+            <div class="input-group">
+                <span asp-validation-for="@subCompt.QuantityPerTeam" class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+                <input id="quantitiyPerTeamInput-@subCompt.Id" asp-for="@subCompt.QuantityPerTeam" class="form-control" placeholder="Max antal lag">
+            </div>
+            <br />
+            <div>
+                @*<button class="btn btn-danger" asp-controller="Competition" asp-action="Delete" asp-route-id="@subCompt.Id">Ta bort denna subevent</button>*@
+                @*<button class="btn btn-danger" onclick="DeleteSubEvent(@subCompt.Id,@subCompt.CompetitionId)">Ta bort denna subevent</button>*@
+                <a id="@subCompt.Id" class="deleteSubComp btn btn-danger"><span class="glyphicon glyphicon-trash"></span>Ta bort denna subevent</a>
+            </div>
+            <br />
+        </div>
+
+    }
+}

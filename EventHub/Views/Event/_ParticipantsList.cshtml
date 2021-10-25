@@ -1,0 +1,190 @@
+﻿@model ListParticipantsVM.SubCompetitionVM
+<div class="overview-body bc-system-wrapper">
+    <div class="bc-system-header">
+        <h3>Deltävlingsinformation</h3>
+    </div>
+    <div class="bc-table-body">
+        <div class="bc-system-table">
+            <table class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                <tr>
+                    <th scope="col">Klass</th>
+                    <th scope="col">Kön</th>
+                    <th scope="col">Svårighetsgrad</th>
+                    <th scope="col">Datum</th>
+                </tr>
+                <tr>
+                    <td scope="col">@Model.Type</td>
+                    <td scope="col">@Model.Gender</td>
+                    <td scope="col">@Model.Difficulty</td>
+                    <td scope="col">@Model.Date.ToString("yyyy-MM-dd")</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="overview-body bc-system-wrapper">
+    <div class="bc-system-header">
+        <h3>Bokningar</h3>
+    </div>
+    @if (Model.Reservation.Count() == 0)
+    {
+        <div class="bc-overview-body">
+            <div class="bc-table-body profile-comp-booking">
+                <h1>Inga bokningar</h1>
+            </div>
+        </div>
+    }
+    @if (Model.Reservation.Count() > 0)
+    {
+        <div class="bc-table-body">
+            <div class="bc-system-table">
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" />
+                <table id="myTable" data-toggle="table" data-sort-order="desc" class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                    <thead>
+                        <tr>
+                            <th id="test" type="submit" scope="col" data-field="FirstName" data-sortable="false">Förnamn</th>
+                            <th scope="col" data-field="LastName" data-sortable="false">Efternamn</th>
+                            <th scope="col" data-field="ReservationDate" data-sortable="false">Köpdatum</th>
+                            <th scope="col" data-field="Reference" data-sortable="false">Referens</th>
+                            <th scope="col" data-field="Status" data-sortable="false">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        @foreach (var item in Model.Reservation)
+                        {
+                            <tr>
+                                <td scope="col">@item.User.FirstName</td>
+                                <td scope="col">@item.User.LastName</td>
+                                <td scope="col">@item.ReservationDate.ToString()</td>
+                                <td scope="col">@item.Reference</td>
+                                <td scope="col">OK</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+<div class="overview-body bc-system-wrapper">
+    <div class="bc-system-header">
+        <h3>Deltagare</h3>
+    </div>
+    @if (Model.UsersToSubCompetitionsAndCompetitors.Count() == 0)
+    {
+        <div class="bc-overview-body">
+            <div class="bc-table-body profile-comp-booking">
+                <h1>Inga deltagare</h1>
+            </div>
+        </div>
+    }
+    @if (Model.UsersToSubCompetitionsAndCompetitors.Count() > 0)
+    {
+        if (Model.Type == SubCompetitionTypes.Single)
+        {
+            <div class="bc-table-body">
+                <div class="bc-system-table">
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" />
+                    <table data-toggle="table" data-sort-order="desc" class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                        <thead>
+                            <tr>
+                                <th scope="col" data-field="FirstName" data-sortable="true">Förnamn</th>
+                                <th scope="col" data-field="LastName" data-sortable="true">Efternamn</th>
+                                <th scope="col" data-field="Gender" data-sortable="true">Kön</th>
+                                <th scope="col" data-field="Size" data-sortable="true">Tröjstorlek</th>
+                                <th scope="col" data-field="Email" data-sortable="true">E-post</th>
+                                <th scope="col" data-field="CheckedIn" data-sortable="true">Incheckad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            @foreach (var item in Model.UsersToSubCompetitionsAndCompetitors)
+                            {
+                            <tr>
+                                <td scope="col">@item.Competitor.Athlete.FirstName</td>
+                                <td scope="col">@item.Competitor.Athlete.LastName</td>
+                                <td scope="col">@item.Competitor.Athlete.Gender</td>
+                                <td scope="col">@item.Competitor.Athlete.Size</td>
+                                <td scope="col">@item.Competitor.Athlete.Email</td>
+                                <td scope="col" class="text-center check-in">
+
+                                    @* The toggle check in button are also generated dynamically in javascript (at the moment in ParticipantsList.cshtml *@
+                                    @if (item.Competitor.IsCheckedIn)
+        {
+                            <button id="check-in-button-@item.Competitor.Id" subcomp="@Model.Id" value="@item.Competitor.Id" class="check-in-button btn btn-success btn-sm check-in-button-@item.Competitor.Id"><span class="glyphicon glyphicon-ok"></span></button>
+
+}
+else
+{
+                            <button id="check-in-button-@item.Competitor.Id" subcomp="@Model.Id" value="@item.Competitor.Id" class="check-in-button btn btn-danger btn-sm check-in-button-@item.Competitor.Id"><span class="glyphicon glyphicon-remove"></span></button>
+}
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="bc-table-body">
+                <div class="bc-system-table">
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" />
+                    <table data-toggle="table" data-sort-order="desc" class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                        <thead>
+                            <tr>
+                                <th scope="col" data-field="FirstName" data-sortable="true">Förnamn</th>
+                                <th scope="col" data-field="LastName" data-sortable="true">Efternamn</th>
+                                <th scope="col" data-field="Gender" data-sortable="true">Kön</th>
+                                <th scope="col" data-field="Size" data-sortable="true">Tröjstorlek</th>
+                                <th scope="col" data-field="Email" data-sortable="true">E-post</th>
+                                <th scope="col" data-field="Team" data-sortable="true">Lag</th>
+                                <th scope="col" data-field="CheckedIn" data-sortable="true">Incheckad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.UsersToSubCompetitionsAndCompetitors)
+                            {
+
+                                @foreach (var athlete in item.Competitor.Team.AthleteInTeam)
+                                {
+                                    <tr>
+                                        <td scope="col">@athlete.Athlete.FirstName</td>
+                                        <td scope="col">@athlete.Athlete.LastName</td>
+                                        <td scope="col">@athlete.Athlete.Gender</td>
+                                        <td scope="col">@athlete.Athlete.Size</td>
+                                        <td scope="col">@athlete.Athlete.Email</td>
+                                        <td scope="col">@item.Competitor.Team.TeamName</td>
+                                        <td scope="col" class="text-center check-in">
+
+                                            @* The toggle check in button are also generated dynamically in javascript (at the moment in ParticipantsList.cshtml *@
+                                            @if (item.Competitor.IsCheckedIn)
+                                            {
+                                                <button id="check-in-button-@item.Competitor.Id" subcomp="@Model.Id" value="@item.Competitor.Id" class="check-in-button btn btn-success btn-sm check-in-button-@item.Competitor.Id"><span class="glyphicon glyphicon-ok"></span></button>
+
+                                            }
+                                            else
+                                            {
+                                                <button id="check-in-button-@item.Competitor.Id" subcomp="@Model.Id"  value="@item.Competitor.Id" class="check-in-button btn btn-danger btn-sm check-in-button-@item.Competitor.Id"><span class="glyphicon glyphicon-remove"></span></button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+    }
+    <div class="bc-system-footer"></div>
+</div>
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+}

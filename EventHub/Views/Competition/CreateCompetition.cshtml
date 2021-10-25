@@ -1,0 +1,260 @@
+﻿@model CreateCompetitiontVM
+@{
+    ViewBag.Title = "Create Competition";
+}
+<style>
+    .alert-admin {
+        color: #1b1e21;
+        background-color: #d6d8d9;
+        border-color: #c6c8ca
+    }
+
+        .alert-admin hr {
+            border-top-color: #b9bbbe
+        }
+
+        .alert-admin .alert-link {
+            color: #040505
+        }
+</style>
+<div class="event-main">
+    <div class="user-form bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Skapa Tävling</h1>
+        </div>
+        <div class="bc-system-body container-fluid">
+            <form asp-controller="Competition" asp-action="CreateCompetition" method="post">
+                <!-- Name -->
+                <div class="stepIndicatorTxt event-info well">
+                    <b>Steg I:</b>
+                    Allmän info om tävlingen
+                </div>
+                <div class="user-info input-group"><label asp-for="@Model.Name" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.Name" class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                    <input asp-for="@Model.Name" class="form-control" placeholder="Namn" title="Namn">
+                </div>
+                <br />
+                <!-- StartDate -->
+                <div class="user-info input-group"><label asp-for="@Model.StartDate" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.StartDate" class="input-group-addon"><img class="date-img" src="~/img/Hourglass Up.png" /></span>
+                    <input asp-for="@Model.StartDate" class="form-control" placeholder="Startdatum" title="Startdatum">
+                </div>
+                <br />
+                <!-- EndDate -->
+                <div class="user-info input-group"><label asp-for="@Model.EndDate" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.EndDate" class="input-group-addon"><img class="date-img" src="~/img/Hourglass Down.png" /></span>
+                    <input asp-for="@Model.EndDate" class="form-control" placeholder="Slutdatum" title="Slutdatum">
+                </div>
+                <br />
+                <!-- Location -->
+                <div class="user-info input-group"><label asp-for="@Model.Location" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.Location" class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
+                    <input asp-for="@Model.Location" class="form-control" placeholder="Plats" title="Plats">
+                </div>
+                <br />
+                <!-- Description -->
+                <div class="user-info input-group"><label asp-for="@Model.Description" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.Description" class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                    <textarea asp-for="@Model.Description" class="form-control" placeholder="Beskrivning" title="Beskrivning" rows="5"></textarea>
+                </div>
+                <div id="addedSubEventsContainer">
+                    <br />
+                    <div style="color:black;" class="panel-group addedSubEvents" id="accordion"></div>
+                </div>
+                <hr style="margin-top: 0;" />
+                <!-- Event type -->
+                <div class="stepIndicatorTxt event-info well">
+                    <b>Steg II:</b>
+                    Lägg till deltävlingar
+                </div>
+                <div class="create-event-buttons btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                    <a id="addSoloCompBtn" class="btn btn-primary buttonBorder" role="button"><span class="glyphicon glyphicon-plus"></span> Individuell</a>
+                    <a id="addTeamCompBtn" class="btn btn-primary buttonBorder" role="button"><span class="glyphicon glyphicon-plus"></span> Lag</a>
+                </div>
+                <div id="subEventMsg" class="alert alert-success hidden buttonBorder">
+                    <strong>Tävlingsklass skapad.</strong>
+                </div>
+                <!-- SubEvent div -->
+                <div id="subEventsContainer">
+                    <div id="subEvents"></div>
+                </div>
+                <hr />
+                <div class="stepIndicatorTxt event-info well">
+                    <b>Steg III:</b>
+                    Bekräfta bokning av tävling
+                </div>
+                <!--Open for bookings-->
+                <div class="event-info input-group">
+                    <label asp-for="@Model.OpenForBookings" class="pull-left"></label>
+                    <input asp-for="@Model.OpenForBookings">
+                </div>
+                @if (User.IsInRole("Admin"))
+    {
+            <!-- Box Select-->
+            <div class="alert alert-admin" role="alert">              
+                <h4 class="alert-heading">Admin</h4>
+                <div class="event-info input-group">
+                    <label asp-for="@Model.Box" class="pull-left"></label>
+                </div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.Box" class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                    <select asp-for="@Model.Box" class=" form-control"
+                            asp-items="@Model.Boxes" title="Box">
+                        <option>Välj Box</option>
+                    </select>
+                </div>
+                <br />
+                <!-- Publish-->
+                <div class="event-info input-group">
+                    <label asp-for="@Model.Published" class="pull-left"></label>
+                    <input asp-for="@Model.Published" class="pull-right">
+                </div>
+            </div>
+}
+
+                <div class="create-event-buttons">
+                    <button type="submit" class="btn btn-success btn-block largeButton">Skapa tävling</button>
+                </div>
+            </form>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+
+            // Cached variables
+            var addTeamCompBtn = $('#addTeamCompBtn');
+            var addSoloCompBtn = $('#addSoloCompBtn');
+            var addedSubEvents = $('.addedSubEvents');
+            var subEvents = $('#subEvents')
+            var subEventMsg = $('#subEventMsg')
+            var subEventIndex = 1;
+
+            // Add team competition form
+            addTeamCompBtn.click(function () {
+                $.ajax({
+                    url: '/Competition/AddTeamCompForm',
+                    type: "GET",
+                    success: function (result) {
+                        subEvents.empty();
+                        subEvents.html(result);
+                    },
+                    error: function () {
+                        alert('Error initializing form');
+                    },
+                });
+            });
+
+            // Add solo competition form
+            addSoloCompBtn.click(function () {
+                $.ajax({
+                    url: '/Competition/AddSoloCompForm',
+                    type: "GET",
+                    success: function (result) {
+                        subEvents.empty();
+                        subEvents.html(result);
+                    },
+                    error: function () {
+                        alert('Error initializing form');
+                    },
+                });
+            });
+
+            // Submit team competition form
+            $(document).on("click", "#submitTeamComp", function () {
+
+                // TeamSubEventVM
+                var teamData = {
+                    id: subEventIndex++ + Date.now().toString(),
+                    date: $('#dateSelect').val(),
+                    gender: $('#genderSelect').val(),
+                    difficulty: $('#difficultySelect').val(),
+                    price: $('#costInput').val(),
+                    quantity: $('#quantityInput').val(),
+                    quantityperteam: $('#quantitiyPerTeamInput').val(),
+                    confirmedparticipants: 0,
+                };
+
+                $.ajax({
+                    url: '/Competition/SubmitTeamComp',
+                    type: "POST",
+                    data: teamData,
+                    success: function (result) {
+                        if (!result.invalidModelState) {
+                            $("#accordion").html(result);
+                            subEvents.empty();
+                            flashMsg();
+                        }
+                        else
+                            alert(result.errorMsg)
+                    },
+                    error: function () {
+                        alert('Error submitting team event')
+                    },
+                });
+            });
+
+            // Submit solo competition form
+            $(document).on("click", "#submitSoloComp", function () {
+
+                // SoloSubEventVM
+                var soloData = {
+                    id: subEventIndex++ + Date.now().toString(),
+                    date: $('#dateSelect').val(),
+                    gender: $('#genderSelect').val(),
+                    difficulty: $('#difficultySelect').val(),
+                    price: $('#costInput').val(),
+                    quantity: $('#quantityInput').val(),
+                    confirmedparticipants: 0,
+                };
+                $.ajax({
+                    url: '/Competition/SubmitSoloComp',
+                    type: "POST",
+                    data: soloData,
+                    success: function (result) {
+                        if (!result.invalidModelState) {
+                            $("#accordion").html(result);
+                            subEvents.empty();
+                            flashMsg();
+                        }
+                        else
+                            alert(result.errorMsg)
+                    },
+                    error: function () {
+                        alert('Error submitting solo event')
+                    },
+                });
+            });
+
+            // Success Sub-event entry message
+            function flashMsg() {
+                subEventMsg.removeClass("hidden");
+                subEventMsg.fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).delay(600).slideUp();
+            };
+        });
+        function removeSubCompetition(id) {
+            $.ajax({
+                url: '/Competition/DeleteSubCompetition',
+                type: "DELETE",
+                data: "id=" + id,
+                success: function (result) {
+
+                    $("#accordion").html(result);
+
+                },
+                error: function () {
+                    alert('Error removing sub event.')
+                },
+            });
+        }
+    </script>
+
+}

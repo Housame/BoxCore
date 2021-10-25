@@ -1,0 +1,112 @@
+﻿@model RegisterUserVM
+@{
+    ViewBag.Title = "Registrering";
+}
+<div class="event-main">
+    <div class="user-form bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Registrering</h1>
+        </div>
+        <div class="bc-system-body">
+            <form asp-controller="UserClient" asp-action="RegisterUser" method="post" enctype="multipart/form-data">
+                @if (TempData["OperationFailed"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["OperationFailed"]
+                    </div>
+                }
+                <!-- First name -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.FirstName" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input asp-for="@Model.FirstName" class="form-control" placeholder="Förnamn" pattern="^[a-zåäöA-ZÅÄÖ\s-]+$" title="Inga siffror eller specialtecken för namn." required>
+                </div>
+                <span asp-validation-for="@Model.FirstName"></span>
+                <br />
+                <!-- Last name -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.LastName" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input asp-for="@Model.LastName" class="form-control" placeholder="Efternamn" pattern="^[a-zåäöA-ZÅÄÖ\s-]+$" title="Inga siffror eller specialtecken för namn." required>
+                </div>
+                <span asp-validation-for="@Model.LastName"></span>
+                <br />
+                <!-- Phone number -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.PhoneNumber" class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                    @*<input asp-for="PhoneNumber" class="form-control" placeholder="Mobilnummer" pattern="^(0[7][0-9])\s*(\d{3})\s*(\d{4})$" title="07x xxx xxxx" required>*@
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Mobilnummer" pattern="^[0-9]+$" title="Endast siffror." required>
+                </div>
+                <span asp-validation-for="@Model.PhoneNumber"></span>
+                <br />
+                <!-- Email -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.Email" class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    <input asp-for="@Model.Email" class="form-control" placeholder="E-post" title="exempel@exempel.se" required>
+                </div>
+                <br />
+                <!-- Confirm email -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.ConfirmEmail" class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    <input asp-for="@Model.ConfirmEmail" class="form-control" placeholder="Bekräfta e-post" title="Ange samma e-post som ovan." required>
+                </div>
+                <br />
+                <div class="register-checkboxes">
+                    <!-- Confirm policy -->
+                    <div class="user-info input-group">
+                        <input asp-for="@Model.TermsAndConditions" type="checkbox" value="true" required> Jag har läst och accepterat BoxCore <a href="#" class="modalTermsTrigger">personuppgiftspolicy</a>.
+                    </div>
+                    <span asp-validation-for="@Model.TermsAndConditions"></span>
+                    <br />
+                    <!-- Confirm NewsLetter -->
+                    <div class="user-info input-group">
+                        <input asp-for="@Model.AllowNewsLetter" type="checkbox" value="true">  Jag vill ta del av kommande nyhetsbrev.
+                    </div>
+                    <br />
+                </div>
+                <button type="submit" class="btn btn-success buttonBorder">Registrera dig</button>
+            </form>
+        </div>
+        <div id="termsRegisterModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content"></div>
+            </div>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            // Start
+            var modalTrigger = $('.modalTermsTrigger');
+            var content = $('.modal-content');
+            var termsModal = $('#termsRegisterModal');
+            modalTrigger.click(function () {
+
+                $.ajax({
+                    url: "/UserClient/ModalTerms/",
+                    type: 'POST',
+                    success: function (result) {
+                        content.html(result);
+                        termsModal.modal('toggle');
+                    },
+                });
+            });
+            $(document).on('click', '#modalClose', function () {
+                termsModal.modal('toggle');
+            });
+            $('#termsModal').on("hide.bs.modal", function () {
+                $("input").prop('disabled', false);
+                $("select").prop('disabled', false);
+            })
+            // End
+        })
+    </script>
+}
+
+
+
+
+
+
+

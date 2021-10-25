@@ -1,0 +1,22 @@
+﻿@model ProductDisplayVM
+
+<div class="productFrame">
+    @if (Model.Image.Length > 0)
+    {
+        var base64 = Convert.ToBase64String(Model.Image);
+        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+        <img class="img-responsive" src="@imgSrc" width="150" height="150" />
+    }
+    else
+    {
+        <div class="" style="width: 150px; height: 150px"></div>
+    }
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-success">
+            <strong class="text-nowrap">@Model.Name</strong>
+            <br />
+            <span style="vertical-align:middle;" class="label label-success">@Model.Price kr</span>
+        </li>
+    </ul>
+    <button id="@Model.Id" type="button" class="purchaseBtn btn btn-success btn-block">Köp</button>
+</div>

@@ -1,0 +1,356 @@
+﻿@model EditOneCompetVM.CompetitionVM
+@{
+    ViewBag.Title = "Ändra på Tävling";
+}
+<div class="event-main">
+    <div class="user-form bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Ändra Tävling</h1>
+        </div>
+        <div class="bc-system-body container-fluid">
+            <form asp-controller="Competition" asp-action="EditCompetition" method="post">
+                <!-- Name -->
+                <div class="event-info input-group"><label asp-for="@Model.Name" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.Name" class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                    <input asp-for="@Model.Name" class="form-control" placeholder="Namn">
+                </div>
+                <br />
+                <!-- StartDate -->
+                <div class="event-info input-group"><label asp-for="@Model.StartDate" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.StartDate" class="input-group-addon"><img class="date-img" src="~/img/Hourglass Up.png" /></span>
+                    <input asp-for="@Model.StartDate" class="form-control" placeholder="Start Datum">
+                </div>
+                <br />
+                <!-- EndDate -->
+                <div class="event-info input-group"><label asp-for="@Model.EndDate" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.EndDate" class="input-group-addon"><img class="date-img" src="~/img/Hourglass Down.png" /></span>
+                    <input asp-for="@Model.EndDate" class="form-control" placeholder="Slut Datum">
+                </div>
+                <br />
+                <!-- Location -->
+                <div class="event-info input-group"><label asp-for="@Model.Location" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.Location" class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
+                    <input asp-for="@Model.Location" class="form-control" placeholder="Plats">
+                </div>
+                <br />
+                <!-- Description -->
+                <div class="event-info input-group"><label asp-for="@Model.Description" class="pull-left"></label></div>
+                <div class="event-info input-group">
+                    <span asp-validation-for="@Model.Description" class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                    <textarea asp-for="@Model.Description" class="form-control" placeholder="Beskrivning"></textarea>
+                </div>
+                <!-- SubEvent div -->
+                <div id="subEventsContainer" class="">
+                    @for (int i = 0; i < Model.SubCompetition.Count; i++)
+                    {
+                        if (Model.SubCompetition[i].Type == SubCompetitionTypes.Single)
+                        {
+                            <hr />
+                            <div class="soloFields" data-subid="@Model.SubCompetition[i].Id">
+                                <div class="event-info">
+                                    <div id="comp-heading" class="panel-heading">Individuelltävling</div>
+                                </div>
+                                <br />
+                                <!-- Type -->
+                                <input asp-for="@Model.SubCompetition[i].Type" id="subCompType-@Model.SubCompetition[i].Id">
+                                <!-- Id -->
+                                <input asp-for="@Model.SubCompetition[i].Id" class="subCompSoloId" id="subCompId-@Model.SubCompetition[i].Id">
+                                <!-- Date -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Date" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Date" class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <input id="dateSelect" asp-for="@Model.SubCompetition[i].Date" class="form-control" placeholder="Datum">
+                                </div>
+                                <br />
+                                <!-- Difficulty -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Difficulty" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Difficulty" class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
+                                    <select id="difficultySelect-@Model.SubCompetition[i].Id" asp-for="@Model.SubCompetition[i].Difficulty" class="form-control" asp-items="Html.GetEnumSelectList<Difficulties>()"><option>@Model.SubCompetition[i].Difficulty</option></select>
+                                </div>
+                                <br />
+                                <!-- Gender -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Gender" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Gender" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <select id="genderSelect-@Model.SubCompetition[i].Id" asp-for="@Model.SubCompetition[i].Gender" class="form-control" asp-items="Html.GetEnumSelectList<SingleGenders>()"><option>@Model.SubCompetition[i].Gender</option></select>
+                                </div>
+                                <br />
+                                <!-- Cost -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Price" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Price" class="input-group-addon"><i class="glyphicon glyphicon-piggy-bank"></i></span>
+                                    <input id="costInput-@Model.SubCompetition[i].Id" asp-for="@Model.SubCompetition[i].Price" class="form-control" placeholder="Pris">
+                                </div>
+                                <br />
+                                <!-- Quantity -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Quantity" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Quantity" class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                    <input id="quantityInput-@Model.SubCompetition[i].Id" asp-for="@Model.SubCompetition[i].Quantity" class="form-control" placeholder="Antal deltagare">
+                                </div>
+                                <br />
+                                <div>
+                                    @if (Model.SubCompetition[i].HasReservations)
+                                    {
+                                        <a id="@Model.SubCompetition[i].Id" disabled class="disabled btn btn-danger buttonBorder"><span class="glyphicon glyphicon-trash"></span>Ta bort</a>
+                                        <span style="color:burlywood;" data-toggle="tooltip" title="Eventet har bokningar. För att radera eventet måste du först avboka alla deltagare." data-placement="top" class="glyphicon glyphicon-question-sign"></span>
+                                    }
+
+                                    else
+                                    {
+                                        <a id="@Model.SubCompetition[i].Id" class="deleteSubComp btn btn-danger buttonBorder"><span class="glyphicon glyphicon-trash"></span>Ta bort</a>
+                                    }
+
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <hr />
+                            <div class="teamFields" data-subid="@Model.SubCompetition[i].Id">
+                                <div class="event-info">
+                                    <div id="comp-heading" class="panel-heading">Lagtävling</div>
+                                </div>
+                                <br />
+                                <!-- Type -->
+                                <input asp-for="@Model.SubCompetition[i].Type" id="subCompType-@Model.SubCompetition[i].Id">
+                                <!-- Id -->
+                                <input asp-for="@Model.SubCompetition[i].Id" class="subCompTeamId" id="subCompId-@Model.SubCompetition[i].Id">
+                                <!-- Date -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Date" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Date" class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <input id="dateSelect" asp-for="@Model.SubCompetition[i].Date" class="form-control" placeholder="Datum">
+                                </div>
+                                <br />
+                                <!-- Difficulty -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Difficulty" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Difficulty" class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
+                                    <select id="difficultySelect-@Model.SubCompetition[i].Id" asp-for="@Model.SubCompetition[i].Difficulty" class="form-control" asp-items="Html.GetEnumSelectList<Difficulties>()"><option>@Model.SubCompetition[i].Difficulty</option></select>
+                                </div>
+                                <br />
+                                <!-- Gender -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Gender" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Gender" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <select id="genderSelect-@Model.SubCompetition[i].Id" asp-for="@Model.SubCompetition[i].Gender" class="form-control" asp-items="Html.GetEnumSelectList<Genders>()"><option>@Model.SubCompetition[i].Gender</option></select>
+                                </div>
+                                <br />
+                                <!-- Cost -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Price" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Price" class="input-group-addon"><i class="glyphicon glyphicon-piggy-bank"></i></span>
+                                    <input id="costInput-@Model.SubCompetition[i].Id" asp-for="@Model.SubCompetition[i].Price" class="form-control" placeholder="Pris">
+                                </div>
+                                <br />
+                                <!-- Quantity per team -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].QuantityPerTeam" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].QuantityPerTeam" class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                    <input id="quantitiyPerTeamInput-@Model.SubCompetition[i].Id" asp-for="@Model.SubCompetition[i].QuantityPerTeam" class="form-control" placeholder="Antal deltagare per lag">
+                                </div>
+                                <br />
+                                <!-- Quantity -->
+                                <div class="event-info input-group"><label asp-for="@Model.SubCompetition[i].Quantity" class="pull-left"></label></div>
+                                <div class="event-info input-group">
+                                    <span asp-validation-for="@Model.SubCompetition[i].Quantity" class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                                    <input id="quantityInput-@Model.SubCompetition[i].Id" asp-for="@Model.SubCompetition[i].Quantity" class="form-control" placeholder="Antal lag">
+                                </div>
+                                <br />
+                                <div>
+                                    @if (Model.SubCompetition[i].HasReservations)
+                                    {
+                                        <a id="@Model.SubCompetition[i].Id" disabled class="disabled btn btn-danger buttonBorder"><span class="glyphicon glyphicon-trash"></span>Ta bort</a>
+                                        <span style="color:burlywood;" data-toggle="tooltip" title="Eventet har bokningar. För att radera eventet måste du först avboka alla deltagare." data-placement="top" class="glyphicon glyphicon-question-sign"></span>
+                                    }
+                                    else
+                                    {
+                                        <a id="@Model.SubCompetition[i].Id" class="deleteSubComp btn btn-danger buttonBorder"><span class="glyphicon glyphicon-trash"></span>Ta bort</a>
+
+                                    }
+                                    @*<button class="btn btn-danger" asp-controller="Competition" asp-action="Delete" asp-route-id="@Model.SubCompetition[i].Id">Ta bort denna subevent</button>*@
+                                    @*<button class="btn btn-danger" onclick="DeleteSubEvent(@Model.SubCompetition[i].Id,@Model.SubCompetition[i].CompetitionId)">Ta bort denna subevent</button>*@
+
+                                </div>
+                            </div>
+
+                        }
+                    }
+                </div>
+                <hr />
+                <!-- Event type -->
+                <div class="create-event-buttons btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                    <a id="addSoloCompBtn" class="btn btn-primary buttonBorder" role="button"><span class="glyphicon glyphicon-plus"></span> Individuell</a>
+                    <a id="addTeamCompBtn" class="btn btn-primary buttonBorder" role="button"><span class="glyphicon glyphicon-plus"></span> Lag</a>
+                </div>
+                <div id="subEventMsg" class="alert alert-success hidden buttonBorder">
+                    <strong>Tävlingsklass skapad.</strong>
+                </div>
+                <!-- SubEvent div -->
+                <div id="subEventsContainer">
+                    <div id="subEvents"></div>
+                </div>
+                <hr />
+                @if (User.IsInRole("Admin"))
+                {
+
+                    <!-- Publish-->
+                    <div class="event-info input-group">
+                        <label asp-for="@Model.Published" class="pull-left"></label>
+                        <input asp-for="@Model.Published" class="pull-right">
+                    </div>
+                }
+
+                <!--Open for bookings-->
+                <div class="event-info input-group">
+                    <label asp-for="@Model.OpenForBookings" class="pull-left"></label>
+                    <input asp-for="@Model.OpenForBookings" class="pull-right">
+                </div>
+                <div class="create-event-buttons">
+                    <button type="submit" id="submitEdit" class="btn btn-success btn-block largeButton">Spara ändringar</button>
+                </div>
+            </form>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+
+            // Cached variables
+            var addTeamCompBtn = $('#addTeamCompBtn');
+            var addSoloCompBtn = $('#addSoloCompBtn');
+            var addedSubEvents = $('.addedSubEvents');
+            var subEvents = $('#subEvents')
+            var subEventMsg = $('#subEventMsg')
+            var comptId = @Model.Id;
+
+            // Add team competition form
+            addTeamCompBtn.click(function () {
+                $.ajax({
+                    url: '/Competition/AddTeamCompForm',
+                    type: "GET",
+                    success: function (result) {
+                        subEvents.empty();
+                        subEvents.html(result);
+                    },
+                    error: function () {
+                        alert('Error initializing form');
+                    },
+                });
+            });
+
+            // Add solo competition form
+            addSoloCompBtn.click(function () {
+                $.ajax({
+                    url: '/Competition/AddSoloCompForm',
+                    type: "GET",
+                    success: function (result) {
+                        subEvents.empty();
+                        subEvents.html(result);
+                    },
+                    error: function () {
+                        alert('Error initializing form');
+                    },
+                });
+            });
+
+            // Submit team competition form
+            $(document).on("click", "#submitTeamComp", function () {
+
+                // TeamSubEventVM
+                var teamData = {
+                    date: $('#dateSelect').val(),
+                    gender: $('#genderSelect').val(),
+                    difficulty: $('#difficultySelect').val(),
+                    price: $('#costInput').val(),
+                    quantity: $('#quantityInput').val(),
+                    quantityperteam: $('#quantitiyPerTeamInput').val(),
+                    competitionId: comptId,
+                    type: "Team",
+                    confirmedparticipants: 0,
+                };
+
+                $.ajax({
+                    url: '/Competition/AddTeamCompOnEdit',
+                    type: "POST",
+                    data: teamData,
+                    success: function (result) {
+                        if (!result.invalidModelState) {
+                            window.location.reload(true);
+                            subEvents.empty();
+                            flashMsg();
+                        }
+                        else
+                            alert(result.errorMsg)
+                    },
+                    error: function () {
+                        alert('Error submitting team competition')
+                    },
+                });
+            });
+
+            // Submit solo competition form
+            $(document).on("click", "#submitSoloComp", function () {
+
+                // SoloSubEventVM
+                var soloData = {
+                    date: $('#dateSelect').val(),
+                    gender: $('#genderSelect').val(),
+                    difficulty: $('#difficultySelect').val(),
+                    price: $('#costInput').val(),
+                    quantity: $('#quantityInput').val(),
+                    competitionId: comptId,
+                    type: "Single",
+                    confirmedparticipants: 0,
+                };
+
+                $.ajax({
+                    url: '/Competition/AddSoloCompOnEdit',
+                    type: "POST",
+                    data: soloData,
+                    success: function (result) {
+                        if (!result.invalidModelState) {
+                            window.location.reload(true);
+                            subEvents.empty();
+                            flashMsg();
+                        }
+                        else
+                            alert(result.errorMsg)
+                    },
+                    error: function () {
+                        alert('Error submitting solo competition')
+                    },
+                });
+            });
+
+            // Success Sub-event entry message
+            function flashMsg() {
+                subEventMsg.removeClass("hidden");
+                subEventMsg.fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).delay(600).slideUp();
+            };
+
+            $(".deleteSubComp").click(function () {
+
+                // SubEventVM ID
+                var subid = (this.id);
+                $.ajax({
+                    url: '/Competition/DeleteSubEvent',
+                    type: "POST",
+                    data: "id=" + subid,
+                    success: function () {
+                        window.location.reload(true);
+                    }
+                });
+            });
+        });
+    </script>
+}

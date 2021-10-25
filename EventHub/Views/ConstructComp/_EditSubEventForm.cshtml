@@ -1,0 +1,282 @@
+﻿@model EventHub.Models.ConstructComp.SubEventVM
+@{ 
+    string[] types = { "Time", "Reps", "Weight", "Points" };
+}
+
+<style>
+
+    input {
+        max-width: 100%;
+    }
+
+    .btn {
+        width: auto;
+    }
+
+    .errorListBox {
+        list-style-type: square;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 300px;
+        border-radius: 5px;
+        margin: 0 auto;
+        text-align: left;
+        background-color: darkred;
+        color: white;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="well"><strong>Redigera Sub Event</strong></div>
+
+<div class="form-group">
+    <label for="subEventTitle">Titel på sub eventet:</label>
+    <input value="@Model.Title" type="text" class="form-control" id="subEventTitle" />
+</div>
+
+<div class="form-group">
+    <label for="subEventDescription">Beskrivning:</label>
+    <textarea style="max-width:100%;" class="form-control" rows="5" id="subEventDescription">@Model.Description</textarea>
+    <br />
+    <label>Typ:</label>
+    <div style="text-align:center;" class="row">
+        @foreach (var type in types)
+        {
+            if (String.Equals(type, Model.Type))
+            {
+                <div class="col-sm-3">
+                    <label class="radio-inline"><input checked style="max-width:100%;" type="radio" value="@type" name="type">@type</label>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-3">
+                    <label class="radio-inline"><input style="max-width:100%;" type="radio" value="@type" name="type">@type</label>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="timeCap">Time Cap</label> <span style="color:gray; font-size: smaller">MM:SS</span>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <input type="number" max="60" min="0" value="@Model.TimeCap.Value.Minutes" placeholder="0" style="max-width:100%;" class="form-control" id="timeCapMin">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="number" max="60" min="0" value="@Model.TimeCap.Value.Seconds" placeholder="0" style="max-width:100%;" class="form-control" id="timeCapSec">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        @if (String.Equals(Model.Type, "Time"))
+        {
+            <div class="form-group">
+                <label for="totalReps">Total Reps:</label>
+                <input value="@Model.TotalReps" style="max-width:100%;" type="text" class="form-control" id="totalReps">
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label for="totalReps">Total Reps:</label>
+                <input disabled style="max-width:100%;" type="text" class="form-control" id="totalReps">
+            </div>
+        }
+    </div>
+</div>
+
+@if (Model.SetUpTime.Value.Minutes != 0 && Model.SetUpTime.Value.Seconds != 0)
+{
+    <div class="checkbox">
+        <label><input checked style="max-width:100%;" type="checkbox" name="setupTimeCheckbox"><strong>Setup Time</strong></label> <span style="color:gray; font-size: smaller">MM:SS</span>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <input type="number" max="60" min="0" value="@Model.SetUpTime.Value.Minutes" placeholder="0" style="max-width:100%;" class="form-control" id="setupTimeMin">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="number" max="60" min="0" value="@Model.SetUpTime.Value.Seconds" placeholder="0" style="max-width:100%;" class="form-control" id="setupTimeSec">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="checkbox">
+        <label><input style="max-width:100%;" type="checkbox" name="setupTimeCheckbox"><strong>Setup Time</strong></label> <span style="color:gray; font-size: smaller">MM:SS</span>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <input disabled type="number" max="60" min="0" value="0" placeholder="0" style="max-width:100%;" class="form-control" id="setupTimeMin">
+                    </div>
+                    <div class="col-sm-6">
+                        <input disabled type="number" max="60" min="0" value="0" placeholder="0" style="max-width:100%;" class="form-control" id="setupTimeSec">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<br />
+
+<div>
+    <ul id="errorMsgList"></ul>
+</div>
+
+<div class="col-sm-10 col-sm-offset-1">
+    <div class="col-sm-6">
+        <button style="width:100%" id="saveSubEventForm" class="btn btn-success btn-block">Spara Ändringar</button>
+    </div>
+    <div class="col-sm-6">
+        <button style="width:100%" id="cancelForm" class="btn btn-danger btn-block">Avbryt</button>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        // Container
+        var constructionContainer = $('#constructionContainer');
+        var formContainer = $('#formContainer');
+
+        // Form
+        var saveSubEventForm = $('#saveSubEventForm');
+        var cancelForm = $('#cancelForm');
+        var errorMsgList = $('#errorMsgList');
+
+        // Input
+        var subEventTitle = $('#subEventTitle');
+        var subEventDescription = $('#subEventDescription');
+        var timeCapMin = $('#timeCapMin');
+        var timeCapSec = $('#timeCapSec');
+        var totalReps = $('#totalReps');
+        var setupTimeMin = $('#setupTimeMin');
+        var setupTimeSec = $('#setupTimeSec');
+
+        $("input[name='type']").change(function () {
+
+            var radioVal = $("input[name='type']:checked").val();
+
+            if (radioVal == "Reps" || radioVal == "Weight" || radioVal == "Points")
+                totalReps.prop('disabled', true);
+            else if (radioVal == "Time")
+                totalReps.prop('disabled', false);
+
+        });
+
+        $("input[name='setupTimeCheckbox']").change(function () {
+
+            var isChecked = $(this).is(':checked');
+
+            if (isChecked) {
+                setupTimeMin.prop('disabled', false);
+                setupTimeSec.prop('disabled', false);
+            }
+            else {
+                setupTimeMin.prop('disabled', true);
+                setupTimeSec.prop('disabled', true);
+            }
+
+        });
+
+        saveSubEventForm.on('click', function () {
+
+            var errorMsg = '';
+            errorMsgList.html('');
+            errorMsgList.removeClass('errorListBox');
+            var validFormSubmission = true;
+
+            var subEvent = {};
+            subEvent.eventTempId = @Model.EventTempId;
+            subEvent.subEventTempId = @Model.SubEventTempId;
+
+            // Sub event title
+            subEvent.title = subEventTitle.val();
+            if (subEvent.title.length < 1) {
+                validFormSubmission = false;
+                errorMsg += 'Fyll i titel.';
+            }
+
+            // Sub event description
+            subEvent.description = subEventDescription.val();
+            if (subEvent.description.length < 1) {
+                validFormSubmission = false;
+                errorMsg += 'Fyll i beskrivning.';
+            }
+
+            // Time cap
+            subEvent.timeCapMinutes = timeCapMin.val();
+            subEvent.timeCapSeconds = timeCapSec.val();
+
+            // Type
+            subEvent.type = $("input[name='type']:checked").val();
+
+            // Total reps?
+            var radioValue = $("input[name='type']:checked").val();
+            if (radioValue == "Time") {
+                subEvent.totalReps = $('#totalReps').val();
+                if (subEvent.totalReps.length < 1) {
+                    validFormSubmission = false;
+                    errorMsg += 'Ange antal reps.';
+                }
+            }
+
+            // Setup time
+            if ($("input[name='setupTimeCheckbox']").is(':checked')) {
+                subEvent.setUpTimeMinutes = setupTimeMin.val();
+                subEvent.setUpTimeSeconds = setupTimeSec.val();
+            }
+
+            console.log(subEvent);
+
+            if (validFormSubmission) {
+
+                $.ajax({
+                    url: '/ConstructComp/SaveEditSubEvent',
+                    type: 'POST',
+                    data: { 'subEvent': subEvent },
+                    success: function (data) {
+                        constructionContainer.html(data);
+                    }
+                })
+
+            }
+            else {
+                var errors = errorMsg.split('.');
+                errorMsgList.addClass('errorListBox');
+                $.each(errors, function () {
+                    if (this.length > 0)
+                        errorMsgList.append('<li>' + this + '</li>')
+                });
+            }
+
+        });
+
+        cancelForm.on('click', function () {
+
+            formContainer.html('');
+
+        });
+
+    });
+
+</script>

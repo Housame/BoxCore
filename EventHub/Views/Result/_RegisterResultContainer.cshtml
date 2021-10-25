@@ -1,0 +1,389 @@
+﻿@model AddResultsVM
+<div class="overview-body bc-system-wrapper">
+    <div class="bc-system-header">
+        <input id="userSearch" class="form-control searchInput" maxlength="50" type="text" placeholder="Sök bland användare..">
+    </div>
+    @foreach (var compEvent in Model.SubCompMember.CompEvent)
+    {
+        <div id="@compEvent.Id">
+            @foreach (var subEvent in compEvent.SubEvent)
+            {
+                if (subEvent.Type == EventHub.Models.Competition.Enums.ScoreTypes.Reps.ToString())
+                {
+
+                    <div class="bc-system-header">
+                        <h3>@compEvent.Title @subEvent.Title</h3>
+                    </div>
+
+                    <div class="bc-table-body" data-value="@subEvent.Type">
+                        <div class="bc-system-table">
+                            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" />
+                            <table data-toggle="table" data-sort-order="desc" class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                                <thead>
+                                    <tr>
+                                        <th class="bc-system-padding-right" data-field="Team" data-sortable="false">Lag</th>
+                                        <th class="bc-system-padding-right" data-field="Reps" data-sortable="false">Reps</th>
+                                        <th class="bc-system-padding-right" data-field="TieBreak" data-sortable="false">TieBreak</th>
+                                        <th class="bc-system-padding-right" data-field="Reps" data-sortable="false">Score</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var result in subEvent.CompetitorResult)
+                                    {
+                                        <tr id="@result.Competitor.Id">
+                                            <td class="bc-system-padding-right">@result.Competitor.Name</td>
+                                            <td class="bc-system-padding-left repScore"><input class="repScore" value="@(result.RepScore== null ? 0 : @result.RepScore)" /></td>
+                                            <td class="bc-system-padding-right text-left tieBreak"><input class="tieBreak" value="@(result.TieBreak== null ? 0 : @result.TieBreak)" /></td>
+                                            <td class="bc-system-padding-left"><span id="score">@(result.Score == null ? 0 : @result.Score)</span></td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <br />
+                        <div class="alert alert-success succesMsg hidden buttonBorder">
+                            <strong>Resultat sparats.</strong>
+                        </div>
+
+                        <div class="alert alert-danger errorMsg hidden buttonBorder">
+                            <strong>Obs! något gick fel, försök igen!</strong>
+                        </div>
+                        <br />
+                        <button class="btn btn-primary pull-right submitData" id="@subEvent.Id" value="Spara">Spara</button>
+                        <br />
+                    </div>
+
+                }
+                if (subEvent.Type == EventHub.Models.Competition.Enums.ScoreTypes.Time.ToString())
+                {
+
+                    <div class="bc-system-header">
+                        <h3>@compEvent.Title @subEvent.Title</h3>
+                    </div>
+
+                    <div class="bc-table-body" data-value="@subEvent.Type">
+                        <div class="bc-system-table">
+                            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" />
+                            <table data-toggle="table" data-sort-order="desc" class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                                <thead>
+                                    <tr>
+                                        <th class="bc-system-padding-right" data-field="Team" data-sortable="false">Lag</th>
+                                        <th class="bc-system-padding-right" data-field="Time" data-sortable="false">Time</th>
+                                        <th class="bc-system-padding-right" data-field="Reps" data-sortable="false">Reps</th>
+                                        <th class="bc-system-padding-right" data-field="TieBreak" data-sortable="false">TieBreak</th>
+                                        <th class="bc-system-padding-right" data-field="Reps" data-sortable="false">Score</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var result in subEvent.CompetitorResult)
+                                    {
+                                    <tr id="@result.Competitor.Id">
+                                        <td class="bc-system-padding-right">@result.Competitor.Name</td>
+                                        @if (result.TimeScore == null)
+    {
+                                    <td class="bc-system-padding-left timeScore"><input class="timeScore" type="time" step='1' min="00:00:00" max="00:30:00" value="00:00:00"></td>
+}
+else
+{
+                                    <td class="bc-system-padding-left timeScore" data-time="@subEvent.TimeCap" data-reps="@subEvent.TotalReps"><input class="timeScore" type="time" step='1' min="00:00:00" max="00:30:00" value="@result.TimeScore"></td>
+}
+                                        <td class="bc-system-padding-right text-left repScoreForTime" data-time="@subEvent.TimeCap" data-reps="@subEvent.TotalReps"><input class="repScoreForTime" value="@(result.RepScore== null ? 0 : @result.RepScore)" /></td>
+                                        <td class="bc-system-padding-right text-left tieBreak"><input class="tieBreak" value="@(result.TieBreak== null ? 0 : @result.TieBreak)" /></td>
+                                        <td class="bc-system-padding-left"><span id="score">@(result.Score == null ? 0 : @result.Score)</span></td>
+
+                                    </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <br />
+                        <div class="alert alert-success succesMsg hidden buttonBorder">
+                            <strong>Resultat sparats.</strong>
+                        </div>
+                        <div class="alert alert-danger errorMsg hidden buttonBorder">
+                            <strong>Obs! något gick fel, försök igen!</strong>
+                        </div>
+                        <br />
+                        <button class="btn btn-primary pull-right submitData" id="@subEvent.Id" value="Spara">Spara</button>
+                        <br />
+
+                    </div>
+
+                }
+
+                if (subEvent.Type == EventHub.Models.Competition.Enums.ScoreTypes.Weight.ToString())
+                {
+
+                    <div class="bc-system-header text-center">
+                        <h3>@compEvent.Title @subEvent.Title</h3>
+                    </div>
+
+                    <div class="bc-table-body" data-value="@subEvent.Type">
+                        <div class="bc-system-table">
+                            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" />
+                            <table data-toggle="table" data-sort-order="desc" class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                                <thead>
+                                    <tr>
+                                        <th class="bc-system-padding-right" data-field="Team" data-sortable="false">Lag</th>
+                                        <th class="bc-system-padding-right" data-field="Reps" data-sortable="false">Vikt</th>
+                                        <th class="bc-system-padding-right" data-field="Reps" data-sortable="false">Score</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var result in subEvent.CompetitorResult)
+                                    {
+                                        <tr id="@result.Competitor.Id">
+                                            <td class="bc-system-padding-right">@result.Competitor.Name</td>
+                                            <td class="bc-system-padding-right text-left scoreForWeight"><input class="scoreForWeight" value="@(result.WeightScore== null ? 0 : @result.WeightScore)" /></td>
+                                            <td class="bc-system-padding-left"><span id="score">@(result.Score == null ? 0 : @result.Score)</span></td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <br />
+                        <div class="alert alert-success succesMsg hidden buttonBorder">
+                            <strong>Resultat sparats.</strong>
+                        </div>
+                        <div class="alert alert-danger errorMsg hidden buttonBorder">
+                            <strong>Obs! något gick fel, försök igen!</strong>
+                        </div>
+                        <br />
+                        <button class="btn btn-primary pull-right submitData" id="@subEvent.Id" value="Spara">Spara</button>
+                        <br />
+
+                    </div>
+
+                }
+                if (subEvent.Type == EventHub.Models.Competition.Enums.ScoreTypes.Point.ToString())
+                {
+
+                    <div class="bc-system-header">
+                        <h3>@compEvent.Title @subEvent.Title</h3>
+                    </div>
+
+                    <div class="bc-table-body" data-value="@subEvent.Type">
+                        <div class="bc-system-table">
+                            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" />
+                            <table data-toggle="table" data-sort-order="desc" class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                                <thead>
+                                    <tr>
+                                        <th class="bc-system-padding-right" data-field="Team" data-sortable="false">Lag</th>
+                                        <th class="bc-system-padding-right" data-field="Points" data-sortable="false">Points</th>
+                                        <th class="bc-system-padding-right" data-field="TieBreak" data-sortable="false">TieBreak</th>
+                                        <th class="bc-system-padding-right" data-field="Points" data-sortable="false">Score</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var result in subEvent.CompetitorResult)
+                                    {
+                                        <tr id="@result.Competitor.Id">
+                                            <td class="bc-system-padding-right">@result.Competitor.Name</td>
+                                            <td class="bc-system-padding-left scoreForPoint"><input class="scoreForPoint" value="@(result.PointScore== null ? 0 : @result.PointScore)" /></td>
+                                            <td class="bc-system-padding-right text-left tieBreak"><input class="tieBreak" value="@(result.TieBreak== null ? 0 : @result.TieBreak)" /></td>
+                                            <td class="bc-system-padding-left"><span id="score">@(result.Score == null ? 0 : @result.Score)</span></td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <br />
+
+                        <div class="alert alert-success succesMsg hidden buttonBorder">
+                            <strong>Resultat sparats.</strong>
+                        </div>
+
+                        <div class="alert alert-danger errorMsg hidden buttonBorder">
+                            <strong>Obs! något gick fel, försök igen!</strong>
+                        </div>
+                        <br />
+                        <button class="btn btn-primary pull-right submitData" id="@subEvent.Id" value="Spara">Spara</button>
+                        <br />
+                    </div>
+
+                }
+            }
+        </div>
+    }
+    <div class="bc-system-footer"></div>
+</div>
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+
+
+}
+<script>
+    var submit = $(".submitData");
+    var succesMsg = $(".succesMsg");
+    var errorMsg = $(".errorMsg");
+    var searchIn = $('.searchInput');
+    searchIn.on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $(".subCompTable tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $('input.repScoreForTime').blur(function () {
+        var timeCap = $(this).parent().attr('data-time');
+        var totalReps = $(this).parent().attr('data-reps');
+        var timeToModify = $(this).parent().parent().find('input.timeScore');
+        var reps = $(this).val();
+        if (parseInt(reps) == 0) {
+            timeToModify.val("00:00:00");
+
+        }
+        if (parseInt(reps) < parseInt(totalReps) && parseInt(reps) > 0) {
+            var secondsToAdd = totalReps - reps;
+            console.log(secondsToAdd);
+            var time = timeCap;
+            time = time.split(":");
+            var addedSeconds = new Date(secondsToAdd * 1000).toISOString().substr(11, 8);
+            addedSeconds = addedSeconds.split(":");
+            var minutes = (parseInt(time[1]) + parseInt(addedSeconds[1]));
+            var seconds = (parseInt(time[2]) + parseInt(addedSeconds[2]));
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+
+            }
+            var timeToReturn = "00" + ":" + minutes + ":" + seconds;
+            console.log(timeToReturn);
+
+            timeToModify.val(timeToReturn);
+
+        }
+    });
+
+    $('input.timeScore').blur(function () {
+        var timeCap = $(this).parent().attr('data-time');
+        var totalReps = $(this).parent().attr('data-reps');
+        var repcoreForeTimeInput = $(this).parent().parent().find('input.repScoreForTime');
+        var time = $(this).parent().parent().find('input.timeScore').val();
+        if (time <= timeCap) {
+            repcoreForeTimeInput.val(totalReps);
+
+        }
+    });
+
+    function flashSuccesMsg(id) {
+        $('#' + id).parent().find('.succesMsg').removeClass("hidden");
+        $('#' + id).parent().find('.succesMsg').fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).delay(600).slideUp();
+    };
+    function flashErrorMsg(id) {
+        $('#' + id).parent().find('.errorMsg').removeClass("hidden");
+        $('#' + id).parent().find('.errorMsg').fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).delay(600).slideUp();
+    };
+
+    $('.submitData').click(function () {
+        var type = $(this).parent().attr('data-value');
+        var subEventId = this.id;
+        var compEventId = $(this).parent().parent().attr('id');
+
+        var viewModel = [];
+        if (type == "Weight") {
+            $(this).parent().find('tr').each(function (i, item) {
+                if (i != 0) {
+                    item.weightScore = $(this).find('td.scoreForWeight').find('input.scoreForWeight').val();
+                    viewModel.push({
+                        'subEventId': subEventId,
+                        'competitorId': item.id,
+                        'compEventId': compEventId,
+                        'weightScore': item.weightScore,
+                        'type': type
+                    });
+
+                }
+
+            });
+
+        }
+        if (type == "Point") {
+            $(this).parent().find('tr').each(function (i, item) {
+                if (i != 0) {
+                    item.pointScore = $(this).find('td.scoreForPoint').find('input.scoreForPoint').val();
+                    item.tieBreak = $(this).find('td.tieBreak').find('input.tieBreak').val();
+                    viewModel.push({
+                        'subEventId': subEventId,
+                        'competitorId': item.id,
+                        'compEventId': compEventId,
+                        'pointScore': item.pointScore,
+                        'tieBreak': item.tieBreak,
+                        'type': type
+                    });
+
+                }
+
+            });
+
+        }
+        if (type == "Time") {
+
+            $(this).parent().find('tr').each(function (i, item) {
+                if (i != 0) {
+                    item.timeScore = $(this).find('td.timeScore').find('input.timeScore').val();
+                    item.repScore = $(this).find('td.repScoreForTime').find('input.repScoreForTime').val();
+                    item.tieBreak = $(this).find('td.tieBreak').find('input.tieBreak').val();
+                    viewModel.push({
+                        'subEventId': subEventId,
+                        'competitorId': item.id,
+                        'compEventId': compEventId,
+                        'timeScore': item.timeScore,
+                        'tieBreak': item.tieBreak,
+                        'repScore': item.repScore,
+                        'type': type
+                    });
+
+                }
+
+            });
+        }
+        if (type == "Reps") {
+
+            $(this).parent().find('tr').each(function (i, item) {
+                if (i != 0) {
+                    item.repScore = $(this).find('td.repScore').find('input.repScore').val();
+                    item.tieBreak = $(this).find('td.tieBreak').find('input.tieBreak').val();
+                    viewModel.push({
+                        'subEventId': subEventId,
+                        'competitorId': item.id,
+                        'compEventId': compEventId,
+                        'repScore': item.repScore,
+                        'tieBreak': item.tieBreak,
+                        'type': type
+                    });
+
+                }
+
+            });
+        }
+        console.log(viewModel);
+        $.ajax({
+            url: '/Result/UpdateResult',
+            type: 'POST',
+            data: { viewModel: viewModel },
+            success: function (result) {
+                flashSuccesMsg(subEventId);
+            },
+            error: function () {
+                flashErrorMsg(subEventId);
+            }
+        });
+
+
+
+    });
+</script>

@@ -1,0 +1,53 @@
+﻿@model RegisterAdminVM
+@{
+    ViewBag.Title = "Register admin";
+}
+<h1>Register admin</h1>
+<hr />
+<br />
+<div class="productBox col-sm-4 col-sm-offset-4">
+    <form asp-controller="superadmin" asp-action="RegisterAdmin" method="post" enctype="multipart/form-data">
+        <fieldset class="fieldSet">
+            <!-- First name -->
+            <div class="input-group">
+                <span asp-validation-for="@Model.FirstName" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input asp-for="@Model.FirstName" class="form-control" placeholder="First name ">
+            </div>
+            <br />
+            <!-- Last name -->
+            <div class="input-group">
+                <span asp-validation-for="@Model.LastName" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input asp-for="@Model.LastName" class="form-control" placeholder="Last name">
+            </div>
+            <br />
+            <!-- Email -->
+            <div class="input-group">
+                <span asp-validation-for="@Model.Email" class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                <input asp-for="@Model.Email" class="form-control noresize" rows="3" placeholder="Email">
+            </div>
+            <br />
+            <!-- Boxes -->
+            <div class="input-group">
+                <span asp-validation-for="@Model.Box" class="input-group-addon"><i class="glyphicon glyphicon-menu-down"></i></span>
+                <select asp-for="@Model.Box" class="form-control" asp-items="@Model.BoxNames"><option value="" disabled selected>Select a box</option></select>
+            </div>
+            <br />
+            <!-- Creator or not -->
+            <span> Can Create competition ?:    </span>
+            <div class="btn-group" data-toggle="buttons">
+
+                <label asp-for="@Model.Creator" class="btn btn-primary active">
+                    <input asp-for="@Model.Creator" asp-value="true" type="radio" value="true" id="option1" autocomplete="off" checked> Yes @*preselected*@
+                </label>
+                <label asp-for="@Model.Creator" class="btn btn-warning">
+                    <input asp-for="@Model.Creator" asp-value="false" type="radio" value="false" id="option2" autocomplete="off"> No
+                </label>
+            </div>
+            <br />
+            <button type="submit" class="btn btn-success">Add admin</button>
+        </fieldset>
+    </form>
+</div>
+
+
+

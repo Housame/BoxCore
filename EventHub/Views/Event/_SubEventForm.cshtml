@@ -1,0 +1,191 @@
+﻿<style>
+    .subEventCol {
+        background-color: #eeeeee;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border: 1px solid #D3D3D3;
+        border-radius: 5px;
+    }
+
+    .subEventHeader {
+        background-color: #4285F4;
+        color: white;
+        font-size: larger;
+    }
+
+</style>
+
+<br /><br />
+<div class="subEventCol subEventHeader col-sm-8 col-sm-offset-2">
+    Nytt Sub Event
+</div>
+<div class="subEventCol col-sm-8 col-sm-offset-2">
+
+    <div class="form-group">
+        <label for="subEventTitle">Titel på sub eventet:</label>
+        <input style="max-width:100%;" type="text" class="form-control" id="subEventTitle">
+    </div>
+
+    <div class="form-group">
+        <label for="subEventDescription">Beskrivning:</label>
+        <textarea style="max-width:100%;" class="form-control" rows="5" id="subEventDescription"></textarea>
+        <br />
+        <label>For:</label>
+        <div style="text-align:center;" class="row">
+            <div class="col-sm-3">
+                <label class="radio-inline"><input style="max-width:100%;" type="radio" value="Time" name="for">Time</label>
+            </div>
+            <div class="col-sm-3">
+                <label class="radio-inline"><input style="max-width:100%;" type="radio" value="Reps" name="for">Reps</label>
+            </div>
+            <div class="col-sm-3">
+                <label class="radio-inline"><input style="max-width:100%;" type="radio" value="Weight" name="for">Weight</label>
+            </div>
+            <div class="col-sm-3">
+                <label class="radio-inline"><input style="max-width:100%;" type="radio" value="Points" name="for">Points</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="timeCap">Time Cap:</label>
+                <input placeholder="MM:SS" style="max-width:100%;" type="text" class="form-control" id="timeCap">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="totalReps">Total Reps:</label>
+                <input disabled style="max-width:100%;" type="text" class="form-control" id="totalReps">
+            </div>
+        </div>
+    </div>
+
+    <div class="checkbox">
+        <label><input style="max-width:100%;" type="checkbox" name="setupTimeCheckbox"><strong>Setup Time</strong></label>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="form-group">
+                <input disabled placeholder="MM:SS" style="max-width:100%;" type="text" class="form-control" id="setupTime">
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="well"><strong>Steg 2.1: Lägg till Exercise</strong></div>
+
+    <button id="addExerciseForm" style="width:100%;" class="btn btn-warning btn-block">Ny Exercise</button>
+
+    <!-- Exercise Form Container -->
+    <div id="exerciseFormContainer" class="row"></div>
+
+    <br /><br />
+    <div class="col-sm-12">
+        <div class="col-sm-6">
+            <button id="saveSubEventForm" style="width:100%;" class="btn btn-primary btn-block">Spara Sub Event</button>
+        </div>
+        <div class="col-sm-6">
+            <button id="cancelSubEventForm" style="width:100%;" class="btn btn-danger btn-block">Avbryt</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    var exerciseFormContainer = $('#exerciseFormContainer');
+
+    var addExerciseForm = $('#addExerciseForm');
+    addExerciseForm.on('click', function () {
+
+        $.get(
+            '/Event/AddExerciseForm',
+            function (data, status) {
+                exerciseFormContainer.html(data);
+            });
+
+        $(this).attr('disabled', true);
+
+    });
+
+    var saveSubEventForm = $('#saveSubEventForm');
+    saveSubEventForm.on('click', function () {
+        saveSubEvent();
+        resetSubEventForm();
+    });
+
+    var cancelSubEventForm = $('#cancelSubEventForm');
+    cancelSubEventForm.on('click', function () {
+        resetSubEventForm();
+    });
+
+    function resetSubEventForm() {
+        $('#addSubEventForm').attr('disabled', false);
+        $('#subEventFormContainer').empty();
+    }
+
+    var totalReps = $('#totalReps');
+    $("input[name='for']").change(function () {
+
+        var radioVal = $("input[name='for']:checked").val();
+
+        if (radioVal == "Reps" || radioVal == "Weight" || radioVal == "Points")
+            totalReps.prop('disabled', true);
+        else if (radioVal == "Time")
+            totalReps.prop('disabled', false);
+
+    });
+
+    var setupTime = $('#setupTime');
+    $("input[name='setupTimeCheckbox']").change(function () {
+
+        var isChecked = $(this).is(':checked');
+
+        if (isChecked)
+            setupTime.prop('disabled', false);
+        else
+            setupTime.prop('disabled', true);
+
+    });
+
+    function saveSubEvent() {
+
+        var subEvent = {};
+        subEvent.title = $('#subEventTitle').val();
+        subEvent.description = $('#subEventDescription').val();
+        subEvent.type = $("input[name='for']:checked").val();
+        var timeCapSplit = $('#timeCap').val();
+        var timeCap = timeCapSplit.split(':');
+        subEvent.timeCapMinutes = timeCap[0];
+        subEvent.timeCapSeconds = timeCap[1];
+
+        var isChecked = $("input[name='for']").is(':checked');
+
+        if (isChecked)
+            subEvent.totalReps = $('#totalReps').val();
+
+        if ($("input[name='setupTimeCheckbox']").is(':checked')) {
+            var setUpTimeSplit = $('#setupTime').val();
+            var setUpTime = setUpTimeSplit.split(':');
+            subEvent.setUpTimeMinutes = setUpTime[0];
+            subEvent.setUpTimeSeconds = setUpTime[1];
+        }
+
+        console.log(subEvent);
+
+        $.ajax({
+            url: '/Event/SaveSubEvent',
+            type: 'POST',
+            data: { 'viewModel': subEvent },
+            success: function (data) {
+                console.log('operation success');
+            }
+        })
+
+    }
+
+</script>

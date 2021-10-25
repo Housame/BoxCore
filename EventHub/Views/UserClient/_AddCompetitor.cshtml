@@ -1,0 +1,84 @@
+﻿@model IEnumerable<AllUsersVM>
+@{
+    Layout = null;
+}
+<style>
+    .ui-autocomplete-input {
+        border: none;
+        border: 1px solid #DDD !important;
+        padding-top: 0px !important;
+        z-index: 1511;
+        position: relative;
+    }
+
+    .ui-menu {
+        text-align: left;
+    }
+
+    .ui-menu .ui-menu-item a {
+        font-size: 14px;
+    }
+
+    .ui-autocomplete {
+        height: 200px;
+        overflow-y: scroll;
+        position: fixed;
+        top: 100%;
+        left: 0;
+        z-index: 1051 !important;
+        float: left;
+        display: none;
+        min-width: 160px;
+        _width: 160px;
+        padding: 4px 0;
+        margin: 2px 0 0 0;
+        list-style: none;
+        background-color: #ffffff;
+        border-color: #ccc;
+        border-color: rgba(0, 0, 0, 0.2);
+        border-style: solid;
+        border-width: 1px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        -webkit-background-clip: padding-box;
+        -moz-background-clip: padding;
+        background-clip: padding-box;
+        *border-right-width: 2px;
+        *border-bottom-width: 2px;
+    }
+
+    .ui-menu-item > a.ui-corner-all {
+        display: block;
+        padding: 3px 15px;
+        clear: both;
+        font-weight: normal;
+        line-height: 18px;
+        color: #555555;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .ui-state-hover, .ui-state-active {
+        color: #ffffff;
+        text-decoration: none;
+        background-color: #0088cc;
+        border-radius: 0px;
+        -webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        background-image: none;
+    }
+</style>
+
+<row>
+    <div id="searchUsers">
+        <div class="user-info input-group"><label class="pull-left" for="usrFName">Sök:</label></div>
+        <div class="user-info form-group">
+            <input type="text" class="form-control firstNameInput usrFName">
+        </div>
+    </div>
+</row>
+

@@ -1,0 +1,37 @@
+﻿@model UserLoginVM
+
+<div id="modalLogin" class="bc-modal-shadow">
+    <div class="bc-system-header">
+        <button id="modalButton-close" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h1>Inloggning</h1>
+    </div>
+    <div class="bc-system-body">
+        <!-- Name -->
+        <div class="bc-modal-info">
+            <div style="display:none;" id="msg" class="alert alert-danger"></div>
+            <div class="edit-info input-group">
+                <span asp-validation-for="@Model.UserName" class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                <input id="username" asp-for="@Model.UserName" class="form-control" placeholder="E-post" title="exempel@exempel.se" required>
+            </div>
+            <span asp-validation-for="@Model.UserName"></span>
+            <br />
+            <!-- Password -->
+            <div class="edit-info input-group">
+                <span asp-validation-for="@Model.Password" class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="password" asp-for="@Model.Password" class="form-control" placeholder="Lösenord" required>
+            </div>
+            <span asp-validation-for="@Model.Password"></span>
+            <br />
+            <span><input id="rememberMe" type="checkbox" value=""> Kom ihåg mig</span>
+            <br />
+            <br />
+            <!-- Submit button -->
+            <button class="btn btn-success loginBtn">Logga in</button>
+            <br />
+            <div class="bc-system-padding-top"><a class="dialogBox-footer-forgot retrievePasswordTxt"><b>Glömt lösenord?</b></a></div>
+        </div>
+        <br />
+        <div class="bc-modal-info"><span class="dialogBox-footer-register">Inget konto? <b><a class="registerTxt">Registrera dig här</a></b></span></div>
+    </div>
+    <div class="bc-system-footer"></div>
+</div>

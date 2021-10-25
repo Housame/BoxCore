@@ -1,0 +1,66 @@
+﻿@model UserClientIndexVM
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="headerDiv" class="productBox">
+    <h1>Användare</h1>
+</div>
+<div class="col-sm-4 col-sm-offset-4">
+        <div class="productBox" style="padding-bottom: 0px">
+            <div id="userDiv">
+                <!-- Search bar -->
+                <div class="row">
+                    <div id="imaginary_container">
+                        <div class="input-group stylish-input-group">
+                            <input id="search-input" type="text" class="form-control" placeholder="Sök">
+                            <span class="input-group-addon">
+                                <button id="search-users" type="submit">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search result -->
+                <div class="row">
+                    <div id="filter-users" class="list-group"></div>
+                </div>
+
+                <!-- User List -->
+                <div class="row">
+                    <!-- All users title -->
+                    <p style="text-align:center;">Alla användare:</p>
+                    <!-- All users list -->
+                    <div class="list-group">
+                        @Html.Partial("_User", Model.userDisplay)
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+<!-- Login Box -->
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="loginmodal-container">
+            <h1>Login to Your Account</h1><br>
+            <form asp-controller="UserClient" asp-action="Index" enctype="multipart/form-data">
+                <input asp-for="userSignIn.UserName" placeholder="Username">
+                <span style="color:red;" asp-validation-for="userSignIn.UserName"></span>
+                <input asp-for="userSignIn.Password" placeholder="Password">
+                <span style="color:red;" asp-validation-for="userSignIn.Password"></span>
+                <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+            </form>
+
+            <div class="login-help">
+                <a href="#">Register</a> - <a href="#">Forgot Password</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/js/FilterUser.js"></script>
+}

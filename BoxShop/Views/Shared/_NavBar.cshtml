@@ -1,0 +1,109 @@
+﻿<nav id="navDiv" class="navbar navbar-inverse navbar-fixed-top col-sm-12 container-fluid">
+    <div class="navbar-header">
+        <div id="collapseDiv">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menuBar" style="float: left; margin-left: 20px">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <!-- Logo -->
+            <a class="navbar-brand pull-right" asp-controller="home" asp-action="index">
+                <!-- Logo here -->
+                <img id="logo" src="~/img/CrossFitSodertornLogo.png" />
+            </a>
+        </div>
+    </div>
+    <div class="content">
+        <div class="collapse navbar-collapse" id="menuBar">
+            @if (User.IsInRole("SuperAdmin"))
+            {
+                <ul class="nav navbar-nav navbar">
+                    <!-- Drop Down Menu: Users -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a asp-controller="superadmin" asp-action="registeradmin">Add a user</a>
+                            </li>
+                            <li>
+                                <a asp-controller="superadmin" asp-action="adminsoverview">Overview</a>
+                            </li>
+                            <li>
+                                <a asp-controller="superadmin" asp-action="userspanel">Users panel</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Drop Down Menu: Boxes -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Boxes<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a asp-controller="superadmin" asp-action="registerbox">Add a box</a>
+                            </li>
+                            <li>
+                                <a asp-controller="superadmin" asp-action="boxoverview">Overview</a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                </ul>
+            }
+            @if (User.IsInRole("Admin"))
+            {
+                <ul class="nav navbar-nav navbar">
+                    <!-- Menu -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administrering<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a asp-controller="adminclient" asp-action="add">Lägg till produkt</a>
+                            </li>
+                            <li>
+                                <a asp-controller="adminclient" asp-action="overview">Översikt</a>
+                            </li>
+                            <li>
+                                <a asp-controller="adminclient" asp-action="billing">Fakturera</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Launch Store Option -->
+                    <li>
+                        <a asp-controller="Store" asp-action="Index">Starta Affär</a>
+                    </li>
+                </ul>
+            }
+            <ul class="nav navbar-nav navbar-right">
+                @if (User.Identity.IsAuthenticated && User.IsInRole("SuperAdmin"))
+                {
+                    <li id="user">
+                        inlogged as <strong><i>@User.Identity.Name</i></strong> 
+                    </li>
+                    <li id="logOut">
+                        <a asp-controller="AdminClient" asp-action="SignOut">
+                            <span class="glyphicon glyphicon-log-out"></span> Sign out
+                        </a>
+                    </li>
+                }
+                @if (!User.IsInRole("SuperAdmin") && User.Identity.IsAuthenticated )
+                {
+                    <li id="user">
+                        <strong><i>@User.Identity.Name</i></strong> är inloggad
+                    </li>
+                    <li id="logOut">
+                        <a asp-controller="AdminClient" asp-action="SignOut">
+                            <span class="glyphicon glyphicon-log-out"></span> Utloggning
+                        </a>
+                    </li>
+                }
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <li id="logIn">
+                        <a asp-controller="AdminClient" asp-action="SignIn">
+                            <span class="glyphicon glyphicon-log-in"></span> Inloggning
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>

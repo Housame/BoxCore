@@ -1,0 +1,78 @@
+﻿@model EventHub.Models.ConstructComp.EventVM
+
+<style>
+
+    input {
+        max-width: 100%;
+    }
+</style>
+
+<div class="well wellBox"><strong>Redigera Event</strong></div>
+
+<div class="form-group">
+    <label for="eventTitleInput">Titel på eventet:</label>
+    <input value="@Model.Title" type="text" class="form-control" id="eventTitleInput" />
+</div>
+
+
+<div class="col-sm-10 col-sm-offset-1">
+    <div class="col-sm-6">
+        <button style="width:100%" id="@Model.EventTempId" class="saveEventForm btn btn-success btn-block">Spara Ändringar</button>
+    </div>
+    <div class="col-sm-6">
+        <button style="width:100%" id="cancelForm" class="btn btn-danger btn-block">Avbryt</button>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        // Cached variables
+        var constructionContainer = $('#constructionContainer');
+        var formContainer = $('#formContainer');
+
+        var eventTitleInput = $('#eventTitleInput');
+        var saveEventForm = $('.saveEventForm');
+        var cancelForm = $('#cancelForm');
+
+        // Disable save button if input field is empty
+        if (eventTitleInput.val() == '') {
+            saveEventForm.prop('disabled', true);
+        }
+
+        // Disable save button if input field is empty
+        eventTitleInput.keyup(function () {
+            if ($(this).val() == '')
+                saveEventForm.prop('disabled', true);
+            else
+                saveEventForm.prop('disabled', false);
+        });
+
+        // Click listener to save form button
+        saveEventForm.on('click', function () {
+
+            var viewModel = {};
+            viewModel.eventtempid = $(this).attr('id');
+            viewModel.title = eventTitleInput.val();
+
+            $.ajax({
+                url: '/ConstructComp/EditEvent',
+                type: 'POST',
+                data: { 'model': viewModel },
+                success: function (data) {
+                    constructionContainer.html(data);
+                }
+            });
+
+        });
+
+        cancelForm.on('click', function () {
+
+            formContainer.html('');
+
+        });
+
+    });
+
+</script>

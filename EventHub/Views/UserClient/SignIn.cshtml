@@ -1,0 +1,50 @@
+﻿@model UserLoginVM
+@{
+    ViewBag.Title = "Inloggning";
+}
+<div class="event-main container-fluid">
+    <div class="user-form bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Inloggning</h1>
+        </div>
+        <div class="bc-system-body">
+            @if (TempData["MailSent"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["MailSent"]
+                </div>
+            }
+            @if (TempData["IncorrectCredentials"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["IncorrectCredentials"]
+                </div>
+            }
+            <form asp-controller="UserClient" asp-action="SignIn" method="post">
+                <!-- Name -->
+
+                <div class="edit-info input-group">
+                    <span asp-validation-for="@Model.UserName" class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    <input asp-for="@Model.UserName" class="form-control" placeholder="E-post" title="exempel@exempel.se" required>
+                </div>
+                <span asp-validation-for="@Model.UserName"></span>
+                <br />
+                <!-- Password -->
+                <div class="edit-info input-group">
+                    <span asp-validation-for="@Model.Password" class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input asp-for="@Model.Password" class="form-control" placeholder="Lösenord" required>
+                </div>
+                <span asp-validation-for="@Model.Password"></span>
+                <br />
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary buttonBorder">Logga in</button>
+            </form>
+            <br />
+            <span class="dialogBox-footer-forgot"><b><a asp-controller="UserClient" asp-action="RetrievePassword" method="post">Glömt lösenord?</a></b></span>
+            <hr />
+            <!--Added a link to signUp page to "Register now"-->
+            <span class="dialogBox-footer-register">Inget konto? <b><a asp-controller="UserClient" asp-action="RegisterUser" method="post">Registrera dig här.</a></b></span>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>

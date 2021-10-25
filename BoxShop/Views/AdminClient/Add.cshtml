@@ -1,0 +1,44 @@
+﻿@model ProductAddVM
+@{
+    ViewBag.Title = "Add";
+}
+<div id="headerDiv" class="productBox">
+    <h1>Lägg till produkt</h1>
+</div>
+<div class="productBox col-sm-4 col-sm-offset-4">
+    <form asp-controller="AdminClient" asp-action="Add" method="post" enctype="multipart/form-data">
+        <fieldset class="fieldSet">
+            <!-- Name -->
+            <div class="input-group">
+                <span asp-validation-for="@Model.Name" class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                <input asp-for="@Model.Name" class="form-control" placeholder="Namn">
+            </div>
+            <br />
+            <!-- Category -->
+            <div class="input-group">
+                <span asp-validation-for="@Model.Category" class="input-group-addon"><i class="glyphicon glyphicon-sort"></i></span>
+                <select asp-for="@Model.Category" class="form-control" asp-items="Html.GetEnumSelectList<Categories>()"></select>
+            </div>
+            <br />
+            <!-- Description -->
+            <div class="input-group">
+                <span asp-validation-for="@Model.Description" class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                <textarea asp-for="@Model.Description" class="form-control noresize" rows="3" placeholder="Beskrivning"></textarea>
+            </div>
+            <br />
+            <!-- Price -->
+            <div class="input-group">
+                <span asp-validation-for="@Model.Price" class="input-group-addon"><i class="glyphicon glyphicon-tags"></i></span>
+                <input asp-for="@Model.Price" class="form-control" placeholder="Pris">
+            </div>
+            <br />
+            <!-- Image -->
+            <div class="input-group">
+                <span asp-validation-for="@Model.Image" class="input-group-addon"><i class="glyphicon glyphicon-tags"></i></span>
+                <input asp-for="@Model.Image" id="input-1" type="file" class="btn btn-default form-control file" style="width: 100%">
+            </div>
+            <br />
+            <button type="submit" class="btn btn-success">Lägg till</button>
+        </fieldset>
+    </form>
+</div>

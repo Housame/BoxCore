@@ -1,0 +1,54 @@
+﻿@model RegisterUserVM
+@{
+    ViewBag.Title = "Bekräftelse";
+}
+
+<div class="event-main">
+    <div class="user-form bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Bekräftelse</h1>
+        </div>
+        <div class="bc-system-body">
+            <form asp-controller="UserClient" asp-action="ConfirmUserRegistration" method="post">
+                <!-- User Details -->
+                <div class="panel-body">
+                    <table class="table bc-system-table">
+                        <tr>
+                            <td style="text-align: left"><strong>Förnamn:</strong></td>
+                            <td style="text-align: right">@Model.FirstName</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left"><strong>Efternamn:</strong></td>
+                            <td style="text-align: right">@Model.LastName</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left"><strong>Mobilnummer:</strong></td>
+                            <td style="text-align: right">@Model.PhoneNumber</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left"><strong>E-post:</strong></td>
+                            <td style="text-align: right">@Model.Email</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left"><strong>Nyhetsbrev:</strong></td>
+                            @if (Model.AllowNewsLetter)
+                            {
+                                <td style="text-align: right">Ja</td>
+                            }
+                            else
+                            {
+                                <td style="text-align: right">Nej</td>
+                            }
+                        </tr>
+                    </table>
+                </div>
+                <!-- Navigation -->
+                <div class="registration-buttons">
+                    <button asp-controller="UserClient" asp-action="RegisterUser" formmethod="get" class="btn btn-primary pull-left" type="submit">Tillbaka</button>
+                    <button class="btn btn-success pull-right" type="submit">Bekräfta</button>
+                </div>
+            </form>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>

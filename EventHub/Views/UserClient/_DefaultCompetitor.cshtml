@@ -1,0 +1,28 @@
+﻿@model AddAthleteSubCompVM.CurrentUser
+
+@{
+    Layout = null;
+}
+
+<row>
+    <div class="col-sm-10 col-sm-offset-1">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="athlete-info" for="usr">Förnamn:</label>
+                <input type="text" class="form-control" placeholder="@Model.FirstName" disabled id="usr">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="athlete-info" for="usr">Efternamn:</label>
+                <input type="text" class="form-control" placeholder="@Model.LastName" disabled id="usr">
+            </div>
+        </div>
+        @*<div class="col-sm-4">
+            <div class="form-group">
+                <label class="athlete-info" for="sel1">Tröjstorlek:</label>
+                <select asp-for="@Model.ShirtSize" class="form-control defaultShirtSizeInput" asp-items="Html.GetEnumSelectList<ShirtSizes>()"></select>
+            </div>
+        </div>*@
+    </div>
+</row>

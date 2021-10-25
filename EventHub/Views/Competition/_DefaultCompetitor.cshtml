@@ -1,0 +1,73 @@
+﻿@model EventUser
+
+@{
+    Layout = null;
+}
+
+<row>
+    <div class="col-sm-10 col-sm-offset-1">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="usr">Förnamn</label>
+                <input type="text" class="form-control" placeholder="@Model.FirstName" disabled id="defaultUsrName">
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="usr">Efternamn</label>
+                <input type="text" class="form-control" placeholder="@Model.LastName" disabled id="defaultUsrLName">
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="sel1">Tröjstorlek</label>
+                <select asp-for="@Model.ShirtSize" class="form-control defaultShirtSizeInput" asp-items="Html.GetEnumSelectList<ShirtSizes>()"></select>
+                @*<select class="form-control defaultShirtSizeInput" id="sel1">
+                    @if (Model.ShirtSize.Trim() == "XS")
+                    {
+                        <option selected>XS</option>
+                    }
+                    else
+                    {
+                        <option>XS</option>
+                    }
+                    @if (Model.ShirtSize.Trim() == "S")
+                    {
+                        <option selected>S</option>
+                    }
+                    else
+                    {
+                        <option>S</option>
+                    }
+                    @if (Model.ShirtSize.Trim() == "M")
+                    {
+                        <option selected>M</option>
+                    }
+                    else
+                    {
+                        <option>M</option>
+                    }
+                    @if (Model.ShirtSize.Trim() == "L")
+                    {
+                        <option selected>L</option>
+                    }
+                    else
+                    {
+                        <option>L</option>
+                    }
+                    @if (Model.ShirtSize.Trim() == "XL")
+                    {
+                        <option selected>XL</option>
+                    }
+                    else
+                    {
+                        <option>XL</option>
+                    }
+                </select>*@
+                @*<select asp-for="ShirtSize" asp-items="Html.GetEnumSelectList<ShirtSizes>()">
+                        <option selected="selected" value="">Tröjstorlek</option>
+                    </select>*@
+            </div>
+        </div>
+    </div>
+</row>

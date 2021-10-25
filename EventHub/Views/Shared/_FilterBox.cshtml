@@ -1,0 +1,17 @@
+﻿@model FilterCompetitionsVM
+<form class="form-inline">
+        <div id="filter-dropdown" class="filter input-group" style="float: left;">
+            <label asp-for="@Model.Difficulty"></label>
+            <br />
+            <select id="filterDifficulty" asp-for="@Model.Difficulty" class="subComp-selector form-control" asp-items="Html.GetEnumSelectList<Difficulties>()">
+                <option value="0" selected>
+                    Alla
+                </option>
+            </select>
+        </div>
+        <div id="filter-dropdown" class="filter input-group" style="float: right;">
+            <label asp-for="@Model.SelectedLocation"></label>
+            <br />
+            <select id="filterLocation" asp-for="@Model.SelectedLocation" class="subComp-selector form-control" asp-items="@Model.Locations"></select>
+        </div>
+</form>

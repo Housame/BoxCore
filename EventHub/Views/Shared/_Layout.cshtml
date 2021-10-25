@@ -1,0 +1,217 @@
+﻿@*@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet*@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="google-site-verification" content="eQWqoXQXImRI7WW_rLtGXyqmtGlCMC0wzgUsgbGJ92k" />
+    <meta name="viewport" content="width=device-width" , initial-scale="1" />
+    <title>@ViewData["Title"] - BoxCore</title>
+    <link rel="icon" type="image/png" href="~/img/favicon/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="~/img/favicon/favicon-16x16.png" sizes="16x16" />
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+    </environment>
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="~/css/fileinput.min.css" />
+    <link href="~/css/bc-system.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/event.css" rel="stylesheet" />
+    <link href="~/css/policy.css" rel="stylesheet" />
+   @* @Html.Raw(JavaScriptSnippet.FullScript)*@
+    <!-- Cookie Banner (style & script) -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function () {
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#171616"
+                    },
+                    "button": {
+                        "background": "#286090"
+                    }
+                },
+                "theme": "classic",
+                "position": "bottom-right",
+                "content": {
+                    "href": "/Home/Cookies",
+                    "message": "Denna webbplats använder cookies för att förbättra användarupplevelsen.",
+                    "dismiss": "Acceptera",
+                    "link": "Läs mer"
+                }
+            })
+        });
+    </script>
+</head>
+
+<body id="top" data-spy="scroll" data-target=".navbar" data-offset="60" style="text-align: center">
+    <div class="col-sm-12" style="width: 100%; margin: 0; padding: 0">
+        <!-- Navigation Bar -->
+        @Html.Partial("_NavBar")
+        <!-- Header -->
+        @*@Html.Partial("_PageHeader")*@
+        <div id="mainDiv">
+            @*<a id="down"></a>*@
+            <!-- Content here -->
+            @RenderBody()
+        </div>
+        <!-- Footer -->
+        <footer id="footerDiv">
+            @Html.Partial("_PageFooter")
+        </footer>
+    </div>
+
+    <!-- Dormant Login/Register modal in case user has not signed in -->
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                </div>
+            </div>
+        </div>
+    }
+
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+    </environment>
+
+    <!-- Scripts -->
+    <script src="~/js/site.js"></script>
+    <script src="~/js/fileinput.min.js"></script>
+    <script src="~/js/script.js"></script>
+    @RenderSection("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+
+            var modalContent = $('.modal-content');
+
+            $.get({
+                url: '/Home/Modal_Login',
+                success: function (data) {
+                    modalContent.html(data);
+                },
+            });
+
+            // Launch register modal content
+            $(document).on("click", ".registerTxt", function () {
+                $.get({
+                    url: '/Home/Modal_Register',
+                    success: function (data) {
+                        modalContent.html(data);
+                    },
+                });
+            });
+
+            // Launch login modal content
+            $(document).on("click", ".loginTxt", function () {
+                $.get({
+                    url: '/Home/Modal_Login',
+                    success: function (data) {
+                        modalContent.html(data);
+                    },
+                });
+            });
+
+            // Launch retrieve modal content
+            $(document).on("click", ".retrievePasswordTxt", function () {
+                $.get({
+                    url: '/Home/Modal_RetrievePassword',
+                    success: function (data) {
+                        modalContent.html(data);
+                    },
+                });
+            });
+
+            // Retrieve password
+            $(document).on("click", ".submitPasswordRetrieve", function () {
+
+                $('#initializingPayment').addClass('glyphicon-refresh-animate');
+                var emailInput = $('#emailInput').val();
+                var data = {};
+                data.email = emailInput;
+                data.modal = true;
+
+                $.ajax({
+                    url: '/UserClient/RetrievePassword/',
+                    type: 'POST',
+                    data: data,
+                    success: function (data) {
+                        $('#initializingPayment').removeClass('glyphicon-refresh-animate');
+                        if (data.mailSent)
+                            $('#successMsg').html(data.msg).slideDown().delay(2000).slideUp();
+                        else
+                            $('#failMsg').html(data.msg).slideDown().delay(2000).slideUp();
+                    },
+                    error: function () {
+                        console.log('Error!');
+                    },
+                })
+            });
+
+            // Press enter to sign in
+            $(document).keypress(function (e) {
+                var dialogOpen = $('#modalLogin').is(':visible');
+                if (dialogOpen && e.which === 13) {
+                    console.log('dialog is open');
+                    $('.loginBtn').click();
+                }
+            });
+
+            // Login
+            $(document).on("click", ".loginBtn", function () {
+
+                var data = {};
+                data.username = $('#username').val();
+                data.password = $('#password').val();
+                data.modal = true;
+
+                if ($('#rememberMe').is(":checked")) {
+                    data.rememberuser = true;
+                }
+                else {
+                    data.rememberuser = false;   
+                }
+
+                $.ajax({
+                    url: '/UserClient/SignIn/',
+                    type: 'POST',
+                    data: data,
+                    success: function (data) {
+                        if (!data.loginSuccessful)
+                            $('#msg').html(data.msg).slideDown().delay(2000).slideUp();
+                        else
+                            window.location.href = "/myprofile/";
+                    },
+                    error: function () {
+                        console.log('Error!');
+                    },
+                })
+            });
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+﻿@model List<ExistingDiscountCode>
+
+<style>
+
+    h3 {
+        color: black;
+    }
+
+    p {
+        color: #666;
+    }
+
+    .discount-button-table {
+        height: 100% !important;
+        padding: 0 !important;
+    }
+
+    .deleteCode {
+        height: 50px !important;
+        width: 100% !important;
+    }
+
+    /*th, td {
+        background: white;
+        text-align: center;
+    }*/
+</style>
+
+@if (Model.Count < 1)
+{
+    <h3>Inga existerande rabattkoder finns. Du kan skapa en rabattkod med formuläret till vänster.</h3>
+}
+else
+{
+    @foreach (var subcomp in Model)
+    {
+
+        <p><b>@subcomp.CompName - @subcomp.SubCompName</b></p>
+
+        <div class="bc-system-table">
+            <table class="table cellspacing="0" width="100%" style="text-align: left;">
+
+                <thead>
+                    <tr>
+                        <th scope="col">Kod</th>
+                        <th scope="col">%</th>
+                        <th scope="col">Giltighet</th>
+                        @*<th>Redigera</th>*@
+                        <th scope="col">Ta bort</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var code in subcomp.DiscountCodes)
+                    {
+                        <tr>
+                            <td scope="col">@code.Code</td>
+                            <td scope="col">@code.PercentageOff</td>
+                            <td scope="col">@code.ExpiryDate</td>
+                            @*<td><button class="btn btn-primary editCode">Redigera</button></td>*@
+                            <td scope="col" class="discount-button-table"><button data-discountId="@code.Id" data-subCompId="@subcomp.SubCompId" class="btn btn-danger deleteCode glyphicon glyphicon-trash"></button></td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+        <br />
+    }
+}
+
+@*@section Scripts{
+
+        <script>
+
+            $(document).ready(function () {
+
+                var deleteCode = $('.deleteCode');
+
+                deleteCode.on('click', function () {
+
+                    console.log('Delete clicked');
+
+                    $.ajax({
+                        url: '/Discount/DeleteCode',
+                        type: 'DELETE',
+                        data: { 'id': $(this).id },
+                        success: function (response) {
+                            console.log("Success");
+                        },
+                        error: function (xhr) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+
+                });
+
+            });
+
+        </script>
+
+    }*@

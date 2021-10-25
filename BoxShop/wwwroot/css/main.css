@@ -1,0 +1,217 @@
+﻿body {
+    overflow-y: scroll;
+    padding-top: 80px;
+    color: white;
+    text-align: center;
+    background-color: black;
+    background-image: url('../img/01.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* Change font sizes */
+
+h1 {
+    font-size: 48px;
+}
+
+h2 {
+    font-size: 36px;
+}
+
+h3 {
+    font-size: 24px;
+}
+
+h4 {
+    font-size: 18px;
+}
+
+#navDiv {
+    padding: 0;
+    margin-right: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+}
+
+/* Change logo size here */
+
+#logo {
+    height: 50px;
+}
+
+/* Change navigation bar size here */
+
+#menuBar a {
+    padding-top: 28px;
+    height: 80px;
+}
+
+#menuBar li {
+    padding-top: 0;
+}
+
+/* Change user info in navigation bar here */
+
+#user {
+    margin-top: 28px;
+    padding-right: 20px;
+}
+
+/* Change login and logout buttons here */
+
+#logIn {
+    padding-right: 30px;
+}
+
+#logOut {
+    padding-right: 30px;
+}
+
+/* Change settings for header here */
+
+#headerDiv {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+/* Change settings for main here */
+#mainDiv {
+    margin-top: 80px;
+    border-radius: 0;
+    margin-bottom: 0;
+    min-height: 74vh;
+    min-width: 650px;
+}
+
+/* Footer settings */
+
+#footerDiv {
+    height: 12vh;
+    border-top: 1px white solid;
+    margin-top: 25px;
+    padding-top: 25px;
+    padding-bottom: 30px;
+    background-image: url('../img/01-background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    color: white;
+}
+
+/* Settings when collapsed */
+
+@media screen and (max-width: 767px) {
+    #collapseDiv {
+        height: 80px;
+        padding-left: 20px;
+        padding-right: 20px;
+        min-width: 600px;
+    }
+
+        #collapseDiv button {
+            margin-top: 20px;
+        }
+
+    .dropdown-menu li {
+        text-align: center;
+    }
+
+    #logOut {
+        padding-right: 0;
+    }
+
+    #footerDiv {
+        margin-top: 25px;
+        padding-top: 12px;
+        padding-bottom: 30px;
+    }
+}
+
+.productBox {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px white solid;
+    background-image: url('../img/01-background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+#productBox {
+    height: 270px;
+}
+
+.cartDiv {
+    padding: 20px;
+}
+
+.cart {
+    min-height: 50px;
+}
+
+#cartItem {
+    /*border: 2px yellow solid;
+    height: 50px;*/
+    padding-top: 17px
+}
+
+#removeButton {
+    padding-top: 14px
+}
+
+.store {
+    min-height: 100px;
+}
+
+#imgDiv {
+    width: 120px;
+}
+
+.infoDiv {
+    text-align: center;
+    width: 380px;
+}
+
+#userDiv {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#billButtonTable {
+    border: 2px yellow solid;
+}
+
+#billButton {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.editButtons {
+    color: white;
+}
+
+#editButtons {
+    width: 100%;
+}
+
+    #editButtons #leftEdit {
+        float: left;
+    }
+
+    #editButtons #rightEdit {
+        float: right;
+    }
+
+#confirmationDiv {
+    position: relative;
+    border: 1px #8397b0 outset;
+    background-color: whitesmoke;
+    margin-left: auto;
+    margin-right: auto;
+    width: 450px;
+    height: 880px;
+    color: #8397b0;
+}

@@ -1,0 +1,196 @@
+﻿@model ModalSubCompetitionVM
+
+@{
+    Layout = null;
+}
+<div id="modalReserve" class="bc-modal-shadow">
+    <div class="bc-system-header">
+        <!-- Modal header -->
+        <button id="modalButton-close" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3 modal-title"><b>@Model.EventName</b></h3>
+    </div>
+    <div class="bc-modal-body">
+        <!-- Modal main content -->
+        <!-- Event info -->
+        <br />
+        <div class="bc-modal-info">
+            <p><span class="glyphicon glyphicon-globe"></span> @Model.EventLocation</p>
+            <p class="bc-system-no-margin">@Model.EventStartDate.ToString("dd MMMM") - @Model.EventEndDate.ToString("dd MMMM")</p>
+        </div>
+        <br />
+        <!-- Sub event info -->
+        <table class="table bc-modal-table">
+            <tr>
+                <th><b>Typ</b></th>
+                <th><b>Kön</b></th>
+                <th><b>Svårighetsgrad</b></th>
+                <th><b>Datum</b></th>
+            </tr>
+            <tr class="bc-modal-info">
+                <td>@Model.Type</td>
+                <td>@Model.Gender</td>
+                <td>@Model.Difficulty</td>
+                <td>@Model.SubEventDate.ToString("yyyy-MM-dd")</td>
+            </tr>
+        </table>
+        <div class="bc-modal-info">
+            <p><b>Villkor</b></p>
+            <ul style="text-align: left; font-size: 12px;">
+                <li>Eventuell vinstskatt betalas av vinnarna.</li>
+                <li>Inga anmälningsavgifter återbetalas.</li>
+                <li>Medverkan sker på egen risk.</li>
+                <li>Arrangörerna för tävlingen avsäger sig allt ansvar vid eventuella skador.</li>
+            </ul>
+            <span><input id="conditionCheckbox" type="checkbox" value=""> Jag accepterar härmed tävlingsvillkoren.</span>
+        </div>
+        <br />
+        <div class="bc-modal-info">
+            <!-- Discount Input -->
+            <div style="display:none;" id="discountValid" class="alert alert-info"></div>
+            <div style="display:none;" id="discountInvalid" class="alert alert-danger"></div>
+            <div id="discount-group" class="input-group">
+                <input id="discountInput" type="text" class="form-control" placeholder="Ange rabattkod">
+                <span class="input-group-btn">
+                    <button data-subcompid="@Model.SubEventId" id="addDiscount" class="btn btn-primary" type="button">Lägg till</button>
+                </span>
+            </div>
+        </div>
+        <br />
+        <!-- Modal Footer -->
+        <div class="bc-modal-info">
+            <div class="col-sm-10 col-sm-offset-1">
+                <b>Kostnad:</b><span id="subCompPrice"> @Model.Price  kr</span>
+            </div>
+            <span id="errorMsg" class="notification">
+            </span>
+            <br />
+            <div class="row">
+                <div id="buttonWrapper">
+                    <button disabled type="button" class="btn btn-primary btn-block bookSubEvent buttonBorder">
+                        Bekräfta
+                        <span id="initializingPayment" class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bc-system-footer"></div>
+</div>
+<!-- Script -->
+<script>
+    $(document).ready(function () {
+
+        $('#addDiscount').on('click', function () {
+
+            var model = {};
+            model.code = $('#discountInput').val();
+            model.subcompid = $(this).attr('data-subcompid');
+            console.log(model);
+
+            $.ajax({
+                url: 'Discount/AddDiscount',
+                type: 'POST',
+                data: { 'model': model },
+                success: function (response) { 
+                    if (response.valid) {
+                        $('#discountValid').html(response.msg).slideDown();
+                        $('#addDiscount').prop('disabled', true);
+                        $('#discountInput').prop('disabled', true);
+                    }
+                    else {
+                        $('#discountInvalid').html(response.msg).slideDown().delay(2000).slideUp();
+                    }
+                },
+                error: function () { 
+
+                },
+            });
+
+        });
+
+        var bookSubEvent = $('.bookSubEvent');
+        var conditionCheckbox = $('#conditionCheckbox');
+
+        conditionCheckbox.change(function () {
+            if (this.checked) {
+                bookSubEvent.prop('disabled', false);
+            }
+            else {
+                bookSubEvent.prop('disabled', true);
+            }
+        });
+
+        bookSubEvent.click(function () {
+
+            conditionCheckbox.prop('disabled', true);
+
+            $('#initializingPayment').addClass('glyphicon-refresh-animate');
+            var type = @Html.Raw(Json.Serialize(Model.Type));
+
+            if (type == "Single")
+            {
+                //var shirtSize = $('.defaultShirtSizeInput :selected').text();
+
+                var viewModel = {
+                    SubCompId: @Model.SubEventId,
+                    ShirtSize: "",
+                };
+
+                $.ajax({
+                    url: "/Reservation/BookSingleSubEvent/",
+                    type: "POST",
+                    data: viewModel,
+                    success: function (response) {
+                        if (response.success)
+                        {
+                            $("#buttonWrapper").html("<button data-dismiss='modal' class='btn btn-success btn-block buttonBorder' onclick=Pay('" + response.responseText + "')>Betala</button>");
+                            $("input").prop('disabled', true);
+                            $("select").prop('disabled', true);
+
+                        }
+
+                        else
+                            $('#errorMsg').html(response.responseText).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).delay(2000).slideUp();
+                    },
+                    error: function () {
+                        alert("Error encountered");
+                    },
+                });
+            }
+
+            if (type == "Team")
+            {
+                var firstNames = [];
+                var lastNames = [];
+                var shirtSizes = [];
+
+
+                var viewModel = {                   
+                    QuantityPerTeam: @Model.QuantityPerTeam,
+                    SubCompId: @Model.SubEventId,
+                };
+
+                $.ajax({
+                    url: "/Reservation/BookTeamSubEvent/",
+                    type: "POST",
+                    data: viewModel,
+                    success: function (response) {
+                        if (response.success) {
+                            $("#buttonWrapper").html("<button class='btn btn-success btn-block buttonBorder' onclick=Pay('" + response.responseText + "')>Betala</button>");
+                            $("input").prop('disabled', true);
+                            $("select").prop('disabled', true);
+                        }
+                        else {
+                            $('#initializingPayment').removeClass('glyphicon-refresh-animate');
+                            $('#errorMsg').html(response.responseText).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).delay(2000).slideUp();
+                        }
+                        },
+                    error: function () {
+                        alert("Error encountered");
+                    },
+                });
+            }
+
+        });
+    });
+</script>

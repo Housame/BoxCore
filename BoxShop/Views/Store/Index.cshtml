@@ -1,0 +1,205 @@
+﻿@model ProductDisplayVM[]
+@{
+    ViewBag.Title = "Store";
+}
+
+<!-- Additional CSS -->
+@section stylesheet{
+    <link rel="stylesheet" href="~/css/Store.css" type="text/css" />
+}
+
+<div class="row">
+    <div style="text-align:left;" class="col-sm-6 col-sm-offset-3">
+        <p>
+            <button id="cartToggleBtn" class="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <span class="glyphicon glyphicon glyphicon-chevron-right pull-left"></span> Varukorg
+            </button>
+        </p>
+        <div class="collapse" id="collapseExample">
+            <div id="cart" class="card card-block productBox">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p>Namn</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p>VAT</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p>Pris (SEK)</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p></p>
+                    </div>
+                </div>
+                <hr />
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<!-- Products available for purchase -->
+<div class="row-fluid">
+    <div class="col-sm-12">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    @foreach (ProductDisplayVM product in Model)
+                    {
+                        <div class="col-sm-3 productBox">
+                            @Html.Partial("_Product", product)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Validate User -->
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container-fluid">
+        <div class="navbar-header-bottom navbar-header">
+            <a class="navbar-brand" asp-controller="Store" asp-action="ValidateUser">
+                <span class="glyphicon glyphicon-shopping-cart"></span> Till Kassan
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Additional JS -->
+@section scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('.purchaseBtn').click(function () {
+
+                var productId = $(this).attr('id');
+
+                $.ajax({
+                    url: '/Store/AddProductToCart',
+                    type: "GET",
+                    data: { id: productId },
+                    success: function (result) {
+                        $('#cart').append(result);
+                    },
+                    error: function () {
+                        alert('Unable to add product to cart')
+                    },
+                });
+
+                $('html, body').animate({
+                    scrollTop: $("body").offset().top
+                }, 300);
+
+                $('#cartToggleBtn').delay(300).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+
+            });
+
+            $(document).on("click", ".removeFromCart", function () {
+
+                var productId = $(this).attr('id');
+
+                $.ajax({
+                    url: '/Store/RemoveProductFromCart',
+                    type: 'POST',
+                    data: { id: productId },
+                    error: function () {
+                        alert('Unable to remove from cart');
+                    },
+                });
+
+                $(this).parent().parent().remove();
+
+            })
+
+        });
+
+    </script>
+
+}
+
+
+@*<!-- Products added to Shopping Cart -->
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="productBox cartDiv">
+                <table class="table table-condensed" style="margin-bottom: 0px">
+                    <tbody>
+                        <tr>
+                            <th class="cartDiv">Artikel</th>
+                            <th class="cartDiv">Namn</th>
+                            <th class="cartDiv">Beskrivning</th>
+                            <th class="cartDiv">Kategori</th>
+                            <th class="cartDiv" colspan="2">Pris</th>
+                        </tr>
+                        <tr id="product-placeholder"></tr>
+                        <tr>
+                            <th colspan="4"><span class="pull-right"><br />Summa:</span></th>
+                            <th id="totalPrice"><br />0</th>
+                            <td colspan="6">
+                                <br />
+                                <a id="checkoutBtn" href="#" class="pull-right btn btn-success">Betala</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    <!-- Product listing -->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                @foreach (ProductDisplayVM product in Model)
+                {
+                    <div class="col-sm-4">
+                        <div id="productBox" class="productBox">
+                            @Html.Partial("_ProductInStore", product)
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional JS scripts -->
+    @section scripts{
+        <script>
+            var items = 0;
+            var addProductUrl = { productUrl: '@Url.Action("AddProductToCart", "store")' }
+
+            $(document).ready(function () {
+
+        $('.buy').on("click", function () {
+
+            var id = $(this).attr('id');
+            items++;
+
+            $.ajax({
+                url: addProductUrl.productUrl,
+                data: { "id": id },
+                type: "GET",
+                success: function (product) {
+                    $(product).insertAfter($('#product-placeholder'));
+                },
+                error: function () {
+                    alert('Error adding item to cart');
+                },
+            });
+        });
+
+        $(document).on("click", ".removeProduct", function () {
+            $(this).closest("tr").remove();
+            items--;
+        });
+
+        $('#checkoutBtn').on("click", function () {
+        });
+
+    });
+        </script>
+    }*@

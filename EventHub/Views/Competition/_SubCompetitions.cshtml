@@ -1,0 +1,51 @@
+﻿@model List<ISubCompetition>
+@foreach (var subcompetition in Model)
+{
+    if (subcompetition is CreateCompetitiontVM.SoloSubEventVM)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#@subcompetition.Id">
+                        <b>Individuell: </b>@subcompetition.Difficulty - @subcompetition.Gender
+                    </a>
+                </h4>
+            </div>
+            <div id="@subcompetition.Id" class="panel-collapse collapse createdSoloCompDiv">
+                <ul class="list-group">
+                    <li class="list-group-item"><b class="createdCompHeader">Datum: </b><span class="createdCompInfo">@subcompetition.Date.ToString("yyyy-MM-dd")</span></li>
+                    <li class="list-group-item"><b class="createdCompHeader">Deltagare: </b><span class="createdCompInfo">@subcompetition.Quantity</span></li>
+                    <li class="list-group-item"><b class="createdCompHeader">Pris: </b><span class="createdCompInfo">@subcompetition.Price</span></li>
+                </ul>
+                <div class="panel-footer list-group removeButton">
+                    <input value="Ta bort" type="button" id="@subcompetition.Id" class="btn-danger btn buttonBorder" onclick="removeSubCompetition(@subcompetition.Id)">
+                </div>
+            </div>
+        </div>
+        <br />
+    }
+    else if (subcompetition is CreateCompetitiontVM.TeamSubEventVM)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#@subcompetition.Id">
+                        <b>Lag: </b>@subcompetition.Difficulty - @subcompetition.Gender
+                    </a>
+                </h4>
+            </div>
+            <div id="@subcompetition.Id" class="panel-collapse collapse createdTeamCompDiv">
+                <ul class="list-group">
+                    <li class="list-group-item"><b class="createdCompHeader">Datum: </b><span class="createdCompInfo">@subcompetition.Date.ToString("yyyy-MM-dd")</span></li>
+                    <li class="list-group-item"><b class="createdCompHeader">Antal lag: </b><span class="createdCompInfo">@subcompetition.Quantity</span></li>
+                    <li class="list-group-item"><b class="createdCompHeader">Deltagare per lag: </b><span class="createdCompInfo">@subcompetition.QuantityPerTeam</span></li>
+                    <li class="list-group-item"><b class="createdCompHeader">Pris: </b><span class="createdCompInfo">@subcompetition.Price</span></li>
+                </ul>
+                <div class="panel-footer list-group removeButton">
+                    <input value="Ta bort" type="button" id="@subcompetition.Id" class="deleteTeamComp btn-danger btn buttonBorder" onclick="removeSubCompetition(@subcompetition.Id)">
+                </div>
+            </div>
+        </div>
+        <br />
+    }
+}

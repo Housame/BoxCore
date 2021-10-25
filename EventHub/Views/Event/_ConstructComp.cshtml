@@ -1,0 +1,138 @@
+﻿@model Int32
+
+<style>
+
+    .well{
+        background-color: lightgrey;
+    }
+    .eventCol {
+        background-color: #dbdbdb;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border: 1px solid #a5a5a5;
+        border-radius: 5px;
+    }
+
+</style>
+
+<div class="overview-body bc-system-wrapper">
+
+    <!-- Header -->
+    <div class="bc-system-header"><h3>Konstruera Tävling</h3></div>
+
+    <!-- Body -->
+    <div class="bc-table-body">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+
+                <!-- Step 1: Add event info -->
+                <div class="well step1"><strong>Steg 1: Allmän info om Event</strong></div>
+                <div class="form-group">
+                    <label for="eventTitle">Titel på eventet:</label>
+                    <input style="max-width:100%;" type="text" class="form-control" id="eventTitle">
+                </div>
+                <br />
+
+                <!-- Step 2: Add sub event form -->
+                <div class="well step2"><strong>Steg 2: Lägg till Sub Event</strong></div>
+                <button id="addSubEventForm" style="width:100%;" class="btn btn-primary btn-block">Lägg till Sub Event</button>
+
+                <!-- Sub Event Form Container -->
+                <div id="subEventFormContainer" class="row"></div>
+
+                <!-- Step 3: Save event -->
+                <br /><br />
+                <div class="well step3"><strong>Steg 3: Spara Event</strong></div>
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <button id="@Model" style="width:100%;" class="btn btn-success btn-block saveEvent">Spara Event</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button id="cancelEventForm" style="width:100%;" class="btn btn-danger btn-block">Börja om</button>
+                    </div>
+                </div>
+
+                <br /><br /><br />
+                <div class="well step3"><strong>Steg 4: Spara Tävling</strong></div>
+                <button id="saveConstructedComp" style="width:100%;" class="btn btn-primary btn-block">Spara tävling</button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bc-system-footer"></div>
+
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        var subEventFormContainer = $('#subEventFormContainer');
+
+        // Add sub event form
+        var addSubEventForm = $('#addSubEventForm');
+        addSubEventForm.on('click', function () {
+
+            $.get(
+                '/Event/AddSubEventForm',
+                function (data, status) {
+                    subEventFormContainer.html(data);
+                });
+
+            $(this).attr('disabled', true);
+
+        });
+
+        // Save event form
+        var saveEvent = $('.saveEvent');
+        saveEvent.on('click', function () {
+
+            var viewModel = {};
+            viewModel.title = $('#eventTitle').val();
+            viewModel.subCompetitionId = $(this).attr('id');
+
+            $.ajax({
+                url: '/Event/SaveEvent',
+                type: 'POST',
+                data: { 'viewModel': viewModel },
+                success: function (result) {
+                    console.log('success');
+                }
+            });
+
+            resetEventForm();
+        });
+
+        // Cancel event form
+        var cancelEventForm = $('#cancelEventForm');
+        cancelEventForm.on('click', function () {
+            resetEventForm();
+        });
+
+        // Reset event form
+        function resetEventForm() {
+            $('#exerciseFormContainer').empty();
+            $('#subEventFormContainer').empty();
+            $('#addSubEventForm').attr('disabled', false);
+            $('#eventTitle').val('');
+        }
+
+        var saveConstructedComp = $('#saveConstructedComp');
+        saveConstructedComp.on('click', function () {
+
+            $.ajax({
+                url: '/Event/SaveConstructedCompetition',
+                type: 'GET',
+                success: function (result) {
+                    console.log('success');
+                }
+            });
+
+        });
+
+    });
+
+</script>

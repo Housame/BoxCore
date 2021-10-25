@@ -1,0 +1,74 @@
+﻿@model ProductAddVM
+@{
+    ViewBag.Title = "Edit";
+}
+<h1>Ändra produkt</h1>
+<hr />
+<br />
+<div class="productBox col-sm-4 col-sm-offset-4">
+    <form asp-controller="AdminClient" asp-action="EditProduct" method="post" enctype="multipart/form-data">
+        <!-- Image -->
+        <div>
+            @if (@Model.Image != null)
+            {
+                var base64 = Convert.ToBase64String(@Model.Image);
+                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                <img class="img-thumbnail" src="@imgSrc" width="250" height="250" />
+            }
+            else
+            {
+                <img width="250" height="250" />
+            }
+        </div>
+        <br />
+        <div class="input-group">
+            <span asp-validation-for="@Model.FormImage" class="editButtons input-group-addon btn-primary"><i class="glyphicon glyphicon-picture"></i></span>
+            <input asp-for="@Model.FormImage" id="input-1" type="file" class="btn btn-default file" style="width: 100%">
+        </div>
+        <br />
+        <!-- Name -->
+        <div class="input-group">
+            <span asp-validation-for="@Model.Name" class="editButtons input-group-addon btn-primary"><i class="glyphicon glyphicon-tag"></i></span>
+            <input asp-for="@Model.Name" class="form-control" placeholder="Namn">
+        </div>
+        <br />
+        <!-- Category -->
+        <div class="input-group">
+            <span asp-validation-for="@Model.Category" class="editButtons input-group-addon btn-primary"><i class="glyphicon glyphicon-sort"></i></span>
+            <select asp-for="@Model.Category" class="form-control" asp-items="Html.GetEnumSelectList<Categories>()"></select>
+        </div>
+        <br />
+        <!-- Description -->
+        <div class="input-group">
+            <span asp-validation-for="@Model.Description" class="editButtons input-group-addon btn-primary"><i class="glyphicon glyphicon-info-sign"></i></span>
+            <textarea asp-for="@Model.Description" class="form-control noresize" rows="3" placeholder="Beskrivning"></textarea>
+        </div>
+        <br />
+        <!-- Price -->
+        <div class="input-group">
+            <span asp-validation-for="@Model.Price" class="editButtons input-group-addon btn-primary"><i class="glyphicon glyphicon-piggy-bank"></i></span>
+            <input asp-for="@Model.Price" class="form-control" placeholder="Pris">
+        </div>
+        <br />
+        <br />
+        <!-- Available -->
+        <span> Tillgänglighet:    </span>
+        <div class="btn-group" data-toggle="buttons">
+
+            <label asp-for="@Model.Available" class="btn btn-primary active">
+                <input asp-for="@Model.Available" asp-value="true" type="radio" value="true" id="option1" autocomplete="off" checked> Ja @*preselected*@
+            </label>
+            <label asp-for="@Model.Available" class="btn btn-warning">
+                <input asp-for="@Model.Available" asp-value="false" type="radio" value="true" id="option2" autocomplete="off"> Nej
+            </label>
+        </div>
+        <br />
+        <br />
+        <!-- Back and Save Buttons -->
+        <div id="editButtons" class="input-group">
+            <button id="leftEdit" asp-action="Overview" formmethod="get" class="btn btn-success" type="submit"><i class="glyphicon glyphicon-chevron-left"></i> Tillbaka</button>
+            <button id="rightEdit" class="btn btn-success" type="submit">Spara ändringar</button>
+        </div>
+    </form>
+</div>
+

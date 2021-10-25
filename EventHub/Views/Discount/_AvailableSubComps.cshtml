@@ -1,0 +1,18 @@
+﻿@model ExistingSubComps[]
+
+<div class="row">
+    <div class="col-sm-5">
+        @foreach (var subComp in Model)
+        {
+            <div class="checkbox">
+                <label><input type="checkbox" class="subCompBox" value=@subComp.SubCompId>@subComp.SubCompName</label>
+            </div>
+        }
+    </div>
+    <div class="col-sm-2"><p style="padding-top:10px;">Eller</p></div>
+    <div class="col-sm-5">
+        <label class="checkbox">
+            <input class="allBox" type="checkbox" value="all">Alla
+        </label>
+    </div>
+</div>

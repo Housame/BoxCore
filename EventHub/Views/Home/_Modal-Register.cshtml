@@ -1,0 +1,68 @@
+﻿@model RegisterUserVM
+
+<div class="bc-modal-shadow">
+    <div class="bc-system-header">
+        <button id="modalButton-close" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h1>Registrering</h1>
+    </div>
+    <div class="bc-system-body">
+        <div class="bc-modal-info">
+            <form asp-controller="UserClient" asp-action="RegisterUser" method="post" enctype="multipart/form-data">
+                <!-- First name -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.FirstName" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input asp-for="@Model.FirstName" class="form-control" placeholder="Förnamn" pattern="^[a-zåäöA-ZÅÄÖ\s-]+$" title="Inga siffror eller specialtecken för namn." required>
+                </div>
+                <span asp-validation-for="@Model.FirstName"></span>
+                <br />
+                <!-- Last name -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.LastName" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input asp-for="@Model.LastName" class="form-control" placeholder="Efternamn" pattern="^[a-zåäöA-ZÅÄÖ\s-]+$" title="Inga siffror eller specialtecken för namn." required>
+                </div>
+                <span asp-validation-for="@Model.LastName"></span>
+                <br />
+                <!-- Phone number -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.PhoneNumber" class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Mobilnummer" pattern="^[0-9]+$" title="Endast siffror." required>
+                </div>
+                <span asp-validation-for="@Model.PhoneNumber"></span>
+                <br />
+                <!-- Email -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.Email" class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    <input asp-for="@Model.Email" class="form-control" placeholder="E-post" title="exempel@exempel.se" required>
+                </div>
+                <br />
+                <!-- Confirm email -->
+                <div class="user-info input-group">
+                    <span asp-validation-for="@Model.ConfirmEmail" class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    <input asp-for="@Model.ConfirmEmail" class="form-control" placeholder="Bekräfta e-post" title="Ange samma e-post som ovan." required>
+                </div>
+                <span asp-validation-for="@Model.ConfirmEmail"></span>
+                <br />
+                <div class="register-policy">
+                    <!-- Confirm policy -->
+                    <div class="user-info input-group">
+                        @*<span asp-validation-for="@Model.TermsAndConditions" class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>*@
+                        <input asp-for="@Model.TermsAndConditions" type="checkbox" value="true" required> Jag har läst och accepterar BoxCore <a href="/Home/Terms/" target="_blank" class="modalTermsTrigger">personuppgiftspolicy</a>.
+                    </div>
+                    <span asp-validation-for="@Model.TermsAndConditions"></span>
+                    <br />
+                    <!-- Confirm NewsLetter -->
+                    <div class="user-info input-group">
+                        <input asp-for="@Model.AllowNewsLetter" type="checkbox" value="true">  Jag vill ta del av kommande nyhetsbrev.
+                    </div>
+                    <br />
+                </div>
+                <button type="submit" class="btn btn-success">Registrera dig</button>
+            </form>
+        </div>
+        <br />
+        <div class="bc-modal-info">
+            <button class="btn btn-primary loginTxt">Inloggning</button>
+        </div>
+    </div>
+    <div class="bc-system-footer"></div>
+</div>

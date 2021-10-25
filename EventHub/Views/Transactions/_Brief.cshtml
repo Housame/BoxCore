@@ -1,0 +1,28 @@
+﻿@model TransactionBriefVM
+
+    
+    <div class="bc-table-body">
+        <div class="bc-system-table">
+            <table class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                <tr>
+                    <th scope="col">Antal</th>
+                    <th scope="col">Hanterade</th>
+                    <th scope="col">Transaktioner</th>
+                    <th scope="col">Värde Biljetter (utan rabatter)</th>
+                    <th scope="col">Avdragna rabatter</th>
+                    <th scope="col">Utbetalt till kund</th>
+                    <th scope="col">Debiterat kund</th>
+                </tr>
+                <tr>
+                    <td scope="col">@Model.TotalReservations</td>
+                    <td scope="col">@Model.ReservationsTransacted</td>
+                    <td scope="col">@Model.NumberOfTransactions</td>
+                    <td scope="col">@Model.TotalAccumulation</td>
+                    <td scope="col">@Model.TotalDiscounts</td>
+                    <td scope="col">@Model.PayOut</td>
+                    <td scope="col">@Model.TotalCredits</td>
+                </tr>
+            </table>
+        </div>
+        </div>
+

@@ -1,0 +1,131 @@
+﻿<style>
+    .exerciseCol {
+        background-color: #dbdbdb;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border: 1px solid #a5a5a5;
+        border-radius: 5px;
+    }
+
+    .exerciseHeader {
+        background-color: #ffbb33;
+        color: white;
+        font-size: larger;
+    }
+
+</style>
+
+<br /><br />
+<div class="exerciseCol exerciseHeader col-sm-8 col-sm-offset-2">
+    Ny Exercise
+</div>
+<div class="exerciseCol col-sm-8 col-sm-offset-2">
+
+    <div class="form-group">
+        <label for="exerciseTitle">Titel på exercise:</label>
+        <input style="max-width:100%;" type="text" class="form-control" id="exerciseTitle">
+    </div>
+
+    <div class="form-group">
+        <label for="exerciseDescription">Beskrivning:</label>
+        <textarea style="max-width:100%;" class="form-control" rows="5" id="exerciseDescription"></textarea>
+    </div>
+
+    <div class="checkbox">
+        <label><input style="max-width:100%;" type="checkbox" name="transitionTimeCheckbox"><strong>Transition</strong></label>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div id="transitionTimeForms" class="form-group">
+                <input disabled placeholder="MM:SS" style="max-width:100%;" type="text" class="form-control" id="transitionTime">
+            </div>
+        </div>
+    </div>
+
+    <div class="checkbox">
+        <label><input style="max-width:100%;" type="checkbox" value="" name="tieBreaker"><strong>Tiebreaker</strong></label>
+    </div>
+
+    <br />
+    <div class="col-sm-12">
+        <div class="col-sm-6">
+            <button id="saveExerciseForm" style="width:100%;" class="btn btn-warning btn-block">Spara Exercise</button>
+        </div>
+        <div class="col-sm-6">
+            <button id="cancelExerciseForm" style="width:100%;" class="btn btn-danger btn-block">Avbryt</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        // Cached variables
+        var transitionTime = $('#transitionTime');
+        var saveExerciseForm = $('#saveExerciseForm');
+        var cancelExerciseForm = $('#cancelExerciseForm');
+
+        // Toggle transition time checkbox
+        $("input[name='transitionTimeCheckbox']").change(function () {
+
+            var isChecked = $(this).is(':checked');
+
+            if (isChecked)
+                transitionTime.prop('disabled', false);
+            else
+                transitionTime.prop('disabled', true);
+
+        });
+
+        // Save button
+        saveExerciseForm.on('click', function () {
+            saveExercise();
+            resetExerciseForm();
+        });
+
+        // Cancel button
+        cancelExerciseForm.on('click', function () {
+            resetExerciseForm();
+        });
+
+        function saveExercise() {
+            var exercise = {};
+            exercise.title = $('#exerciseTitle').val();
+            exercise.description = $('#exerciseDescription').val();
+
+            if ($("input[name='transitionTimeCheckbox']").is(':checked')) {
+                var time = $('#transitionTime').val();
+                var timeSplit = time.split(':');
+                exercise.minutes = timeSplit[0];
+                exercise.seconds = timeSplit[1];
+            }
+
+            if ($("input[name='tieBreaker']").is(':checked'))
+                exercise.tiebreak = true;
+            else
+                exercise.tiebreak = false;
+
+            console.log(exercise);
+
+            $.ajax({
+                url: '/Event/SaveExercise',
+                type: 'POST',
+                data: { 'viewModel': exercise },
+                success: function (data) {
+                    console.log('success');
+                }
+            })
+
+        }
+
+        function resetExerciseForm() {
+            $('#addExerciseForm').attr('disabled', false);
+            $('#exerciseFormContainer').empty();
+        }
+
+    });
+
+</script>

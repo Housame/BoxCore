@@ -1,0 +1,150 @@
+﻿<!-- Temporary styling -->
+<style>
+    .left-box label, #datePicked {
+        color: white !important;
+    }
+    .text-left {
+        text-align: left;
+    }
+    .left-box {
+        background: #444;
+        border: 1px #333 solid;
+        border-radius: 4px;
+        padding: 10px;
+    }
+    .right-box {
+        background: #444;
+        border: 1px #333 solid;
+        border-radius: 4px;
+        padding: 10px;
+    }
+    .critical-color {
+        color: #b73946;
+    }
+    .error-color {
+        color: #c98661;
+    }
+    .log-information-color {
+        color: #d3ffce;
+    }
+    .warning-color {
+        color: #feee99;
+    }
+
+</style>
+
+<div class="event-main container">
+    <div class="overview-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Loggar</h1>
+        </div>
+        <div class="bc-system-body">
+            <div class="row">
+                <br />
+                <div class="col-sm-10 col-sm-offset-1">
+                    <!-- Left box -->
+                    <div class="col-sm-3 left-box">
+                        <div class="form-group text-center">
+                            <label for="dateInput">Välj datum:</label>
+                            <input type="date" class="form-control" id="dateInput">
+                        </div>
+                        <h4 class="text-left" id="datePicked"></h4>
+                        @*<button class="btn btn-danger pull-left deleteLog">Ta bort</button>*@
+                        @*<br /><br /><br />*@
+                        <div class="text-left">
+                            <p class="critical-color">Critical = FATAL</p>
+                            <p class="error-color">Error = ERROR</p>
+                            <p class="log-information-color">LogInformation = INFO</p>
+                            <p class="warning-color">Warning = WARN</p>
+                            <p style="color:white;">Debug = DEBUG</p>
+                        </div>
+                    </div>
+
+                    <!-- Right box -->
+                    <div class="col-sm-offset-1 col-sm-8 right-box">
+                        <div class="text-left" id="logContainer"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 bc-system-footer"></div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/js/jquery-dateFormat.min.js"></script>
+
+    <script>
+
+        var currentDateSelected;
+
+        $(document).ready(function () {
+
+            // Cached variables
+            var dateInput = $('#dateInput');
+            var logContainer = $('#logContainer');
+            var datePicked = $('#datePicked');
+            var deleteLog = $('.deleteLog');
+
+            // Get today's log when page loads
+            getTodaysLog();
+
+            function getTodaysLog() {
+                var today = $.format.date(new Date(), "yyyy-MM-dd");
+                getLogByDate(today);
+            }
+
+            dateInput.change(function () {
+                var dateFromPicker = dateInput.val();
+                getLogByDate(dateFromPicker);
+            });
+
+            function getLogByDate(date) {
+
+                console.log(date);
+                currentDateSelected = date;
+
+                $.ajax({
+                    url: '/NLog/GetLogByDate/',
+                    type: 'GET',
+                    data: { 'shortDate': date },
+                    success: function (response) {
+                        datePicked.empty().html("Aktiv logg: " + date);
+                        logContainer.empty().html(response);
+                        console.log("Success: GET");
+                        deleteLog.attr('disabled', false);
+                    },
+                    error: function (xhr) {
+                        datePicked.empty().html("Datum valt: " + date);
+                        logContainer.empty().html("No file exists");  
+                        deleteLog.attr('disabled', true);
+                        console.log(xhr.responseText);
+                    }
+                });
+
+            }
+
+            deleteLog.on("click", function () {
+
+                $.ajax({
+                    url: '/NLog/DeleteLogByDate/',
+                    type: 'DELETE',
+                    data: { 'shortDate': currentDateSelected },
+                    success: function (response) {
+                        getLogByDate(currentDateSelected);
+                        console.log("Success: Delete");
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText);
+                    }
+                });
+
+            });
+
+        });
+
+    </script>
+
+}

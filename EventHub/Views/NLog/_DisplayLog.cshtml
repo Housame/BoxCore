@@ -1,0 +1,7 @@
+﻿@model NlogIndexVM[]
+
+@foreach (var line in Model)
+{
+    <p style="@String.Format($"color:{line.HexCode}")">@line.Log</p>
+    <br />
+}

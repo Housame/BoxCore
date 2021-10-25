@@ -1,0 +1,162 @@
+﻿@model VerifyUserInStore[]
+@{
+    ViewBag.Title = "Verify User";
+}
+
+@section stylesheet{
+    <link rel="stylesheet" href="~/css/bootstrap-pincode-input.css" type="text/css" />
+}
+
+<div id="headerDiv" class="productBox">
+    <h1>Bekräfta Användare</h1>
+</div>
+
+<div class="col-sm-4 col-sm-offset-4">
+    <div class="productBox" style="padding-bottom: 0px">
+        <div id="userDiv">
+            <!-- Search bar -->
+            <div class="row">
+                <div id="imaginary_container">
+                    <div class="input-group stylish-input-group">
+                        <input id="search-input" type="text" class="form-control" placeholder="Sök">
+                        <span class="input-group-addon">
+                            <button id="search-users" type="submit">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search result -->
+            <div class="row">
+                <div id="filter-users" class="list-group"></div>
+            </div>
+
+            <!-- User List -->
+            <div class="row">
+                <!-- All users title -->
+                <p style="text-align:center;">Alla Användare</p>
+                <!-- All users list -->
+                <div class="list-group">
+                    @Html.Partial("_UserView", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div>
+        <a asp-controller="Store" asp-action="Index" class="btn btn-danger btn-block" role="button">Avbryt</a>
+    </div>
+
+</div>
+
+<!-- Enter Pin -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div style="color:black;" class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Verifiera med ditt personliga PIN</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="demo">
+                <p class="hide errorMsg" style="color:red;"><strong>Fel PIN, försök igen...</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Stäng</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+        var input = "";
+        var userSelectedId;
+
+        $(document).ready(function () {
+
+            $('.userSelected').click(function () {
+                userSelectedId = $(this).attr('id');
+            });
+
+            $('#demo').pincodeInput({
+
+                complete: function (value, e, errorElement) {
+
+                    $.ajax({
+                        url: "/Store/ConfirmUserAgainstPIN",
+                        type: "POST",
+                        traditional: true,
+                        data: { 'id': [ value, userSelectedId ] },
+                        success: function (result) {
+                            if (result.userAuthenticated == true)
+                                window.location.href = result.url;
+                            else
+                            {
+
+                                $('.errorMsg').removeClass('hide');
+                            }
+                        },
+                        error: function () { 
+                            alert("Something went wrong.")
+                        }
+                    });
+
+                }
+            });
+
+            $('#myModal').on('hidden.bs.modal', function () {
+                $('.errorMsg').addClass('hide');
+                $('#demo').val('');
+            })
+
+            $("#search-input").keyup(function (e) {
+
+                if (e.keyCode == 8 && input != "")
+                    input = input.substring(0, input.length - 1);
+                else if (e.keyCode == 8 && input.length == 0)
+                    input = "";
+                else
+                    input += String.fromCharCode(e.which);
+
+                $.ajax({
+                    url: "/Store/FilterUserStore",
+                    type: "GET",
+                    data: { "input": input },
+                    success: function (users) {
+                        $("#filter-users").html(users);
+
+                        //$("#filter-users").empty();
+
+                        //if (users.length == 0)
+                        //{
+                        //    $("#filter-users").append('<a href="#" data-toggle="modal" data-target="#login-modal" class="list-group-item list-group-item-action">' + "No user found" + '</a>');
+                        //}
+                        //else
+                        //{
+                        //    $.each(users, function (i, user) {
+                        //        $("#filter-users").append('<a href="#" data-toggle="modal" data-target="#login-modal" class="list-group-item list-group-item-action">' + user.firstName + " " + user.lastName + '</a>');
+                        //    });
+                        //}
+
+                    },
+                    error: function () {
+                        alert("Error loading users");
+                    },
+                });
+            });
+
+        });
+    </script>
+
+    <script src="~/js/bootstrap-pincode-input.js"></script>
+
+}

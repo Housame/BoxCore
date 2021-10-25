@@ -1,0 +1,339 @@
+﻿@model ModalAddAthleteVM
+
+@{
+    Layout = null;
+}
+<div class="bc-modal-shadow teammate-modal-wrapper">
+    <div class="bc-system-header">
+        <!-- Modal header -->
+        <button id="modalButton-close" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3 modal-title"><b>@Model.CompInfo.Competition.Name</b></h3>
+    </div>
+    <div class="bc-system-body">
+        <!-- Modal main content -->
+        <div id="competitorDiv" class="bc-modal-info">
+            <div class="user-info input-group"><label>Lagnamn <span data-toggle="tooltip" title="Fyll i lagnamn nedan." data-placement="top" class="glyphicon glyphicon-question-sign tooltip-icon"></span></label></div>
+            <br />
+            <div class="user-info input-group"><label class="pull-left">Namn:</label></div>
+            <!--Team Name-->
+            <div class="user-info form-group">
+                @if (!String.IsNullOrEmpty(Model.CompInfo.Competition.SubCompetition.UsersToSubCompetitionsAndCompetitors[0].Competitor.Team.TeamName))
+                {
+                    <input type="text" class="form-control" id="teamNameInput" value="@Model.CompInfo.Competition.SubCompetition.UsersToSubCompetitionsAndCompetitors[0].Competitor.Team.TeamName">
+                }
+                else if (!String.IsNullOrEmpty(Model.CompInfo.CurrentEventUser.TeamName))
+                {
+                    <input type="text" class="form-control" value="@Model.CompInfo.CurrentEventUser.TeamName" id="teamNameInput">
+                }
+                else
+                {
+                    <input type="text" class="form-control" id="teamNameInput">
+                }
+            </div>
+        </div>
+        <br />
+        @*<div class="col-sm-12"><label class="pull-left">Lagkapten <span data-toggle="tooltip" title="Du kan ändra namn i profilvyn." data-placement="top" class="glyphicon glyphicon-question-sign"></span>:</label></div>*@
+        <div class="bc-modal-info team-captain-body">
+            <div class="user-info input-group"><label>Lagkapten <span data-toggle="tooltip" title="Du kan ändra namn i profilvyn." data-placement="top" class="glyphicon glyphicon-question-sign tooltip-icon"></span></label></div>
+            <br />
+            <!--Default User-->
+            @Html.Partial("_DefaultCompetitor", Model.CompInfo.CurrentEventUser)
+        </div>
+        <br />
+        <div class="bc-modal-info">
+            <div class="user-info input-group"><label>Lagkamrater <span data-toggle="tooltip" title="Lägg till lagkamrater genom att söka i fältet nedan." data-placement="top" class="glyphicon glyphicon-question-sign tooltip-icon"></span></label></div>
+            <br />
+            <!--Saerch user input-->
+            @Html.Partial("_AddCompetitor", Model.AllUsers)
+            <br />
+            <span><b>Max antal i laget</b> (inklusive dig)<b>:</b> <b>@Model.CompInfo.Competition.SubCompetition.QuantityPerTeam</b> <span data-toggle="tooltip" title="Du kan byta lagkamrater genom att ta bort från listan nedan." data-placement="top" class="glyphicon glyphicon-question-sign tooltip-icon"></span></span>
+            <br />
+            <br />
+            <!--Team members-->
+            <div class="teammate-list-wrapper">
+                <ul id="teamDiv" class="teammate-list list-unstyled">
+                    <!-- Checking out if there existing added members to this subcompetition-->
+                    @foreach (var item in Model.CompInfo.Competition.SubCompetition.UsersToSubCompetitionsAndCompetitors)
+                    {
+
+                        @foreach (var athlete in item.Competitor.Team.AthleteInTeam)
+                        {
+                            if (athlete.Athlete.Email != Model.CompInfo.CurrentEventUser.Email)
+                            {
+                                <li id="@athlete.Athlete.Id" class="user">@athlete.Athlete.FirstName @athlete.Athlete.LastName (@athlete.Athlete.Email)<button type="button" class="btn btn-link removeExistingAthlete bc-system-no-padding pull-right glyphicon glyphicon-trash"></button><br /></li>
+                            }
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <br />
+        <div class="bc-modal-info">
+            @if (Model.CompInfo.Competition.SubCompetition.QuantityPerTeam > 2)
+            {
+                <p><b>Finns inte dina lagkamrater med? Skicka en inbjudan.</b></p>
+            
+            }
+            else
+            {
+                <p><b>Finns inte din lagkamrat med? Skicka en inbjudan.</b></p>
+            
+            }
+            <br />
+            <button class="btn btn-primary" id="sendInvit">Inbjudan</button>
+            <br />
+            <br />
+            <!--Mail Notification-->
+            <div class="alert alert-success" id="successMsg" style="display:none"></div>
+            <div class="alert alert-success" id="failMsg" style="display:none"></div>
+            <!--Send invitation-->
+            <div id="invitationRow" style="display:none">
+                <div class="user-info input-group"><label class="pull-left" for="email">E-post:</label></div>
+                <div class="user-info form-group"><input type="email" class="form-control" id="emailToSend"></div>
+                <br />
+                <button class="btn btn-success" id="sendMail">
+                    Skicka
+                    <span id="initializingSending" class="glyphicon glyphicon-refresh"></span>
+                </button>
+            </div>
+            <span id="errorMsg"></span>
+        </div>
+        <br />
+        <div id="buttonWrapper" class="bc-modal-info">
+            <div id="teamNameAlert" class="alert alert-warning" role="alert">
+                Du måste lägga till <strong>lagnamn</strong> innan du kan spara dina ändringar.
+            </div>
+            <div id="teamMemberAlert" class="alert alert-warning" role="alert">
+                Du måste lägga till <strong>lagkamrat</strong> innan du kan spara dina ändringar.
+            </div>
+            <button type="button" class="btn btn-success btn-block submitTeamMembers" data-dismiss="modal">
+                Spara
+            </button>
+        </div>
+    </div>
+    <div class="bc-system-footer"></div>
+</div>
+<!-- Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.2/i18n/jquery-ui-i18n.js"></script>
+<script>
+    $(document).ready(function () {
+
+        var submitTeamMembers = $('.submitTeamMembers');
+        var teamName = $('#teamNameInput').val();
+        var teamNameAlert = $('#teamNameAlert');
+
+        if (teamName.length < 1) {
+            teamNameAlert.css('display', 'block');
+            submitTeamMembers.attr('disabled', true);
+        }
+        else {
+            teamNameAlert.css('display', 'none');
+            submitTeamMembers.attr('disabled', false);
+        }
+
+        $('#teamNameInput').on('input', function () {
+            teamName = $('#teamNameInput').val();
+            if (teamName.length < 1) {
+                teamNameAlert.css('display', 'block');
+                submitTeamMembers.attr('disabled', true);
+            }
+            else {
+                teamNameAlert.css('display', 'none');
+                submitTeamMembers.attr('disabled', false);
+            }
+        });
+
+
+        var list = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@Model.AllUsers) as String);
+        //Checking if there is existing members then returns 0 or qunatity that ca be added
+        var removeUsers = false;
+        // Getting (if) existing users Idand store them if the current user want to remove
+        console.log(@Model.CompInfo.Competition.SubCompetition.UsersToSubCompetitionsAndCompetitors.Count());
+        function getExistingUsers() {
+            if ( @Model.CompInfo.Competition.SubCompetition.UsersToSubCompetitionsAndCompetitors.Count()+1 > 1) {
+                var existingUsersId = $('#teamDiv li.user').map(function () {
+                    return this.id;
+                }).get();
+                return existingUsersId;
+            }
+            else return [' '];
+        }
+        var listUsers = getExistingUsers();
+
+        function getMaxReached() {
+            if (listUsers.length + 1 == @Model.CompInfo.Competition.SubCompetition.QuantityPerTeam) {
+                $(".usrFName").prop('disabled', true);
+                $('#teamMemberAlert').css('display', 'none');
+                submitTeamMembers.attr('disabled', false);
+                return 0;
+            }
+            else {
+                $('#teamMemberAlert').css('display', 'block');
+                submitTeamMembers.attr('disabled', true);
+                return @Model.CompInfo.Competition.SubCompetition.QuantityPerTeam-1;
+            }
+
+        }
+        var maxReached = getMaxReached();
+        console.log(maxReached);
+        console.log(listUsers);
+        // Change values in list of users
+         function reloadList(param, value, id) {
+             if (param == 0) {
+
+                 list = list.filter(function (el) {
+                     return el.value !== value;
+                 });
+             }
+             else if (param == 1) {
+                 list.push({
+                     id: id,
+                     value: value,
+                 });
+
+             }
+         };
+        //Disable the input if quantity per tem is reached
+         function checkMaxAthlete(max) {
+             if ((max == 0) || (max < 0)) {
+                 $(".usrFName").prop('disabled', true);
+                 $('#teamMemberAlert').css('display', 'none');
+                 submitTeamMembers.attr('disabled', false);
+             }
+             else if (max > 0) {
+                 $(".usrFName").prop('disabled', false);
+                 $('#teamMemberAlert').css('display', 'block');
+                 submitTeamMembers.attr('disabled', true);
+             };
+         };
+
+         // Gets the autoCompletlist to select a user of
+         $(".usrFName").autocomplete({
+             source: function (request, response) {
+                 var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+
+                 var matching = $.grep(list, function (value) {
+                     var name = value.value;
+                     var id = value.id;
+
+                     return matcher.test(name);
+                 });
+                 response(matching);
+             },
+             select: function (event, ui) {
+
+                 var tempId = ui.item.id;
+                 var tempUser = ui.item.value;
+                     var teamDiv = $("#teamDiv");
+                     teamDiv.append("<li id='" + tempId + "'class='user'>" + tempUser + "<button type='button' class='btn btn-link removeAthlete bc-system-no-padding pull-right glyphicon glyphicon-trash'></button></li>");
+                     maxReached = maxReached - 1;
+                     // Remove the user from the list
+                     //reloadList(0, tempUser, tempId);
+                     $('.usrFName').val('');
+                     checkMaxAthlete(maxReached);
+                     if ((maxReached == 0) || (maxReached < 0)) {
+                         $(".usrFName").prop('disabled', true);
+                     };
+                     event.preventDefault();
+             }
+
+         });
+
+        //remove the competitor, letting the user to add another instead,
+        // fill the list of user with the removed user to give chance to re-add it
+         $("#teamDiv").on("click", "button.removeAthlete", function (event) {
+             maxReached = maxReached + 1;
+             // adding opportunity to add one more competitor
+             checkMaxAthlete(maxReached)
+             var id = $(this).closest(".user").id;
+             var value = $(this).closest(".user").value;
+             //Re-add competitor to list
+             //reloadList(1, value, id);
+             $(this).closest(".user").remove();
+             event.preventDefault();
+         });
+         // remove a existing competitor
+         $("#teamDiv").on("click", "button.removeExistingAthlete", function (event) {
+             maxReached = maxReached + 1;
+             // adding opportunity to add one more competitor
+             checkMaxAthlete(maxReached)
+             // Changing the value of removing user(s) to true
+             removeUsers = true;
+             // Removing from list in modal
+             $(this).closest(".user").remove();
+             event.preventDefault();
+         });
+        // Show the div that contains input for email and button for sending
+        var successMsg = $('#successMsg');
+        var sendInvit = $('#sendInvit');
+        var invitRow = $('#invitationRow');
+        sendInvit.click(function () {
+            invitRow.slideDown();
+        });
+        // Send an invitation to the email that user puted in
+        var sendMail = $('#sendMail');
+            sendMail.click(function () {
+                var emailToSend = $('#emailToSend').val();
+                var data = {};
+                data.Email = emailToSend;
+                $.ajax({
+                    url: "/UserClient/SendInvitation/",
+                    type: "POST",
+                    data: data,
+                    success: function (response) {
+                        $('#initializingPayment').removeClass('glyphicon-refresh-animate');
+                        if (response.mailSent)
+                            successMsg.html(response.msg).slideDown().delay(3000).slideUp();
+                        else
+                            $('#failMsg').html(response.msg).slideDown().delay(3000).slideUp();
+                    },
+                    error: function () {
+                        alert("Error encountered");
+                    },
+                });
+        })
+
+            submitTeamMembers.click(function () {
+            //$('#spinner').addClass('glyphicon-refresh-animate');
+             var myUsersId = $('#teamDiv li.user').map(function () {
+                 return this.id;
+                    }).get();
+                var teamName = $('#teamNameInput').val();
+
+               var viewModel = {
+                    SubCompId: @Model.CompInfo.Competition.SubCompetition.Id,
+                    TeamName: teamName,
+                    MembersId: myUsersId,
+                    QunatityPerTeam: @Model.CompInfo.Competition.SubCompetition.QuantityPerTeam,
+                    RemoveUserOrNot: removeUsers,
+                    ListOfUserToDelete : listUsers,
+                };
+
+                $.ajax({
+                    url: "/UserClient/AddTeamMembers/",
+                    type: "POST",
+                    data: viewModel,
+                    success: function (response) {
+                        if (response.success) {
+                            $("#buttonWrapper").html("<button class='btn btn-success' data-dismiss='modal'>Klar</button>");
+                            $("input").prop('disabled', true);
+                            $("select").prop('disabled', true);
+                            $("button.btn-info").prop('disabled', true);
+                            $("button.removeAthlete").prop('disabled', true);
+                        }
+                        else {
+                            $('#spinner').removeClass('glyphicon-refresh-animate');
+                            $('#errorMsg').html(response.responseText).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).delay(2000).slideUp();
+                        }
+                    },
+                    error: function () {
+                        alert("Oops! Något gick fel, försök igen och se till att du fyller i all information.");
+                    },
+                });
+
+
+        });
+
+    });
+</script>
+

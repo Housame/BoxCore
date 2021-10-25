@@ -1,0 +1,10 @@
+﻿@model UserClientIndexVM
+@{
+    ViewBag.Title = "Index";
+}
+<h1>Admin Client Index</h1>
+@if (User.Identity.IsAuthenticated)
+{
+    <h2><u>@User.Identity.Name</u> är inloggad</h2>
+}
+

@@ -1,0 +1,36 @@
+﻿@model ProductDisplayVM
+
+<tr id="@Model.Id" style="text-align:left;">
+    <td>
+        @if (@Model.Image.Length > 0)
+        {
+            var base64 = Convert.ToBase64String(@Model.Image);
+            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+            <img class="img-thumbnail cart" src="@imgSrc" width="50" height="50" />
+        }
+        else
+        {
+            <div class="img-thumbnail nopic" style="width: 50px; height: 50px">
+                <span class="glyphicon glyphicon-camera cam-small"></span>
+            </div>
+        }
+    </td>
+    <td id="cartItem">
+        @Model.Name
+    </td>
+    @if (String.IsNullOrEmpty(Model.Description))
+    {
+        <td id="cartItem">Beskrivning saknas.</td>
+    }
+    else
+    {
+        <td id="cartItem">@Model.Description</td>
+    }
+    <td id="cartItem">
+        @Enum.GetName((typeof(Categories)), Model.Category)
+    </td>
+    <td id="cartItem">@Model.Price SEK</td>
+    <td id="removeButton" class="actions" data-th="">
+        <button class="removeProduct pull-right btn btn-danger btn-sm glyphicon glyphicon-trash"><i class="fa fa-trash-o"></i></button>
+    </td>
+</tr>

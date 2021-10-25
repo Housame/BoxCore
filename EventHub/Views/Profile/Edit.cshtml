@@ -1,0 +1,99 @@
+﻿@model EditUserVM
+@{
+    ViewBag.Title = "Profil";
+}
+<div class="profile-user">
+    <div class="edit-profile bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Redigera Profil</h1>
+        </div>
+        <div class="bc-system-body container-fluid">
+            @if (TempData["ProfileIncomplete"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ProfileIncomplete"]
+                </div>
+            }
+                <form asp-controller="Profile" asp-action="Edit" method="post">
+                    <!--First Name -->
+                    <div class="user-info input-group"><label asp-for="@Model.FirstName" class="pull-left"></label></div>
+                    <div class="edit-info input-group">
+                        <span asp-validation-for="@Model.FirstName" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input asp-for="@Model.FirstName" class="form-control" placeholder="Förnamn" title="Förnamn">
+                    </div>
+                    <br />
+                    <!--Last Name -->
+                    <div class="user-info input-group"><label asp-for="@Model.LastName" class="pull-left"></label></div>
+                    <div class="edit-info input-group">
+                        <span asp-validation-for="@Model.LastName" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input asp-for="@Model.LastName" class="form-control" placeholder="Efternamn" title="Efternamn">
+                    </div>
+                    <br />
+                    <!-- BirthDay -->
+                    <div class="user-info input-group"><label asp-for="@Model.DateOfBirth" class="pull-left"></label></div>
+                    <div class="edit-info input-group">
+                        <span asp-validation-for="@Model.DateOfBirth" class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <input asp-for="@Model.DateOfBirth" class="birth-info form-control" placeholder="Födelsedatum" title="Födelsedatum">
+                    </div>
+                    <br />
+                    <!-- Gender -->
+                    <div class="user-info input-group"><label asp-for="@Model.Gender" class="pull-left"></label></div>
+                    <div class="edit-info input-group">
+                        <span asp-validation-for="@Model.Gender" class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <select asp-for="@Model.Gender" class="form-control" asp-items="Html.GetEnumSelectList<SingleGenders>()" title="Kön"></select>
+                    </div>
+                    <br />
+                    <!-- Location -->
+                    <div class="user-info input-group"><label asp-for="@Model.Location" class="pull-left"></label></div>
+                    <div class="edit-info input-group">
+                        <span asp-validation-for="@Model.Location" class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
+                        <input asp-for="@Model.Location" class="form-control" placeholder="Stad" title="Stad">
+                    </div>
+                    <br />
+                    <!-- Team -->
+                    <div class="user-info input-group"><label asp-for="@Model.Team" class="pull-left"></label></div>
+                    <div class="edit-info input-group">
+                        <span asp-validation-for="@Model.Team" class="input-group-addon"><i class="glyphicon glyphicon-flag"></i></span>
+                        <input asp-for="@Model.Team" class="form-control" placeholder="Team" title="Team">
+                    </div>
+                    <br />
+                    <!-- Shirt Size -->
+                    <div class="user-info input-group"><label asp-for="@Model.ShirtSize" class="pull-left"></label></div>
+                    <div class="edit-info input-group">
+                        <span asp-validation-for="@Model.ShirtSize" class="input-group-addon"><i class="glyphicon glyphicon-tag"></i></span>
+                        <select asp-for="@Model.ShirtSize" class="form-control" asp-items="Html.GetEnumSelectList<ShirtSizes>()" title="Tröjstorlek"></select>
+                    </div>
+                    <br />
+                    <!--Box-->
+                    <div class="user-info input-group"><label asp-for="@Model.BoxId" class="pull-left"></label></div>
+                    <div class="edit-info input-group">
+                        <span asp-validation-for="@Model.BoxId" class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                        <select asp-for="@Model.BoxId" class="form-control" asp-items="@Model.Boxes" title="Box"></select>
+                    </div>
+                    <br />
+                    <!--Allow newsletter-->
+                    <div class="user-info input-group">
+                        <label asp-for="@Model.IsAllowingNewsLetter" class="pull-left"></label>
+                        <input asp-for="@Model.IsAllowingNewsLetter" class="pull-right checkbox-inline">
+                    </div>
+                    <br />
+                    <!--Public profile-->
+                    <div class="user-info input-group">
+                        <label asp-for="@Model.PublicProfile" class="pull-left"></label>
+                        <input asp-for="@Model.PublicProfile" class="pull-right checkbox-inline">
+                    </div>
+                    <!--How Public profile link-->
+                    <div class="user-info input-group">
+                        <span class="pull-left"> <a asp-controller="Profile" asp-action="PublicProfile" asp-route-id="@Model.Id" target="_blank">Hur ser min profil ut för andra om jag väljer detta?</a> </span>
+                    </div>
+                    <br />
+                    <div class="profile-edit-buttons">
+                        <!-- Submit button -->
+                        <button id="confimChanges" type="submit" class="btn btn-success buttonBorder">Spara ändringar</button>
+                    </div>
+                </form>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>
+

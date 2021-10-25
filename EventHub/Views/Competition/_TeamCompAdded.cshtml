@@ -1,0 +1,22 @@
+﻿@model CreateCompetitiontVM.TeamSubEventVM
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#@ViewBag.Index">
+                <b>Lag: </b>@Model.Difficulty - @Model.Gender
+            </a>
+        </h4>
+    </div>
+    <div id="@ViewBag.Index" class="panel-collapse collapse createdCompInfo">
+        <ul class="list-group">
+            <li class="list-group-item"><b>Datum: </b>@Model.Date</li>
+            <li class="list-group-item"><b>Antal lag: </b>@Model.Quantity</li>
+            <li class="list-group-item"><b>Deltagare per lag: </b>@Model.QuantityPerTeam</li>
+            <li class="list-group-item"><b>Pris: </b>@Model.Price</li>
+        </ul>
+        <div class="panel-footer">
+            <button id="@ViewBag.Index" class="deleteTeamComp btn btn-danger buttonBorder">Ta bort</button>
+        </div>
+    </div>
+</div>

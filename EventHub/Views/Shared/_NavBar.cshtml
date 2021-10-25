@@ -1,0 +1,196 @@
+﻿<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="logo navbar-brand pull-left" asp-controller="home" asp-action="index">
+                <!-- Logo here -->
+                <img id="logo" alt="BoxCore" title="BoxCore" src="~/img/BoxCore04.png" />
+            </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <div id="menuBar">
+                <ul class="nav navbar-nav">
+                    @*@if (!User.Identity.IsAuthenticated)
+        {
+            <li class="event-menu menu-drop"><a href="../home/index/#top">Hem</a></li>
+            <li class="event-menu menu-drop"><a href="../home/index/#news">Nyheter</a></li>
+            <li class="event-menu menu-drop"><a href="../home/index/#contact">Kontakt</a></li>
+            <li class="event-menu menu-drop"><a href="../home/index/#about">Om oss</a></li>
+        }*@
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Client"))
+    {
+                <!-- Drop Down Menu: User -->
+                <li class="dropdown">
+                    <a href="#" class="event-menu menu-drop dropdown-toggle" data-toggle="dropdown">Atlet<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Profile" asp-action="Profile">Min profil</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Profile" asp-action="Edit">Redigera profil</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="UserClient" asp-action="ChangePassword">Ändra lösenord</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Drop Down Menu: Competitions -->
+                @if (User.HasClaim(c => c.Type == "CompetitionManager" || c.Type == "EventManager"))
+{
+                <li class="dropdown">
+                    <a href="#" class="event-menu menu-drop dropdown-toggle" data-toggle="dropdown">Tävlingar<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Reservation" asp-action="Reserve">Boka tävling</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Reservation" asp-action="MyReservations">Mina bokningar</a>
+                        </li>
+                        <li class="divider bc-system-no-margin bc-system-no-padding"></li>
+                        <li>
+                            <a class="event-admin event-menu menu-drop" asp-controller="Profile" asp-action="ListCompetitionEdit">Mina tävlingar</a>
+                        </li>
+                    </ul>
+                </li>
+
+}
+else
+{
+                <li class="dropdown">
+                    <a href="#" class="event-menu menu-drop dropdown-toggle" data-toggle="dropdown">Tävlingar<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Reservation" asp-action="Reserve">Boka tävling</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Reservation" asp-action="MyReservations">Mina bokningar</a>
+                        </li>
+                    </ul>
+                </li>
+}
+
+
+
+}
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+                <!-- Drop Down Menu: User -->
+                <li class="dropdown">
+                    <a href="#" class="event-menu menu-drop dropdown-toggle" data-toggle="dropdown">Atlet<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Profile" asp-action="Profile">Min profil</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Profile" asp-action="Edit">Redigera profil</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="UserClient" asp-action="ChangePassword">Ändra lösenord</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Drop Down Menu: Competitions -->
+                <li class="dropdown">
+                    <a href="#" class="event-menu menu-drop dropdown-toggle" data-toggle="dropdown">Tävlingar<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Reservation" asp-action="Reserve">Boka tävling</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Reservation" asp-action="MyReservations">Mina bokningar</a>
+                        </li>
+                        <li class="divider bc-system-no-margin bc-system-no-padding"></li>
+                        <li>
+                            <a class="event-admin event-menu menu-drop" asp-controller="Competition" asp-action="CreateCompetition">Skapa tävling</a>
+                        </li>
+                        <li>
+                            <a class="event-admin event-menu menu-drop" asp-controller="Profile" asp-action="ListCompetitionEdit">Mina tävlingar</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Drop Down Menu: Competitions -->
+                <li class="dropdown">
+                    <a href="#" class="event-menu menu-drop dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Admin" asp-action="Index">Panel</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Nlog" asp-action="Index">Loggar</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Discount" asp-action="Index">Rabattkoder</a>
+                        </li>
+                    </ul>
+                </li>
+}
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("EventAdmin"))
+    {
+                <!-- Drop Down Menu: User -->
+                <li class="dropdown">
+                    <a href="#" class="event-menu menu-drop dropdown-toggle" data-toggle="dropdown">Atlet<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Profile" asp-action="Profile">Min profil</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Profile" asp-action="Edit">Redigera profil</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="UserClient" asp-action="ChangePassword">Ändra lösenord</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Drop Down Menu: Competitions -->
+                <li class="dropdown">
+                    <a href="#" class="event-menu menu-drop dropdown-toggle" data-toggle="dropdown">Tävlingar<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Reservation" asp-action="Reserve">Boka tävling</a>
+                        </li>
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Reservation" asp-action="MyReservations">Mina bokningar</a>
+                        </li>
+                        <li class="divider bc-system-no-margin bc-system-no-padding"></li>
+                        <li>
+                            <a class="event-admin event-menu menu-drop" asp-controller="Competition" asp-action="CreateCompetition">Skapa tävling</a>
+                        </li>
+                        <li>
+                            <a class="event-admin event-menu menu-drop" asp-controller="Profile" asp-action="ListCompetitionEdit">Mina tävlingar</a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Drop Down Menu: Competitions -->
+                <li class="dropdown">
+                    <a href="#" class="event-menu menu-drop dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="event-menu menu-drop" asp-controller="Discount" asp-action="Index">Rabattkoder</a>
+                        </li>
+                    </ul>
+                </li>
+}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li id="user" class="event-menu">
+                            <strong><i>@User.Identity.Name</i></strong> är inloggad
+                        </li>
+                        <li id="logOut" class="event-menu menu-item"><a asp-controller="UserClient" asp-action="LogOut"><span class="glyphicon glyphicon-log-out"></span> Utloggning</a></li>
+                    }
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        @*<li id="logInTemp" style="border: 1px white solid; padding: 5px; margin: 24px 34px 0 0;">Anmälan kommer strax.</li>*@
+                        <li id="logIn" class="event-menu menu-item"><a data-toggle="modal" data-target="#myModal" style="cursor:pointer"><span class="glyphicon glyphicon-log-in"></span> Inloggning</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,98 @@
+﻿@model IEnumerable<UserShowVM>
+@{
+    ViewBag.Title = "Users Panel";
+}
+
+<div class="profile-comp bg-event">
+    <div class="page-header">
+        <h1>All users</h1>
+    </div>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" />
+    <table data-toggle="table" data-sort-order="desc" class="table table-bordered" cellspacing="0" width="100%" style="text-align: left;">
+        <thead>
+            <tr bgcolor="#5F5F5F">
+                <th data-field="Name" data-sortable="true">Name</th>
+                <th data-field="Box" data-sortable="true">Box</th>
+                <th data-field="Email" data-sortable="true">Email</th>
+                <th data-field="Role" data-sortable="true">Role</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr bgcolor="#CCCCCC" class="comp-booked">
+                    <td>@item.FirstName @item.LastName</td>
+                    @if (item.Box != null)
+                    {
+                        <td style="align-content: center; color:black"><b>Box:  </b>@item.Box</td>
+                    }
+                    else
+                    {
+                        <td style="align-content: center; color:black"><b>Box:  </b><span style="color:red">n/a</span></td> }
+                    <td>@item.Email</td>
+                    <td><div data-myid="@item.Id" >@item.Role <button id="@item.Id" class="getRoles btn btn-warning">Change authorization</button></div></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts{
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var getRoles = $('.getRoles');
+            var postRoles = $('.postRoles');
+            getRoles.click(function () {
+                var roleId = this.id;
+                var roleCol = $("[data-myid=" + roleId + "]");
+
+                roleCol.fadeOut('slow', function () {
+                    alert(roleId);
+                    $.ajax({
+                        url: '/SuperAdmin/GetChangeDiv',
+                        type: "Get",
+                        data: { "id" : roleId },
+                        success: function (result) {
+                            roleCol.empty();
+                            roleCol.show();
+                            roleCol.html(result);
+
+                        },
+                        error: function () {
+                            alert('Error initializing form');
+                        },
+                    });
+                });
+            });
+            $(document).on('click', '.postRoles', function () {
+                var roleId = this.id;
+                var roleCol = $("[data-myid=" + roleId + "]");
+                var roleSelected = $("#roleSelect option:selected").val();
+                var viewModel = {
+                    Id: roleId,
+                    RoleSelected: roleSelected,
+                };
+            roleCol.fadeOut('slow', function () {
+                console.log(roleId);
+                console.log(roleSelected);
+                $.ajax({
+                    url: '/SuperAdmin/PostChangeDiv/',
+                    type: "POST",
+                    data: viewModel,
+                    success: function (result) {
+                        roleCol.empty();
+                        roleCol.show();
+                        roleCol.html(result);
+
+                    },
+                    error: function () {
+                        console.log('Error initializing form');
+                    },
+                });
+                });
+            });
+        });
+</script>
+}
+

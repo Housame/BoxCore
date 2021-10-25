@@ -1,0 +1,173 @@
+﻿@model ListParticipantsVM.CompetitionVM
+@{
+    ViewBag.Title = "Översikt";
+}
+<div class="event-main">
+    <div class="overview-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h2>@Model.Name</h2>
+        </div>
+        <div class="bc-overview-body">
+            <span class="comp-date"><strong>@Model.StartDate.ToString("yyyy-MM-dd")</strong> till <strong>@Model.EndDate.ToString("yyyy-MM-dd")</strong></span>
+            <br />
+            <br />
+
+            <div id="subComp-dropdown" class="dropdown">
+                <a href="#" class="subComp-selector dropdown-toggle" type="button" data-toggle="dropdown">
+                    <strong>Klass</strong>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    @foreach (var item in @Model.SubCompetition)
+                    {
+                        <li data-MyId="@item.Id" class="subComp"><strong>@item.Type</strong> - <strong>@item.Gender</strong> - <strong>@item.Difficulty</strong></li>
+                    }
+                </ul>
+            </div>
+            <p></p>
+            <div id="participationsListOptions" class="row">
+            </div>
+            @*@foreach (var item in @Model.SubCompetition)
+                {
+                    <button data-MyId="@item.Id" class="btn btn-default subComp buttonBorder"><strong>@item.Type</strong> - <strong>@item.Gender</strong> - <strong>@item.Difficulty</strong></button>
+                    <br />
+                    <br />
+                }*@
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+    <div id="gridData"></div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            var participationsListOptions = $('#participationsListOptions');
+
+            var subComp = $('.subComp');
+            var infoContainer = $('#gridData');
+            @*var model = @Html.Raw(Json.Serialize(Model));*@
+            var model = ('@(Model)');
+
+            // Gettinng data for this subcompetition
+            subComp.click(function () {
+
+                infoContainer.empty();
+                var subCompId = $(this).attr("data-MyId");
+                var optionsValue = $(this).html();
+
+                $.ajax({
+                    url: '/Event/GetSubCompOptions',
+                    type: 'GET',
+                    data: { id: subCompId },
+                    success: function (result) {
+                        participationsListOptions.html(result);
+                        $('#classSelectedAlert').html(optionsValue);
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+
+            })
+
+            // Get class participation list
+            $(document).on('click', '.participantList', function () {
+
+                console.log('participation list btn');
+                var compId = $(this).attr('id');
+
+                $.ajax({
+                    url: '/Event/GetSubCompInfo',
+                    type: "GET",
+                    data: { id: compId },
+                    success: function (result) {
+                        infoContainer.empty();
+                        infoContainer.html(result);
+                    },
+                    error: function () {
+                        alert('Error initializing GetSubCompInfo form');
+                    },
+                });
+
+            });
+
+            // Construct competition
+            $(document).on('click', '.constructCompetition', function () {
+
+                var compId = $(this).attr('id');
+
+                $.ajax({
+                    url: '/Event/ConstructComp',
+                    type: "POST",
+                    data: { id: compId },
+                    success: function (result) {
+                        infoContainer.empty();
+                        infoContainer.html(result);
+                    },
+                    error: function () {
+                        alert('Error initializing ConstructComp form');
+                    },
+                });
+
+            });
+
+            // Register result
+            $(document).on('click', '.registerResult', function () {
+
+                console.log('register result btn');
+                var compId = $(this).attr('id');
+
+                $.ajax({
+                    url: '/Result/RegisterResult',
+                    type: "POST",
+                    data: { id: compId },
+                    success: function (result) {
+                        infoContainer.empty();
+                        infoContainer.html(result);
+                    },
+                    error: function () {
+                        alert('Error initializing RegisterResult form');
+                    },
+                });
+            });
+            $(document).on('click', '.check-in-button', function () {
+                var athleteId = $(this).attr("value");
+                var subCompId = $(this).attr("subcomp");
+                console.log(athleteId);
+                console.log(subCompId);
+
+                var viewModel = {};
+                viewModel.id = athleteId;
+                viewModel.subCompId = subCompId;
+
+                $.ajax({
+                    url: '/Event/ToggleCheckIn',
+                    type: "PATCH",
+                    data: { 'model': viewModel },
+                    success: function (checkInStatus) {
+                        if (checkInStatus === true) {
+
+                            $('.check-in-button-' + athleteId)
+                                .removeClass('btn-danger')
+                                .addClass('btn-success')
+                                .html('<span class="glyphicon glyphicon-ok"></span>');
+                        }
+                        else {
+                            $('.check-in-button-' + athleteId)
+                                .removeClass('btn-success')
+                                .addClass('btn-danger')
+                                .html('<span class="glyphicon glyphicon-remove"></span>');
+
+                        }
+                    },
+                    error: function () {
+                        alert('Could not change status of check in');
+                    },
+                });
+
+            });
+        });
+    </script>
+}
+

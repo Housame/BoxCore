@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "Adminpanel";
+}
+<link href="~/css/admin-main.css" rel="stylesheet" />
+<div class="admin-main container">
+    <div class="overview-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Adminpanel</h1>
+        </div>
+        <div class="col-sm-12 bc-table-body">
+            <div id="admin-user-select" class="form-group col-sm-4 col-sm-offset-4 row">
+                <label for="active-user">Användare:</label>
+                <p id="active-user">Ingen användare vald.</p>
+            </div>
+            <div id="userForm" class="col-sm-12 form-group row">
+                <div class="col-sm-4 admin-col">
+                    @*FirstName*@
+                    <div class="form-group">
+                        <label for="firstName">Förnamn:</label>
+                        <input type="text" class="form-control" id="firstName" maxlength="20" placeholder="Förnamn" required autofocus>
+                    </div>
+                    @*LastName*@
+                    <div class="form-group">
+                        <label for="lastName">Efternamn:</label>
+                        <input type="text" class="form-control" id="lastName" maxlength="20" placeholder="Efternamn" required autofocus>
+                    </div>
+                    @*E-mail*@
+                    <div class="form-group">
+                        <label for="email">E-post:</label>
+                        <input type="email" class="form-control" id="email" maxlength="20" placeholder="E-post" required autofocus>
+                    </div>
+                    @*BirthDay*@
+                    <div class="form-group">
+                        <label for="dateOfBirth">Födelsedatum:</label>
+                        <input type="date" class="form-control" id="dateOfBirth" placeholder="Födelsedatum" required autofocus>
+                    </div>
+                </div>
+                <div class="col-sm-4 admin-col">
+                    @*Team*@
+                    <div class="form-group">
+                        <label for="team">Team:</label>
+                        <input type="text" class="form-control" id="team" maxlength="20" placeholder="Team" required autofocus>
+                    </div>
+                    @*Location*@
+                    <div class="form-group">
+                        <label for="location">Stad:</label>
+                        <input type="text" class="form-control" id="location" maxlength="20" placeholder="Stad" required autofocus>
+                    </div>
+                    @*Gender*@
+                    <div class="form-group">
+                        <label for="gender">Kön:</label>
+                        <select class="form-control" id="gender">
+                            <option style="display:none;">- Välj kön -</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+                    @*ShirtSize*@
+                    <div class="form-group">
+                        <label for="size">Tröjstorlek:</label>
+                        <select class="form-control" id="size">
+                            <option style="display:none;">- Välj storlek -</option>
+                            <option>XS</option>
+                            <option>S</option>
+                            <option>M</option>
+                            <option>L</option>
+                            <option>XL</option>
+                            <option>XXL</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="col-sm-4 admin-col">
+                    @*Box*@
+                    <div class="form-group">
+                        <label for="boxesSelect">Box:</label>
+                        <select class="form-control" id="boxesSelect">
+                            <option style="display:none;">- Välj box -</option>
+                        </select>
+                    </div>
+                    @*Role*@
+                    <div class="form-group">
+                        <label for="role">Roll:</label>
+                        <select class="form-control" id="role">
+                            <option style="display:none;">- Välj roll -</option>
+                            <option>Admin</option>
+                            <option>EventAdmin</option>
+                            <option>Client</option>
+                        </select>
+                    </div>
+                    @*Claims*@
+                    <div class="form-group">
+                        <label for="claim">Krav:</label>
+                        <div class="button-group">
+                            <button type="button" id="claim" class="btn btn-default btn-md dropdown-toggle" data-toggle="dropdown">
+                                <span>- Välj claims -</span> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu admin-panel-dropdown">
+                                <li><a href="#" class="medium" data-value="EventManager" tabIndex="-1"><input type="checkbox" />&nbsp;EventManager</a></li>
+                                <li><a href="#" class="medium" data-value="Box" tabIndex="-1"><input type="checkbox" />&nbsp;Box</a></li>
+                                <li><a href="#" class="medium" data-value="CompetitionManager" tabIndex="-1"><input type="checkbox" />&nbsp;CompetitionManager</a></li>
+                                <li><a href="#" class="medium" data-value="CompetitionCreator" tabIndex="-1"><input type="checkbox" />&nbsp;CompetitionCreator</a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="adminSaveButton" class="form-group text-center">
+                        <button class="btn btn-success create" type="submit">Skapa användare</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 form-group row justify-content-center">
+                <hr class="info-line" />
+                <div class="form-group justify-content-center">
+                    <input id="searchInput" class="col-sm-4 col-lg-offset-4 form-control" maxlength="50" type="text" placeholder="Sök bland användare..">
+                </div>
+            </div>
+            <br />
+            <div class="col-sm-12 bc-system-table">
+                <table id="myTable" class="table" cellspacing="0" width="100%" style="text-align: left;">
+                    <thead>
+                        <tr>
+                            <th scope="col">E-post</th>
+                            <th scope="col">Roll</th>
+                            <th scope="col">Krav</th>
+                            <th scope="col">Ändra</th>
+                            <th scope="col">Radera</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTable"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-12 bc-system-footer"></div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/apiScripts.js"></script>
+}

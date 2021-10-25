@@ -1,0 +1,199 @@
+﻿@model SubClassResultVM
+
+<style>
+
+    tr {
+        text-align: center;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    table.headerTable {
+        margin: 0px;
+    }
+
+    /*table.contentTable {
+        table-layout: fixed;
+    }*/
+    .table-screen-shot {
+        background-color: #fff;
+    }
+
+    table.teamAndMembers {
+        width: 140px !important;
+    }
+
+    .table-bordered > tbody > tr > td {
+        vertical-align: middle;
+    }
+
+    .glyphicon-sort {
+        color: lightslategray;
+        font-size: 11px;
+    }
+    /*#subClassTable{
+        table-layout: fixed;
+    }*/
+    .table-units {
+        background: green;
+        width: 72px !important;
+    }
+</style>
+
+<table id="subClassTable" class="table table-striped table-bordered" cellspacing="0">
+    <thead>
+        <tr>
+            <th rowspan="2">#</th>
+            <th rowspan="2">Lag <span class="glyphicon glyphicon-sort"></span></th>
+            @foreach (var eventName in Model.Titles)
+            {
+                <th colspan="2">@eventName.Event</th>
+            }
+            <th rowspan="2">Totalt <br /><span class="glyphicon glyphicon-sort"></span></th>
+        </tr>
+        <tr>
+            @foreach (var eventType in Model.Titles)
+            {
+                <th>@eventType.Type <br /><span class="glyphicon glyphicon-sort"></span></th>
+                <th>Poäng <br /><span class="glyphicon glyphicon-sort"></span></th>
+            }
+        </tr>
+        @*<tr>
+                @foreach (var eventName in Model.Titles)
+                {
+                    <th>
+                        <table class="table table-bordered headerTable" width="100%">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">@eventName.Event</th>
+                                </tr>
+                                <tr>
+                                    <th>@eventName.Type</th>
+                                    <th>Poäng</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </th>
+                }
+                <th>Totalt</th>
+            </tr>*@
+    </thead>
+    <tbody>
+
+        @{int index = 1;}
+        @{int previousIndex = index;}
+        @{decimal previousScore = 0;}
+
+        @foreach (var teamResult in Model.TeamResults)
+        {
+            <tr>
+
+                @if (index == 1)
+                {
+                    <td>@index</td>
+                    previousScore = teamResult.TotalScore;
+                }
+                else
+                {
+                    if (teamResult.TotalScore == previousScore)
+                    {
+                        <td>@previousIndex</td>
+                    }
+                    else
+                    {
+                        <td>@index</td>
+                        previousIndex = index;
+                        previousScore = teamResult.TotalScore;
+                    }
+
+                }
+                <td>
+                    <table class="teamAndMembers">
+                        <thead>
+                            <tr>
+                                <th style="color: darkslategrey; text-align:left;">@teamResult.Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var member in teamResult.Members)
+                            {
+                                <tr>
+                                    @if (member.PublicProfile || member.PublicProfile == null) 
+                                    {
+                                    <td id="@member.UserId" style="text-align:left;"><a asp-controller="Profile" asp-action="PublicProfile" asp-route-id="@member.UserId">@member.Name</a></td>
+
+                                    }
+                                    else
+                                    {
+                                    <td id="@member.UserId" style="text-align:left;">@member.Name</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+                @foreach (var score in teamResult.Scores)
+                {
+                    if (score != null)
+                    {
+                        @*<td>
+                                <table class="contentTable" width="100%">
+                                    <tr>
+                                        <td>@score.Type</td>
+                                        <td>@score.Event</td>
+                                    </tr>
+                                </table>
+                            </td>*@
+                        <td colspan="1">@score.Type</td>
+                        <td style="background-color: antiquewhite;" colspan="1">@score.Event</td>
+                    }
+                    else
+                    {
+                        <td>
+                            <table>
+                                <tr>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                }
+                <td>@teamResult.TotalScore</td>
+            </tr>
+            index++;
+        }
+    </tbody>
+</table>
+@*<button id="capture" class="btn btn-primary"></button>*@
+<a href="#" id="capture" style="width:220px" class="btn btn-primary btn-lg">
+    <span class="glyphicon glyphicon-download-alt"></span> Ladda ner resultat
+</a>
+
+
+<script src="https://superal.github.io/canvas2image/canvas2image.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<script>
+    $(function () {
+        $("#capture").click(function () {
+            $('#subClassTable').addClass("table-screen-shot");
+            html2canvas(document.querySelector('#subClassTable'), {
+                backgroundColor: "#ffffff",
+                onrendered: function (canvas) {
+                    // document.body.appendChild(canvas);
+                    return Canvas2Image.saveAsPNG(canvas);
+                }
+            });
+            //$('#subClassTable').removeClass("table-screen-shot");
+        });
+    });
+
+
+
+</script>

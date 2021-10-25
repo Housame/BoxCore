@@ -1,0 +1,67 @@
+﻿<div  style="height: 900px;" class="events-carousel-wrapper">
+    <div class="events-carousel-body bc-system-wrapper">
+        <div id="events-carousel-header" class="bc-system-header">
+            <h2>STHLM Mayhem 2.0</h2>
+        </div>
+        <div style="height: 900px;" id="events-carousel-body" class="carousel slide text-center events-carousel-body events-carousel" data-ride="carousel" data-interval="10000">
+            <!-- Indicators -->
+            @*<ol class="carousel-indicators">
+                    <li class="carousel-indicators-color active" data-target="#myCarousel" data-slide-to="0"></li>
+                    <li class="carousel-indicators-color" data-target="#myCarousel" data-slide-to="1"></li>
+                    <li class="carousel-indicators-color" data-target="#myCarousel" data-slide-to="2"></li>
+                    <li class="carousel-indicators-color" data-target="#myCarousel" data-slide-to="3"></li>
+                </ol>*@
+
+
+            <!-- Wrapper for slides -->
+            <div style="height: 1000px;" class="carousel-inner" role="listbox">
+                @for (int i = 0; i < 2; i++)
+            {
+                    @if (i == 0)
+                {
+                        <div style="height: 1000px;" class="item active">
+                            <div class="events-carousel-inner">
+                                <img style="width:100%;" src="~/results/Mixed - Scale - Event 3.JPG" />
+                            </div>
+                        </div>
+                    }
+                    else if (i == 1)
+                    {
+                        <div style="height: 1000px;" class="item">
+                            <div class="events-carousel-inner">
+                                <img style="width:60%;" src="~/results/Mixed - Scale - Final.JPG" />
+                            </div>
+                        </div>
+                    }
+                    @*else if (i == 2)
+                    {
+                        <div style="height: 900px;" class="item">
+                            <div class="events-carousel-inner">
+                                <img style="width:80%;" src="~/results/MixedFinal.PNG" />
+                            </div>
+                        </div>
+                    }*@
+                }
+            </div>
+
+            <!-- Left and right controls -->
+            @*<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>*@
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+    })
+
+</script>

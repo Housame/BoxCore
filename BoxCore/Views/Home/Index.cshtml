@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+<div id="index">
+    <div id="indexDiv">
+        <img id="indexlogo" src="~/img/BoxCore04.png" />
+    </div>
+</div>
+<br />
+<br />
+<div class="container-fluid">
+    <!-- News -->
+    <div id="news" class="container-fluid text-center bg-news">
+        @Html.Partial("_News")
+    </div>
+    <br />
+    <br />
+    <!-- Contact -->
+    <div id="contact" class="container-fluid bg-news">
+        @Html.Partial("_Contact")
+    </div>
+    <!-- About -->
+    @*<div id="about" class="container-fluid bg-border">
+        @Html.Partial("_About")
+    </div>*@
+</div>

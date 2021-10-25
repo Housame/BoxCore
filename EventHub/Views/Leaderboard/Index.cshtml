@@ -1,0 +1,137 @@
+﻿@model LeaderboardIndexVM[]
+@{
+    ViewBag.Title = "Leaderboard";
+}
+
+<style>
+    .filterBtn {
+        margin-right: 2px;
+        margin-bottom: 2px;
+    }
+    #displayResult {
+        overflow: scroll;
+    }
+</style>
+
+<div class="profile-comp bc-system-wrapper">
+
+    <!-- Header -->
+    <div class="bc-system-header">
+        <h2>Resultat</h2>
+    </div>
+
+    <!-- Body -->
+    <div class="bc-table-body">
+
+        <!-- Select class list & filter options -->
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="col-sm-6">
+                    <br />
+                    <div class="well well-sm"><b>@Model[0].CompetitionName</b></div>
+                    <a asp-controller="Leaderboard" asp-action="Global"><b>Se alla tävlingar</b></a>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="selectCompClass">Klass:</label>
+                        <select class="form-control" id="selectCompClass">
+                            @foreach (var CompClass in Model)
+                            {
+                                <option id="@CompClass.Id">@CompClass.Name</option>
+                            }
+                        </select>
+                        <br />
+                        <div hidden id="loadingDataContainer">
+                            <p>Hämtar data...</p>
+                            <img src="~/leaderboard/ajax-loader.gif" alt="loader" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <!-- Display result -->
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div id="displayResult"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="bc-system-footer">
+    </div>
+
+</div>
+
+@section Scripts{
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            var selectCompClass = $('#selectCompClass');
+            var displayResult = $('#displayResult');
+            var loadingDataContainer = $('#loadingDataContainer');
+
+            getResultForClass();
+
+            selectCompClass.on('change', function () {
+                getResultForClass();
+            });
+
+            function getResultForClass() {
+
+                var id = $('#selectCompClass option:selected').attr('id');
+                loadingDataContainer.show();
+
+                $.get(
+                    '/leaderboard/subclass/' + id,
+                    function (data, status) {
+
+                        displayResult.empty();
+                        displayResult.html(data);
+                        loadingDataContainer.hide();
+
+                        $('#subClassTable').DataTable({
+                            "language":
+                                {
+                                    "decimal": "",
+                                    "emptyTable": "Ingen data tillgänglig i tabellen",
+                                    "info": "Visar _START_ till _END_ av _TOTAL_ resultat",
+                                    "infoEmpty": "Visar 0 till 0 av 0 resultat",
+                                    "infoFiltered": "(filtrerat från _MAX_ antal resultat)",
+                                    "infoPostFix": "",
+                                    "thousands": ",",
+                                    "lengthMenu": "Visa _MENU_ resultat",
+                                    "loadingRecords": "Laddar...",
+                                    "processing": "Behandlar...",
+                                    "search": "Sök:",
+                                    "zeroRecords": "Inga matchande resultat hittas",
+                                    "paginate": {
+                                        "first": "Första",
+                                        "last": "Sista",
+                                        "next": "Nästa",
+                                        "previous": "Föregående"
+                                    },
+                                    "aria": {
+                                        "sortAscending": ": activate to sort column ascending",
+                                        "sortDescending": ": activate to sort column descending"
+                                    }
+                                }
+                        });
+
+                    });
+            }
+
+        });
+
+    </script>
+
+}

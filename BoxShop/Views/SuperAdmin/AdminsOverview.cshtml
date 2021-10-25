@@ -1,0 +1,39 @@
+﻿@model IEnumerable<UserShowVM>
+@{
+    ViewBag.Title = "Admins overview";
+}
+<div id="headerDiv" class="productBox">
+    <h1>Admins</h1>
+</div>
+<div class="col-sm-10 col-sm-offset-1">
+    <div class="productBox">
+        <div class="list-group">
+            @foreach (var admin in Model)
+            {
+                <div class="list-group-item">
+                    <div class="panel panel-inverse list-group-item">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <button data-toggle="collapse" data-target="#@admin.Id" class="btn btn-default" style="float: left" type="button"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                <div style="align-content: center; color:black"><b>@admin.FirstName @admin.LastName</b></div>
+
+                                <div id="@admin.Id" class="panel-collapse collapse">
+                                    <div style="align-content: center; color:black"><b>Email:  </b>@admin.Email</div>
+                                    @if (admin.Box != null)
+                                    {
+                                        <div style="align-content: center; color:black"><b>Box:  </b>@admin.Box</div>
+                                    }
+                                    else
+                                    {<div style="align-content: center; color:black"><b>Box:  </b><span style="color:red">No box is related to this user yet!</span></div> }
+                                    <div style="align-content: center; color:black"><b>Role:  </b><span style="color:green">@admin.Role</span></div>
+                                    @*<div style="align-content: center; color:black"><b>Tfn nr:  </b>@admin.Phone</div>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

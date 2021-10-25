@@ -1,0 +1,59 @@
+﻿@model ConfirmPurchase
+
+<div id="headerDiv" class="productBox">
+    <h1>Slutför Order</h1>
+</div>
+<!-- User Info -->
+<div class="row">
+    <div style="text-align: left;" class="col-sm-6 col-sm-offset-3">
+        <h4>Användare</h4>
+    </div>
+    <div style="text-align: center" class="col-sm-6 col-sm-offset-3 productBox">
+        @Html.Partial("_UserDetail", Model.UserDetail)
+    </div>
+</div>
+<br />
+<!-- Products -->
+<div class="row">
+    <div style="text-align: left;" class="col-sm-6 col-sm-offset-3">
+        <h4>Dina varor</h4>
+    </div>
+    <div style="text-align:left;" class="col-sm-6 col-sm-offset-3 productBox">
+        <div class="row">
+            <div class="col-sm-3">
+                <p></p>
+            </div>
+            <div class="col-sm-3">
+                <p>Name</p>
+            </div>
+            <div class="col-sm-3">
+                <p>VAT</p>
+            </div>
+            <div class="col-sm-3">
+                <p>Pris (SEK)</p>
+            </div>
+        </div>
+        <hr />
+        @foreach (ProductDisplayVM product in Model.productDetails)
+        {
+            @Html.Partial("_ProductDetails", product);
+        }
+        <hr />
+        <div class="row">
+            <div class="col-sm-3">
+                <p>Totalt</p>
+            </div>
+            <div class="col-sm-3 col-sm-offset-6">
+                <p>= @Model.ProductSum kr</p>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-sm-2 col-sm-offset-5">
+        <a asp-controller="Store" asp-action="PersistOrder" class="btn btn-success btn-block" role="button">Bekräfta Köp</a>
+        <hr />
+        <a asp-controller="Store" asp-action="Index">Avbryt Order</a>
+    </div>
+</div>

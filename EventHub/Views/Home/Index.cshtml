@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+@Html.Partial("_PageHeader")
+@*<div id="index">
+        <div id="indexDiv" href="#down" title="Ner">
+            <a id="scroll-down" href="#down" title="Ner">
+                <span class="glyphicon glyphicon-chevron-down"></span>
+            </a>
+        </div>
+    </div>*@
+<a id="down"></a>
+<div class="container-fluid">
+    <br />
+    <br />
+    <!-- News -->
+    @*<div id="news" class="container-fluid text-center bc-modal-shadow">
+        @Html.Partial("_News")
+    </div>
+    <br />
+    <br />*@
+    <!-- News -->
+    <div id="news" class="container-fluid text-center bc-modal-shadow">
+        @Html.Partial("_Competitions")
+    </div>
+    <br />
+    <br />
+    <!-- Register -->
+    <div id="register" class="container-fluid bg-news bc-modal-shadow">
+        @Html.Partial("_Register")
+    </div>
+    <br />
+    <br />
+    <!-- Events -->
+    @*<div id="register" class="container-fluid bg-news bc-modal-shadow">
+            @Html.Partial("_Events")
+        </div>
+        <br />
+        <br />*@
+    <!-- Leaderboard -->
+    <div id="register" class="container-fluid bg-news bc-modal-shadow">
+        @Html.Partial("_LeaderboardRedirect")
+    </div>
+    <br />
+    <br />
+    <!-- Contact -->
+    @*<div id="contact" class="container-fluid bg-news bc-modal-shadow">
+            @Html.Partial("_Contact")
+        </div>
+        <br />
+        <br />*@
+    <!-- Partners -->
+    @*<div id="partners" class="container-fluid bg-news bc-modal-shadow">
+            @Html.Partial("_Partners")
+        </div>*@
+    <!-- About -->
+    @*<div id="about" class="container-fluid bg-border">
+            @Html.Partial("_About")
+        </div>*@
+    <br />
+    <br />
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#scroll-down").mouseenter(function () {
+                var div = $(this);
+                div.stop(true, false);
+                div.animate({ opacity: '1' }, "slow");
+            });
+            $("#scroll-down").mouseleave(function () {
+                var div = $(this);
+                div.stop(true, false);
+                div.animate({ opacity: '0.5' }, "slow");
+            });
+        })
+    </script>
+}

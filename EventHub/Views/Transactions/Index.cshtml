@@ -1,0 +1,150 @@
+﻿@model CompetitionTransactionsVM
+@{
+    ViewBag.Title = "Transaktioner";
+}
+
+<div class="event-main" id="mainContainer">
+    <div class="overview-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h3>Reservationer @Model.Name</h3>
+            <input data="@Model.Id" asp-for="@Model.Id" id="competition-id"/>
+        </div>
+        @Html.Partial("_Brief", Model.Brief)
+    </div>
+    <div class="overview-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h3>Transaktioner </h3>
+        </div>
+        <div class="bc-overview-body">
+            @Html.Partial("_Transactions", Model.Transaction)
+        </div>
+    </div>
+    <div class="overview-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h3>Skapa ny transaktion </h3>
+        </div>
+        <div class="bc-overview-body">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <span class="pull-left">REFERENSNUMMER: @Model.Reference</span> Antal reservationer: <span id="qtyReservations">0</span><div class="pull-right">
+                        PRISPLAN
+                        <select id="pricePlan">
+                            <option value="0.01">1</option>
+                            <option value="0.02">2</option>
+                            <option value="0.03">3</option>
+                            <option value="0.04">4</option>
+                        </select> %
+                    </div>
+                </div>
+                @Html.Partial("_NewTransaction", Model.Reservation)
+
+            </div>
+            </div>
+
+
+        </div>
+</div>
+@section Scripts    {
+    <script>
+        $(document).ready(function () {
+
+            var checkedReservations = 0;
+            var totalValue = 0;
+            var provision = 0;
+            var discounts = 0;
+            var toPay = 0;
+            
+            $(document).on('change', '.reservationCheckBox', function () {
+                let subtract = false;
+
+                if (this.checked) {                 
+                    checkedReservations++;                  
+                               
+                }
+                else {
+                    checkedReservations--;
+                    subtract = true;
+                }
+               let price = parseFloat($(this).closest('tr').find('.price').text().replace(",", "."));
+               let discount = parseFloat($(this).closest('tr').find('.discount').text().replace(",", "."));
+                
+                calculateAndUpdate(price, discount, subtract);
+
+                $("#qtyReservations").text(checkedReservations);
+            });
+            $(document).on('change', "#pricePlan", function () {
+                provision = totalValue * $(this).val()
+                $("#totalProvision").text(provision);
+                calculateToPay(); 
+            });
+
+            $(document).on('click', '#transactButton', function () {
+                console.log(toPay);
+                var references = new Array();
+
+                var compId = $("#competition-id").val();
+                var pricePlan = $("#pricePlan").val();
+                console.log("price" + pricePlan);
+                
+
+                $(':checkbox').each(function () {
+                    if (this.checked) {                      
+                        references.push(this.id);
+                        console.log(this.id);
+                    }                   
+                });               
+
+                $.ajax({                 
+                    url: "/Transactions/MakeNewTransaction",
+                    data: {
+                        'References': references,
+                        'Credit': provision.toString().replace(".", ","),
+                        'Sum': totalValue.toString().replace(".", ","),
+                        'Debt': toPay.toString().replace(".", ","),
+                        'Discount': discounts.toString().replace(".", ","),
+                        'CompetitionId': compId,
+                        'PricePlan': pricePlan.toString().replace(".", ",")
+                    },
+                    type: 'POST',
+                    success: function (data) {
+                        $('#mainContainer').replaceWith(data);
+                         checkedReservations = 0;
+                         totalValue = 0;
+                         provision = 0;
+                         discounts = 0;
+                         toPay = 0;
+                       
+                    },
+                });
+            });
+            function calculateAndUpdate(price, discount, subtract) {
+                if (subtract) {
+                    totalValue -= price;
+                    discounts -= discount;
+                }
+                else {
+
+                    totalValue += price;
+                    discounts += discount;
+                }
+                console.log(totalValue);
+                provision = totalValue * $("#pricePlan").val();
+                console.log(provision);
+                $("#totalValue").text(totalValue);
+                $("#totalProvision").text(provision);
+                $("#totalDiscount").text(discounts);
+                calculateToPay();
+            }
+            function calculateToPay() {
+                toPay = totalValue - discounts - provision;         
+                $("#toPay").text(toPay);
+            }
+        });
+      
+    </script>
+   
+
+    }
+
+

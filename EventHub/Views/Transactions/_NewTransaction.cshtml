@@ -1,0 +1,40 @@
+﻿@model List<TransactionReservationsVM>
+
+    <!-- Table -->
+    <div class="bc-system-table">
+        <table class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+            <tr>
+                <th scope="col">Referens</th>
+                <th scope="col">Datum</th>
+                <th scope="col">Pris</th>
+                <th scope="col">Rabatt</th>
+                <th scope="col">Kort/Faktura</th>
+                <th scope="col">Vald</th>
+
+            </tr>
+            @foreach (var reservation in Model)
+    {
+        if (reservation.TransactionId == null)
+        {
+            <tr>
+                <td scope="col">@reservation.Reference</td>
+                <td scope="col">@reservation.Date</td>
+                <td scope="col" class="price" >@reservation.Price</td>
+                <td scope="col" class="discount">@reservation.Discount</td>
+                <td scope="col">@reservation.Instrument</td>
+                <td scope="col">
+                    <input asp-for="@reservation.IsChecked" class="reservationCheckBox" id="@reservation.Reference" />
+                </td>
+            </tr>
+}
+}
+        </table>
+    </div>
+    <div class="panel-footer">
+        <div class="pull-right"><strong>VÄRDE: <span id="totalValue">0</span> </strong></div><br />
+        <div class="pull-right" ><strong>- TAXA: <span id="totalProvision">0</span></strong></div><br />
+        <div class="pull-right"><strong>- RABATTER: <span id="totalDiscount">0</span></strong></div><br />
+        <br />
+        <div><button id="transactButton" class="btn btn-success">Skapa</button><span class="pull-right">ATT BETALA: <span id="toPay">0</span></span></div>
+    </div>
+

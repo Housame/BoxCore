@@ -1,0 +1,36 @@
+﻿.productFrame{
+    background-color: white;
+    border-radius: 5px;
+}
+
+.productFrame ul {
+    margin: 0px;
+}
+
+.text-nowrap {
+    white-space: nowrap;
+}
+
+.img-responsive {
+    margin: 0 auto;
+}
+
+#header {
+    opacity: 0.5;
+    filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+
+.navbar-header-bottom {
+    float: left;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+}
+
+.navbar-brand {
+    float: none;
+}
+
+.hide{
+    display: none;
+}

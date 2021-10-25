@@ -1,0 +1,86 @@
+﻿@model IEnumerable<MakeReservationVM.CompetitionVM>
+
+@foreach (var competition in Model)
+{
+    <form method="get">
+        <div class="list-group-item">
+            <div class="comp-info panel panel-inverse list-group-item">
+                <div class="panel-heading">
+                    <div data-toggle="collapse" data-target="#@competition.Id" type="button" class="panel-title comp-info-panel">
+                        @*<button data-toggle="collapse" data-target="#@competition.Id" class="btn btn-default comp-info-button" style="float: left" type="button"><i class="glyphicon glyphicon-info-sign"></i></button>*@
+                        <button data-toggle="collapse" data-target="#@competition.Id" class="comp-info-button" type="button"><img src="~/img/BoxCore04.png" /></button>
+                        <div style="align-content: center"><b>@competition.Name</b></div>
+                        <div style="align-content: center">@competition.StartDate.ToString("yyyy-MM-dd") till @competition.EndDate.ToString("yyyy-MM-dd")</div>
+                        <div style="align-content: center">@competition.Location</div>
+                    </div>
+                    <br />
+                    <div>
+                        <a style="margin-bottom: 5px;" asp-controller="event" asp-action="ParticipantsList" asp-route-id="@competition.Id" class="btn btn-primary" role="button">Kontrollpanel</a>
+                        <a style="margin-bottom: 5px;" asp-controller="Leaderboard" asp-action="Index" asp-route-id="@competition.Id" class="btn btn-primary" role="button">Leaderboard</a><br />
+                        <a asp-controller="competition" asp-action="editcompetition" asp-route-id="@competition.Id" class="btn btn-primary" role="button">Ändra</a>
+                        <a asp-controller="ConstructComp" asp-action="Index" asp-route-id="@competition.Id" class="btn btn-primary" role="button">Konstruera</a>
+                    </div>
+                </div>
+                <div id="@competition.Id" class="panel-collapse collapse">
+                    <div style="border: 1px #ddd solid" class="bc-competition-body">
+                        <div class="stepIndicatorTxt event-info well">
+                            <strong>Tävlingsinformation</strong>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table bc-system-table">
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: left"><strong>Startdatum: </strong></td>
+                                        <td style="text-align: right">@competition.StartDate.ToString("yyyy-MM-dd")</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left"><strong>Slutdatum: </strong></td>
+                                        <td style="text-align: right">@competition.EndDate.ToString("yyyy-MM-dd")</td>
+                                    </tr>
+                                    @*<tr>
+                                            <td style="text-align: left"><strong style="text-align: left">Beskrivning: </strong></td>
+                                            <td style="text-align: right">@competition.Description</td>
+                                        </tr>*@
+                                    <tr>
+                                        <td style="text-align: left"><strong style="text-align: left">Plats: </strong></td>
+                                        <td style="text-align: right">@competition.Location</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="bc-competition-info">
+                                <textarea id="bc-competition-info" class="form-control" rows="5" readonly>
+                                @competition.Description
+                            </textarea>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    @foreach (var subcomp in competition.SubCompetition)
+                    {
+                        <br />
+                        <div class="stepIndicatorTxt event-info well">
+                            <strong>@subcomp.Type @subcomp.Gender @subcomp.Difficulty</strong>
+                        </div>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: left"><strong>Datum: </strong></td>
+                                        <td style="text-align: right">@subcomp.Date.ToString("yyyy-MM-dd")</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left"><strong style="text-align: left">Pris: </strong></td>
+                                        <td style="text-align: right">@subcomp.Price.ToString("N0") kr</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left"><strong style="text-align: left">Bokningar: </strong></td>
+                                        <td style="text-align: right">@subcomp.ConfirmedParticipants av @subcomp.Quantity</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <hr style="margin: 0; padding: 0" />
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+}

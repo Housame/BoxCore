@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Bekräftelse";
+}
+<div class="event-main">
+    <div class="user-form bc-system-wrapper">
+        <div class="bc-system-header">
+            <h3>Bekräftelse</h3>
+        </div>
+        <div class="bc-system-body">
+            <span id="userCreated" class="glyphicon glyphicon-ok-circle"></span>
+            <br />
+            <br />
+            <br />
+            <div id="CountDown" style="display:none;">
+                <h4>
+                    Nu länkas du för att skapa lösenord om <span id="CountDownLabel" style="color:red"></span> sekunder.
+                    <br />
+                    Annars kan du klicka <a href=@ViewBag.Url>här</a>
+                </h4>
+            </div>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>
+@section Scripts{
+<script>
+
+    function RedirectAfterDelayFn() {
+        var seconds = 5;
+        var dvCountDown = document.getElementById("CountDown");
+        var lblCount = document.getElementById("CountDownLabel");
+        var callBackUrl = '@ViewBag.Url';
+        callBackUrl = callBackUrl.replace('&amp;', '&');
+        dvCountDown.style.display = "block";
+        lblCount.innerHTML = seconds;
+        setInterval(function () {
+            seconds--;
+
+            lblCount.innerHTML = seconds;
+            if (seconds == 0) {
+                dvCountDown.style.display = "none";
+                window.location.href = callBackUrl;
+            }
+        }, 1000);
+    }
+    window.onload = RedirectAfterDelayFn();
+</script>
+}
+

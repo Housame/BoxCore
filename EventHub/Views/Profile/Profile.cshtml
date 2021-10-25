@@ -1,0 +1,167 @@
+﻿@model ProfileVM
+@{
+    ViewBag.Title = "Profil";
+}
+<div class="profile-user">
+    <div class="profile-body bc-system-wrapper">
+        <div class="bc-system-title">
+            <h1>@String.Format($"{Model.ListProfile.FirstName} {Model.ListProfile.LastName}")</h1>
+        </div>
+        <div class="bc-user-body">
+            <div class="row container">
+                <div class="user col-sm-4">
+                    <div>
+                        @if (Model.ListProfile.ProfileImage != null)
+                        {
+                            var base64 = Convert.ToBase64String(Model.ListProfile.ProfileImage);
+                            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                            <img class="img-thumbnail" src="@imgSrc" width="250" height="250" />
+                        }
+                        else
+                        {
+                            <img width="250" height="250" />
+                        }
+                    </div>
+                    <br />
+                    <div style="width: 250px; margin: 0 auto;">
+                        @if (TempData["ImgSizeMsg"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["ImgSizeMsg"].ToString()</div>
+                        }
+                        <form asp-controller="Profile" asp-action="profile" method="post" enctype="multipart/form-data">
+                            <input asp-for="ImageProfile.Image" id="input-1" type="file" class="btn btn-primary">
+                            <button disabled style="width: 100%;" type="submit" class="btn btn-success buttonBorder uploadImage"><span class="glyphicon glyphicon-upload"></span> Ladda upp</button>
+                        </form>
+                        @*<br />
+                            <a style="width:250px;" href='@Url.Action("Edit", "UserClient")' id="user-edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Redigera profil</a>*@
+                    </div>
+                    <br />
+                </div>
+                <div class="user col-sm-8">
+                    <div class="bc-system-header">
+                        <h3>Användarinformation</h3>
+                    </div>
+                    <div class="bc-user-body">
+                        <table class="table bc-system-table">
+                            <tbody>
+                                <!-- Email -->
+                                <tr>
+                                    <td style="text-align: left"><strong>E-post: </strong></td>
+                                    <td style="text-align: right">@Model.ListProfile.Email</td>
+                                </tr>
+                                <!-- Birth date -->
+                                <tr>
+                                    <td style="text-align: left"><strong style="text-align: left">Födelsedatum: </strong></td>
+                                    <td style="text-align: right">@Model.ListProfile.DateOfBirth.GetValueOrDefault(DateTime.Now).ToString("yyyy-MM-dd")</td>
+                                </tr>
+                                <!-- Gender -->
+                                <tr>
+                                    <td style="text-align: left"><strong>Kön: </strong></td>
+                                    <td style="text-align: right">@Model.ListProfile.Gender</td>
+                                </tr>
+                                <!-- Location -->
+                                <tr>
+                                    <td style="text-align: left"><strong style="text-align: left">Stad: </strong></td>
+                                    <td style="text-align: right">@Model.ListProfile.Location</td>
+                                </tr>
+                                <!-- Box -->
+                                <tr>
+                                    <td style="text-align: left"><strong style="text-align: left">Box: </strong></td>
+                                    @if (@Model.ListProfile.Box == null)
+                                    {
+                                        <td style="text-align: right ; color:lightgray"><b>Ej ansluten</b></td>
+                                    }
+                                    else
+                                    {
+                                        <td style="text-align: right">@Model.ListProfile.Box</td>
+                                    }
+
+                                </tr>
+                                <!-- Shirt Size -->
+                                <tr>
+                                    <td style="text-align: left"><strong style="text-align: left">Tröjstorlek: </strong></td>
+                                    <td style="text-align: right">@Model.ListProfile.ShirtSize</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.ListProfile.Competitions.Count() == 0)
+    {
+        <div class="profile-comp bc-system-wrapper">
+            <div class="bc-system-header">
+                <h2>Bokningar</h2>
+            </div>
+            <div class="bc-overview-body">
+                <div class="bc-system-table profile-comp-booking">
+                    <h1>Inga bokningar</h1>
+                    <p>Bläddra genom tillgängliga tävlingar <a asp-controller="Reservation" asp-action="reserve">här</a></p>
+                    <br />
+                </div>
+            </div>
+            <div class="bc-system-footer"></div>
+        </div>
+    }
+    @if (Model.ListProfile.Competitions.Count() > 0)
+    {
+        <div class="profile-comp bc-system-wrapper">
+            <div class="bc-system-header">
+                <h2>Tävlingar</h2>
+            </div>
+            <div class="bc-table-body">
+                <div class="bc-system-table">
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet" />
+                    <table data-toggle="table" data-sort-order="desc" class="table table-bordered" cellspacing="0" width="100%" style="text-align: left;">
+                        <thead>
+                            <tr>
+                                <th data-field="Name" data-sortable="true">Namn</th>
+                                <th data-field="Description" data-sortable="true">Beskrivning</th>
+                                <th data-field="Cost" data-sortable="true">Kostnad</th>
+                                <th data-field="Date" data-sortable="true">Datum</th>
+                                <th data-field="Difficulty" data-sortable="true">Svårighetsgrad</th>
+                                <th data-field="Location" data-sortable="true">Plats</th>
+                                <th data-field="MaxAttendants" data-sortable="true">Antal deltagare</th>
+                                <th data-field="Alias" data-sortable="true">Alias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (CompetitionProfileView competition in Model.ListProfile.Competitions)
+                            {
+                                <tr class="comp-booked">
+                                    <td><a asp-controller="Leaderboard" asp-action="Index" asp-route-id="@competition.Id">@competition.Name</a></td>
+                                    <td>@competition.Description</td>
+                                    <td>@competition.Cost</td>
+                                    <td>@competition.Date.ToString("yyyy")&#x2011;@competition.Date.ToString("MM")&#x2011;@competition.Date.ToString("dd")</td>
+                                    <td>@competition.Difficulty</td>
+                                    <td>@competition.Location</td>
+                                    <td>@competition.MaxAttendants</td>
+                                    <td>@competition.Alias</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bc-system-footer"></div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('input[type=file]').change(function (e) {
+                $('.uploadImage').prop('disabled', false);
+            });
+        });
+
+    </script>
+}

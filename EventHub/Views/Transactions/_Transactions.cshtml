@@ -1,0 +1,29 @@
+﻿@model List<TransactionsVM>
+
+@foreach (var transaction in Model)
+{
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">@transaction.Date.ToShortDateString() @transaction.Reference  <div class="pull-right"><strong>SUMMA: </strong>@transaction.Debt PRISPLAN @transaction.PricePlan %</div></div>
+    <!-- Table -->   
+        <div class="bc-system-table">
+            <table class="subCompTable" cellspacing="0" width="100%" style="text-align: left;">
+                <tr>
+                    <th scope="col">Referens</th>
+                    <th scope="col">Payment Session Url</th>
+
+                </tr>
+                @foreach (var reservation in transaction.Reservation)
+                {
+                <tr>
+                    <td>@reservation.Reference</td>
+                    <td>@reservation.PaymentSessionUrl</td>
+                </tr>
+
+                }
+            </table>
+            </div>
+            </div>
+      
+    }
+

@@ -1,0 +1,252 @@
+﻿@model DiscountIndexVM
+
+<style>
+    .helperTxt {
+        color: gray;
+        font-size: 10px;
+        padding-left: 5px;
+    }
+</style>
+
+<div class="event-main container">
+    <div class="overview-body bc-system-wrapper">
+
+        <div class="bc-system-header">
+            <h1>Rabattkoder</h1>
+        </div>
+
+        <div class="bc-system-body">
+            <div class="row">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <h3 style="color:black;">Skapa kod</h3>
+                            <hr />
+                            <div class="form-group">
+                                <label for="code">Kod<span class="helperTxt">Koden du anger för att få rabatt.</span></label>
+                                <input type="text" class="form-control" id="code">
+                            </div>
+                            <div class="form-group">
+                                <label for="percentage">Avdrag (%)<span class="helperTxt">Andel i procent som kommer att dras av från totalsumman, exempelvis 10 för 10 procent.</span></label>
+                                <input min="1" max="100" type="number" class="form-control" id="percentageoff">
+                            </div>
+                            <div class="form-group">
+                                <label for="expiryDate">Giltighet<span class="helperTxt">Datum som avgör hur länge rabatten ska gälla.</span></label>
+                                <input type="date" class="form-control" id="expiryDate">
+                            </div>
+                            @*<div class="form-group">
+                                    <label><input id="validOnceCheckbox" style="vertical-align:middle;" type="checkbox" value=""><span class="helperTxt">Ska rabatten gälla endast 1 gång?</span></label>
+                                </div>*@
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3 style="color:black;">Tilldela kod till tävling</h3>
+                                    <hr />
+                                    @if (Model.ExistingCompetitions.Count > 0)
+                                    {
+                                        <div class="form-group">
+                                            <select class="form-control" id="competitionSelect">
+                                                @foreach (var comp in Model.ExistingCompetitions)
+                                                {
+                                                    <option value="@comp.CompId">
+                                                        @comp.CompName
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    }
+                                    <div id="subCompCheckboxesContainer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <hr />
+                            <div style="display:none;" id="invalidModelState" class="alert alert-danger"></div>
+                            <button class="btn btn-success addCodes">Spara</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 style="color:black;">Existerande koder</h3>
+                            <hr />
+                            <div id="existingCodesContainer">
+                                @if (Model.ExistingDiscountCodes.Count > 0)
+                                {
+                                    @Html.Partial("_Codes", Model.ExistingDiscountCodes)
+
+                                }
+                                else
+                                {
+                                    <h3 style="color:black;">Inga existerande rabattkoder finns. Du kan skapa en rabattkod med formuläret till vänster.</h3>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-sm-12 bc-system-footer"></div>
+
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            var count = @Model.ExistingCompetitions.Count;
+
+            if (count > 0 && @Model.ExistingCompetitions[0].CompId > 0) {
+
+                var compId = @Model.ExistingCompetitions[0].CompId;
+
+                $.ajax({
+                    url: '/Discount/GetSubComps',
+                    type: 'GET',
+                    data: { 'id': compId },
+                    success: function (response) {
+                        $('#subCompCheckboxesContainer').html(response);
+                        allBox = $('.allBox');
+                        subCompBox = $('.subCompBox');
+                    },
+                    error: function (xhr) {
+                        console.log('error');
+                    }
+                });
+
+            }
+            else {
+                console.log("No entries found");
+            }
+
+            var addCodes = $('.addCodes');
+            var existingCodesContainer = $('#existingCodesContainer');
+            var invalidModelState = $('#invalidModelState');
+
+            // Input elements
+            var code = $('#code');
+            var percentageoff = $('#percentageoff');
+            var expiryDate = $('#expiryDate');
+            // var validOnceCheckbox = $('#validOnceCheckbox');
+
+            var subCompBox = $('.subCompBox');
+            var allBox = $('.allBox');
+
+            addCodes.on('click', function () {
+
+                var model = {};
+                model.code = code.val();
+                model.percentageoff = percentageoff.val();
+                model.expiryDate = expiryDate.val();
+                // model.codevalidonce = $('#validOnceCheckbox').is(':checked');
+                model.subcompid = [];
+
+                if (allBox.prop('checked')) {
+                    model.subcompid = [];
+                    subCompBox.each(function () {
+                        model.subcompid.push($(this).val());
+                    });
+                }
+                else {
+                    subCompBox.each(function () {
+                        if ($(this).prop('checked')) {
+                            model.subcompid.push($(this).val());
+                            console.log('true');
+                        }
+                    });
+                }
+
+                console.log(model);
+
+                $.ajax({
+                    url: '/Discount/AddCode',
+                    type: 'POST',
+                    data: { 'viewModel': model },
+                    success: function (response) {
+                        if (response.valid != null) {
+                            invalidModelState.empty().html(response.msg).slideDown();
+                        }
+                        else {
+                            code.val('');
+                            percentageoff.val('');
+                            expiryDate.val('');
+                            subCompBox.each(function () {
+                                $(this).attr('checked', false);
+                            });
+                            allBox.attr('checked', false);
+                            existingCodesContainer.html(response);
+                            invalidModelState.css('display', 'none');
+                            // $('#validOnceCheckbox').prop('checked', false);
+                        }
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText);
+                    }
+                });
+
+            });
+
+            $('#competitionSelect').on('change', function () {
+
+                invalidModelState.css('display', 'none');
+                $('#subCompCheckboxesContainer').empty();
+                var compId = $('option:selected').val();
+
+                $.ajax({
+                    url: '/Discount/GetSubComps',
+                    type: 'GET',
+                    data: { 'id': compId },
+                    success: function (response) {
+                        $('#subCompCheckboxesContainer').html(response);
+                        allBox = $('.allBox');
+                        subCompBox = $('.subCompBox');
+                    },
+                    error: function (xhr) {
+                        console.log('error');
+                    }
+                });
+
+            });
+
+            $(document).on('click', '.deleteCode', function () {
+
+                console.log('Delete clicked');
+                var viewmodel = {};
+                viewmodel.discountId = $(this).attr('data-discountId');
+                viewmodel.subCompId = $(this).attr('data-subCompId');
+                console.log(viewmodel);
+
+                $.ajax({
+                    url: '/Discount/DeleteCode',
+                    type: 'DELETE',
+                    data: { 'viewModel': viewmodel },
+                    success: function (response) {
+                        existingCodesContainer.html(response);
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText);
+                    }
+                });
+
+            });
+
+        });
+
+    </script>
+
+}

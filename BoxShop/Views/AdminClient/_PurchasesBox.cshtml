@@ -1,0 +1,50 @@
+﻿@model List<OrderVM>
+
+<div style="color: black" class="panel-body">
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Datum</th>
+                <th>Order Id</th>
+                <th>Produkt</th>
+                <th>Antal</th>
+                <th>Pris(Kr)</th>
+                <th>Moms(Kr)</th>
+                <th>Moms(%)</th>
+                <th>Summa</th>
+                <th>Moms Summa</th>
+            </tr>
+            @foreach (var model in Model)
+            { 
+            foreach (var purchase in model.OrderItem)
+            {
+                <tr>
+                    <td style="text-align: left">@purchase.DateOfPurchase.ToString("yyyy-MM-dd")</td>
+                    <td style="text-align: left">@purchase.OrderId.ToString("D8")</td>
+                    <td style="text-align: left">@purchase.ProductName</td>
+                    <td style="text-align: left">@purchase.Quantity.ToString()</td>
+                    <td style="text-align: left">@purchase.Price</td>
+                    <td style="text-align: left">@purchase.Vat</td>
+                    @if (purchase.Category == 1)
+                    {
+                        <td style="text-align: left">6%</td>
+                    }
+                    @if (purchase.Category == 2)
+                    {
+                        <td style="text-align: left">12%</td>
+                    }
+                    else
+                    {
+                        <td style="text-align: left">25%</td>
+                    }
+                    <td style="text-align: left"> @((purchase.Price * purchase.Quantity).ToString())</td>
+                    <td style="text-align: left"> @((purchase.Vat * purchase.Quantity).ToString())</td>
+                </tr>
+                    }
+            }
+        </tbody>
+    </table>
+</div>
+<div id="billButtonDiv">
+    <button id="billButton" type="submit" class="btn btn-success">Skicka Faktura</button>
+</div>

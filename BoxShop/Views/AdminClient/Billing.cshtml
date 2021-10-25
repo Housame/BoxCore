@@ -1,0 +1,32 @@
+﻿@model List<UserOrdersVM>
+@{
+    ViewBag.Title = "Billing";
+}
+<div id="headerDiv" class="productBox">
+    <h1>Fakturera</h1>
+</div>
+<div class="col-sm-10 col-sm-offset-1">
+    <div class="productBox">
+        <div class="list-group">
+            @foreach (var bill in Model)
+            {
+                <div class="list-group-item">
+                    <div class="panel panel-inverse list-group-item">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <button data-toggle="collapse" data-target="#@bill.Id" class="btn btn-default" style="float: left" type="button"><i class="glyphicon glyphicon-info-sign"></i></button>
+                                <div style="align-content: center; color:black"><b>@bill.FirstName @bill.LastName</b></div>
+                            </div>
+                        </div>
+                        <div id="@bill.Id" class="panel-collapse collapse">
+                            @Html.Partial("_PurchasesBox", bill.Order)  @*Eller så jag testa att skicka id som user har*@
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <form asp-controller="AdminClient" asp-action="SendBills" method="post">
+            <button type="submit" class="btn btn-success">Fakturera alla</button>
+        </form>
+    </div>
+</div>

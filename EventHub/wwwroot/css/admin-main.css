@@ -1,0 +1,90 @@
+﻿.form-control, #claim {
+    width: 280px;
+}
+
+#claim {
+    border: 1px #ccc solid;
+    border-radius: 4px;
+}
+
+.admin-panel-dropdown {
+    position: relative;
+    top: 0;
+    width: 280px;
+}
+
+.admin-main {
+    padding-top: 40px;
+    height: 100%;
+    max-width: 100%;
+}
+
+.admin-col {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+#adminSaveButton button {
+    margin-top: 25px;
+    width: 280px;
+}
+
+.admin-edit-button, .admin-remove-button {
+    height: 50px !important;
+    width: 100% !important;
+}
+
+.admin-button-table {
+    height: 100% !important;
+    padding: 0 !important;
+}
+
+#active-user {
+    color: #888;
+}
+
+hr.info-line {
+    height: 30px;
+    border-style: solid;
+    border-color: #8c8b8b;
+    border-width: 1px 0 0 0;
+    border-radius: 20px;
+}
+
+    hr.info-line:before {
+        display: block;
+        content: "";
+        height: 30px;
+        margin-top: -31px;
+        border-style: solid;
+        border-color: #8c8b8b;
+        border-width: 0 0 1px 0;
+        border-radius: 20px;
+    }
+
+#admin-user-select {
+    padding: 20px 10px 10px 10px;
+    background: #fff;
+    border: 1px #ccc solid;
+    border-radius: 5px;
+    text-align: center;
+    vertical-align: middle;
+    width: 290px;
+}
+
+@media screen and (max-width: 767px) {
+    .admin-main {
+        padding-top: 0 !important;
+    }
+
+    #adminSaveButton, .button-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #admin-user-select {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

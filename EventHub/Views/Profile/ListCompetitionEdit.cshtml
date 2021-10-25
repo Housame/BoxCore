@@ -1,0 +1,28 @@
+﻿@model MakeReservationVM
+@{
+    ViewBag.Title = "Edit Competition";
+}
+<div class="event-main">
+    <div class="comp-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Mina tävlingar</h1>
+        </div>
+        @* This page consists of two partial views. One for the filtering-choices
+            and one for the filtered results. The model contains two sub-models passed
+            on to each partial view.*@
+        <div class="bc-system-body">
+            <div id="filterDiv" class="list-group">
+                @Html.Partial("_FilterBox", Model.Filter)
+            </div>
+            <br />
+            <div id="competitionDiv" class="list-group">
+                @Html.Partial("_CompetitionBoxToEdit", Model.Competitions)
+            </div>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/filterScripts.js"></script>
+}
+

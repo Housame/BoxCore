@@ -1,0 +1,132 @@
+﻿@model MakeReservationVM
+@{
+    ViewBag.Title = "Boka tävling";
+}
+<div class="event-main">
+    <div class="comp-body bc-system-wrapper">
+        <div class="bc-system-header">
+            @*<img id="bc-barbell-left" src="~/img/bc-barbell-left.png" />*@
+            <h1>Boka tävling</h1>
+            @*<img id="bc-barbell-right" src="~/img/bc-barbell-right.png" />*@
+        </div>
+        @* This page consists of two partial views. One for the filtering-choices
+            and one for the filtered results. The model contains two sub-models passed
+            on to each partial view.*@
+        <div class="bc-system-body">
+            <div id="filterDiv" class="list-group">
+                @Html.Partial("_FilterBox", Model.Filter)
+            </div>
+            <br />
+            <div id="competitionDiv" class="list-group">
+                @Html.Partial("_CompetitionBox", Model.Competitions)
+            </div>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <environment names="Development">
+        <script src="~/js/filterScripts.js"></script>
+        <script src="https://checkout.externalintegration.payex.com/js/payex-checkout.min.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/filterScripts.js"></script>
+        <script src="https://checkout.payex.com/js/payex-checkout.min.js"></script>
+    </environment>
+
+
+    <!-- Script to launch Modal -->
+    <script>
+        $(document).ready(function () {
+
+            // Start
+            $(document).on('click', '.modalTest', function () {
+              
+                var ua = navigator.userAgent || navigator.vendor || window.opera;
+
+               
+
+                var subEventId = $(this).attr('id');
+
+                if (isFacebookApp()) {
+                    console.log("Facebook-app detected");
+                    subEventId = 0;
+                }
+
+                function isFacebookApp() {
+                    console.log(ua.indexOf("FBAN"));
+                    return (ua.indexOf("FBAN") > -1) && (ua.indexOf("FBAV") > -1);
+                }
+
+                $.ajax({
+                    url: "/Reservation/ModalReserve",
+                    data: { 'id': subEventId },
+                    type: 'Get',
+                    success: function (data) {
+                        $('.modal-content').html(data);
+                        $('#myModal').modal('toggle');
+                    },
+                });
+            });
+
+            $('#myModal').on("hide.bs.modal", function () {
+                $("input").prop('disabled', false);
+                $("select").prop('disabled', false);
+                $.ajax({
+                    url: "/Reservation/ModalReserveOnClose",
+                    type: 'Post'
+                });
+            })
+            // End
+
+        })
+
+
+
+        function Pay(url) {
+            $("#myModal .close").click();
+            payex.checkout(url,
+                {
+                    onOpen: function () {
+                        $.ajax({
+                            url: "/Reservation/PayexLaunched/",
+                            type: 'POST',
+                        });
+                    },
+                    onClose: function () {
+                        $.ajax({
+                            url: "/Reservation/ClearPaymentSession/",
+                            type: 'DELETE',
+                        });
+                    },
+                    onError: function () {
+                        $.ajax({
+                            url: "/Reservation/PayexFailed/",
+                            type: 'POST',
+                        });
+                    },
+                    onComplete: function () {
+                        $.ajax({
+                            url: "/Reservation/FinalizeReservation/",
+                            data: { 'status': "Completed" },
+                            type: 'POST',
+                            success: function (data) {
+                                window.location.href = data;
+                            },
+                        });
+                    }
+                },
+                "open");
+        };
+    </script>
+
+}
+

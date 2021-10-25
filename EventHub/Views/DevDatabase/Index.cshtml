@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "Database Populator";
+}
+
+<div class="event-main">
+    <div class="comp-body bc-system-wrapper">
+        <div class="bc-system-header">
+            <h1>Populera Databas</h1>
+        </div>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">VARNING</h4>
+            <p>Säkerställ att du befinner dig development-miljö innan du populerar databasen. Tänk på att om du konfigurerat databasinställningar lokalt
+           med skarp databas så är det den databasen som kommer att populeras ÄVEN om du är i development-miljö.  </p>
+            <hr>
+            <p class="mb-0">
+                Du befinner dig just nu i miljö:
+                <h3 style="color: black">@ViewData["Environment"]</h3>
+            </p>
+        </div>
+        <div class="bc-system-body">
+            <p>
+                <button class="btn btn-danger" id="populateButton">Populera</button>
+            </p>
+        </div>
+        <div class="bc-system-footer"></div>
+    </div>
+</div>
+@section Scripts{ 
+    <script>
+        $("#populateButton").click(function(){
+            if (confirm('OBS! Detta populerar databas med ny data. Vill du fortsätta?')) {
+                $.ajax({
+                    url: '/DevDatabase/AddUserIdToAthlete',
+                    type: 'GET',
+                    success: function (result) {
+                        console.log(result);
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+            }
+         
+        });
+    </script>
+}

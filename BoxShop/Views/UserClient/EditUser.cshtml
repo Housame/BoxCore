@@ -1,0 +1,34 @@
+﻿@model UserDisplayVM
+@{ 
+    ViewBag.Title = "Ändra Användare";
+}
+
+<div id="headerDiv" class="productBox">
+    <h1>Ändra Användare</h1>
+</div>
+
+<div class="productBox col-sm-4 col-sm-offset-4">
+    <form asp-controller="UserClient" asp-action="EditUser" method="post">
+
+        <!-- First Name -->
+        <div class="input-group">
+            <span asp-validation-for="@Model.FirstName"  class="input-group-addon">Förnamn&nbsp;&nbsp;</span>
+            <input asp-for="@Model.FirstName" class="form-control" placeholder="Förnamn">
+        </div>
+        <br />
+
+        <!-- Last Name --> 
+        <div class="input-group">
+            <span asp-validation-for="@Model.LastName" class="input-group-addon">Efternamn</span>
+            <input asp-for="@Model.LastName" class="form-control" placeholder="Efternamn">
+        </div>
+        <br />
+
+        <!-- Back and Save Buttons -->
+        <div id="editButtons" class="input-group">
+            <button id="leftEdit" asp-action="Index" formmethod="get" class="btn btn-success" type="submit"><i class="glyphicon glyphicon-chevron-left"></i> Tillbaka</button>
+            <button style="margin-left:10px;" id="rightEdit" class="btn btn-danger" asp-action="RemoveUser" asp-route-id="@Model.Id" formmethod="post" type="submit"><i class="glyphicon glyphicon-trash"></i></button>
+            <button id="rightEdit" class="btn btn-success" type="submit">Spara ändringar</button>
+        </div>
+    </form>
+</div>

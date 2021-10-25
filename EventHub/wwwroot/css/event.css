@@ -1,0 +1,809 @@
+﻿/* Main Event Settings */
+.bg-event {
+    border: 1px #000 solid;
+    background-color: transparent;
+    background-image: url('../img/bc-background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+    border-radius: 0;
+}
+
+.ribbon {
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    z-index: 1;
+    overflow: hidden;
+    width: 75px;
+    height: 75px;
+    text-align: right;
+}
+
+    .ribbon span {
+        font-size: 10px;
+        font-weight: bold;
+        color: #FFF;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 20px;
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        width: 100px;
+        display: block;
+        background: #79A70A;
+        background: linear-gradient(#00006E 0%, #210204 100%);
+        box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+        position: absolute;
+        top: 19px;
+        right: -21px;
+    }
+
+        .ribbon span::before {
+            content: "";
+            position: absolute;
+            left: 0px;
+            top: 100%;
+            z-index: -1;
+            border-left: 3px solid #210204;
+            border-right: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+            border-top: 3px solid #210204;
+        }
+
+        .ribbon span::after {
+            content: "";
+            position: absolute;
+            right: 0px;
+            top: 100%;
+            z-index: -1;
+            border-left: 3px solid transparent;
+            border-right: 3px solid #210204;
+            border-bottom: 3px solid transparent;
+            border-top: 3px solid #210204;
+        }
+
+.event-main {
+    padding-top: 40px;
+    height: 100%;
+    max-width: 100%;
+}
+
+.divider {
+    background: #ccc !important;
+}
+
+.event-admin {
+    background: #eee;
+}
+
+.btn, .btn-danger, .btn-default, .btn-primary, .btn-success, .btn-warning {
+    width: 120px;
+    border: none;
+    border-radius: 0;
+}
+
+.dropdown, .menu-drop {
+    text-align: center;
+    width: 170px;
+}
+
+    .dropdown:hover, .menu-drop:hover {
+        background: #222;
+    }
+
+#logIn {
+    margin-right: 15px;
+}
+
+#logOut {
+    margin-right: 15px;
+}
+
+#user {
+    margin-top: 30px;
+    height: 50px;
+    width: 300px;
+}
+
+/* Profile Settings */
+
+.register-form {
+    margin: 5px auto 5px auto;
+    width: 45%;
+    height: 400px;
+    padding: 20px;
+}
+
+#registrationDiv {
+    margin: 0 auto 0 auto;
+    width: 40%;
+    color: #000;
+}
+
+.register-checkboxes {
+    padding-left: 20px;
+    text-align: left;
+}
+
+.register-policy {
+    text-align: left;
+}
+
+#pagerButtons button {
+    border: 1px #000 solid;
+}
+
+#userCreated {
+    color: green;
+    font-size: 150px;
+}
+
+.notification, #formsMsg {
+    background-color: black;
+    color: #fff !important;
+}
+
+.clearfix {
+    color: black;
+}
+
+.date-img {
+    height: 16px;
+}
+
+#compDate {
+    margin-left: 35px;
+}
+
+#compClass {
+    margin-left: 41px;
+}
+
+#compPrice {
+    margin-left: 52px;
+}
+
+#compReservations {
+    margin-left: 10px;
+}
+
+.file-preview {
+    border: 1px #000 solid;
+    background-color: white;
+}
+
+.file-preview-frame {
+    background: #f5f5f5;
+    width: 22%;
+    display: flex;
+    align-items: center;
+}
+
+.profile-user {
+    padding-top: 40px;
+    min-width: 1000px;
+}
+
+.profile-body {
+    margin: 0 auto 0 auto;
+    width: 85%;
+}
+
+.edit-profile {
+    margin: 0 auto 0 auto;
+    width: 40%;
+}
+
+.img-thumbnail {
+    border: 1px #000 solid;
+}
+
+.profile-well {
+    background: #fff;
+    border: 1px #7f7f7f solid;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2.5px;
+    width: 70%;
+    min-height: 60px;
+}
+
+#input-1 {
+    width: 100%;
+}
+
+.profile-comp {
+    margin: 0 auto 0 auto;
+    width: 85%;
+}
+
+.profile-comp-booking {
+    background: #fff !important;
+    border: 1px #ddd solid;
+    color: #333333;
+}
+
+    .profile-comp-booking h1, .profile-comp-booking h4 {
+        color: #333333;
+    }
+
+.edit-info, .event-info, .user-info, #addedSubEventsContainer, #subEventMsg {
+    width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#subEventMsg {
+    margin-top: 40px;
+}
+
+.profile-edit-buttons, .create-event-buttons, #teamFields, #submitTeamComp, #soloFields, #submitSoloComp, .largeButton {
+    width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.panel {
+    border-radius: 0;
+}
+
+.comp-booked:hover {
+    color: black;
+}
+
+/* Filter Settings */
+#filterDiv {
+    padding: 10px 35px 0 35px;
+    width: 80%;
+    margin: 0 auto 0 auto;
+    height: 80px;
+}
+
+.filter {
+    width: 50%;
+    border: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#filterDifficulty, #filterLocation {
+    border-radius: 0;
+}
+
+    #filterDifficulty:hover, #filterLocation:hover {
+        cursor: pointer;
+    }
+
+.form-inline {
+    width: 100%;
+    height: 100%;
+}
+
+/* Competition Settings */
+#competitionDiv {
+    margin: 0 auto 0 auto;
+    padding: 0 20px 0 20px;
+    width: 80%;
+    color: white;
+}
+
+.stepIndicatorTxt {
+    background: #fff;
+}
+
+.panel, .list-group, .list-group-item {
+    border-color: transparent;
+}
+
+    .list-group-item table {
+        color: black;
+    }
+
+.comp-body {
+    margin: 0 auto 0 auto;
+    width: 60%;
+    min-width: 665px;
+}
+
+.comp-info {
+    background: #fff;
+    color: black;
+    border: 1px #ccc solid;
+    border-radius: 0 !important;
+    padding: 20px 20px 20px 20px;
+}
+
+.comp-info-panel:hover {
+    cursor: pointer;
+}
+
+.panel-body {
+    padding: 0 20px 0 20px;
+}
+
+#comp-heading {
+    background: #fff;
+    color: #333333;
+    border: 1px #ccc solid;
+    border-radius: 5px;
+}
+
+/* Event Settings */
+.createdSoloCompDiv {
+    position: relative;
+    height: 140px;
+}
+
+.createdTeamCompDiv {
+    position: relative;
+    height: 160px;
+}
+
+    .createdSoloCompDiv .panel-footer, .createdTeamCompDiv .panel-footer {
+        width: 100%;
+    }
+
+.createdCompHeader {
+    float: left;
+    margin-left: 20px;
+}
+
+.createdCompInfo {
+    float: right;
+    margin-right: 20px;
+}
+
+.removeButton {
+    position: absolute;
+    bottom: 0;
+    height: 56px;
+}
+
+    .removeButton input {
+        display: inline-block;
+    }
+
+#accordion {
+    margin-bottom: 0;
+}
+
+#subEventMsg {
+    margin-top: 20px;
+}
+
+/* Overview Settings */
+#gridData {
+    padding-top: 40px;
+}
+
+.overview-body {
+    margin: 0 auto 0 auto;
+    width: 85%;
+}
+
+.comp-date {
+    margin: 10px 0 10px 0;
+    padding: 10px 10px 10px 10px;
+    color: #333333;
+}
+
+#subComp-dropdown, #filter-dropdown {
+    margin-left: auto;
+    margin-right: auto;
+    background: #ccc;
+    color: #333333;
+    padding: 5px 5px 5px 5px;
+    border-radius: 0;
+    text-decoration: none;
+    width: 220px;
+}
+
+    #subComp-dropdown:hover {
+        background: #aaa;
+    }
+
+    #subComp-dropdown a:hover, #subComp-dropdown a:link {
+        color: #333333;
+        text-decoration: none;
+    }
+
+.subComp-selector {
+    width: 170px;
+}
+
+.comp-info-button {
+    padding: 0;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    align-items: center;
+    height: 35px;
+    width: 35px;
+    background: #337ab7;
+    border: none;
+    border-radius: 100%;
+}
+
+    .comp-info-button img {
+        margin-left: auto;
+        margin-right: auto;
+        height: 30px;
+    }
+
+    .comp-info-button:hover {
+        background-position: center;
+        background: #286090;
+        border: none;
+    }
+
+    .comp-info-button:focus, .comp-info-button:active, .form-control:focus, .form-control:active {
+        outline: none !important;
+    }
+
+.subComp {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px 0 5px 5px;
+    width: 218px;
+}
+
+    .subComp:hover {
+        background: #e6e6e6;
+        color: #333333;
+        cursor: pointer;
+    }
+
+    .subComp:focus, .subComp:active {
+        outline: none !important;
+    }
+
+.subCompTable {
+    background: #fff;
+    color: #000;
+}
+
+    .subCompTable th, .subCompTable td {
+        border: 1px #7f7f7f solid;
+        padding: 5px 0 5px 5px;
+    }
+
+        .subCompTable th:hover, .subCompTable td:hover {
+            background: #e6e6e6;
+            color: #333333;
+        }
+
+
+.competition-buttons {
+    height: 52px;
+    padding: 20px 0 0 0;
+}
+
+.registration-buttons {
+    height: 32px;
+    padding: 0 20px 0 20px;
+}
+
+/* Form settings */
+.form-group {
+    text-align: left;
+}
+
+    .form-group input {
+        color: black;
+    }
+
+/* Valdidation color */
+.field-validation-error {
+    background: black;
+    color: white;
+}
+
+/* Change form width here */
+.user-info {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user-form {
+    margin: 5px auto 5px auto;
+    width: 40%;
+    min-width: 450px;
+    border-radius: 0;
+}
+
+.verification-form {
+    margin: 5px auto 5px auto;
+    width: 50%;
+    min-width: 500px;
+    border-radius: 0;
+}
+
+.modal-content {
+    margin: 10px auto 10px auto;
+    background: #000;
+    width: 40%;
+    min-width: 450px;
+    border-radius: 0;
+}
+
+.modal-buttons {
+    height: 72px;
+    padding: 20px 20px 20px 20px;
+}
+
+/* Modal Settings */
+.modal-header {
+    background-color: #000;
+    color: #fff;
+}
+
+#modalButton-close {
+    color: #7f7f7f;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    position: relative;
+    top: 5px;
+    right: 5px;
+    border: 0 !important;
+    outline: none !important;
+    opacity: 1;
+}
+
+    #modalButton-close:hover {
+        /*border: 1px #000 solid;*/
+        color: #fff;
+    }
+
+.modal-body {
+    height: 400px;
+    overflow-y: auto;
+}
+
+#buttonWrapper button {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tooltip-icon {
+    color: #5bc0de;
+}
+
+.teammate-modal-wrapper {
+    max-width: 448px;
+}
+
+.team-captain-body {
+    height: 150px;
+}
+
+#teamDiv {
+    padding: 0;
+}
+
+    #teamDiv li, li .user {
+        display: inline-block;
+        width: 444px !important;
+    }
+
+.removeExistingAthlete, .removeAthlete {
+    color: red;
+    width: 10px !important;
+}
+
+    .removeExistingAthlete:hover, .removeExistingAthlete:active, .removeExistingAthlete:visited, .removeAthlete:hover, .removeAthlete:active, .removeAthlete:visited {
+        color: red;
+        text-decoration: none !important;
+    }
+
+.teammate-list-wrapper {
+}
+
+.teammate-list {
+    text-align: left;
+}
+
+#logInTemp {
+    border: 1px white solid;
+    padding: 5px;
+    margin: 24px 34px 0 0;
+}
+
+.check-in {
+    padding: 0 !important;
+    width: 100px !important;
+}
+
+#discountInput, #discountValid, #discountInvalid {
+    border-radius: 0 !important;
+}
+
+#discount-group {
+    margin: 0 15px 0 15px !important;
+}
+
+.leaderboard-body {
+    margin: 0 auto 0 auto;
+    width: 60%;
+}
+
+    .leaderboard-body .active {
+        height: 350px !important;
+    }
+
+/* Settings when collapsed */
+@media screen and (max-width: 767px) {
+    #logInTemp {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .profile-user, #mainDiv, .event-main, .overview-body, .user, #gridData {
+        padding: 0 !important;
+    }
+
+    .event-main {
+        margin: 0 !important;
+    }
+
+    .competition-buttons {
+        padding: 20px 20px 0 20px;
+    }
+
+    #error-message {
+        margin: 70px 0 0 0;
+    }
+
+    .event-menu, .menu-drop, .dropdown, #user, .overview-body {
+        width: 100%;
+    }
+
+    #index, #footerDiv {
+        box-shadow: none !important;
+    }
+
+    #logOut {
+        padding-right: 0;
+    }
+
+    #filterDiv {
+        padding: 10px 20px 0 20px;
+        width: 100%;
+        min-width: 345px;
+    }
+
+    .filter {
+        width: 50%;
+    }
+
+    #competitionDiv {
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .comp-body, .profile-body, .profile-comp {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+
+        .comp-body .list-group-item {
+            padding-left: 0;
+            padding-right: 0;
+            width: 100%;
+        }
+
+    #subComp-dropdown, #filter-dropdown {
+        width: 150px;
+    }
+
+    #myModal {
+        min-width: 370px !important;
+    }
+
+    .modal-dialog {
+        max-width: 100% !important;
+    }
+
+    .modal-content {
+        /*margin-left: 5px !important;*/
+        width: 95% !important;
+        min-width: 95% !important;
+        max-width: 95% !important;
+    }
+
+    .profile-user {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .profile-well {
+        width: 100%;
+        margin-bottom: 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .user-info {
+        width: 100%;
+    }
+
+    .user-form, .verification-form {
+        margin: 0;
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .edit-profile {
+        width: 100%;
+    }
+
+    .edit-info, .user-info, .profile-edit-buttons, .event-info, .create-event-buttons, #teamFields, #submitTeamComp, #soloFields, #submitSoloComp, #addedSubEventsContainer, #subEventMsg, .largeButton {
+        width: 260px;
+    }
+
+    #StartDate, #EndDate, #dateSelect, #DateOfBirth {
+        width: 220px;
+    }
+
+    .birth-info {
+        width: 260px;
+    }
+
+    .team-captain-body {
+        height: 300px;
+    }
+
+    #teamDiv li, li .user {
+        margin-left: 5px;
+        width: 370px !important;
+    }
+
+    .athlete-info {
+        /*width: 280px;*/
+        padding-left: 17px;
+    }
+
+    .form-control {
+        margin: 0 auto 0 auto;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: scale(1) rotate(0deg);
+    }
+
+    to {
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spinw {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes spinm {
+    from {
+        -moz-transform: rotate(0deg);
+    }
+
+    to {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+.glyphicon-refresh-animate {
+    animation: spin .7s infinite linear;
+    -webkit-animation: spinw .7s infinite linear;
+    -moz-animation: spinm .7s infinite linear;
+}
